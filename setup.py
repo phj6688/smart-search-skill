@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="search_workflow",
-    version="0.1.0",
+    version="0.1.1",
     description="Custom Reasoning and Action agent with tool support",
     author="Your Name",
     author_email="your.email@example.com",

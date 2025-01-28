@@ -8,8 +8,8 @@ from . import prompts
 
 # Constants
 DEFAULT_MODEL = "gpt-4o-mini"
-MAX_SEARCH_RESULTS_TOOL = 1
-MAX_SEARCH_RESULTS_EVALUATOR = 1
+MAX_SEARCH_RESULTS_TOOL = 10
+MAX_SEARCH_RESULTS_EVALUATOR = 5
 
 @dataclass(kw_only=True)
 class Configuration:
