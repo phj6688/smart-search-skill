@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
   searxng:
-    image: searxng/searxng:2025.5.18
+    image: searxng/searxng:latest
     container_name: search-workflow-searxng
     hostname: searxng
     restart: unless-stopped
@@ -22,8 +20,8 @@ services:
       - REDIS_URL=redis://redis:6379/0
     
     volumes:
-      - ./config/settings.yml:/etc/searxng/settings.yml:ro
-      - ./config/uwsgi.ini:/etc/searxng/uwsgi.ini:ro
+      - ./config/settings.yml:/etc/searxng/settings.yml
+      - ./config/uwsgi.ini:/etc/searxng/uwsgi.ini
       - searxng-cache:/var/cache/searxng
     
     depends_on:
@@ -40,10 +38,10 @@ services:
     
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   redis:
     image: redis:7-alpine
