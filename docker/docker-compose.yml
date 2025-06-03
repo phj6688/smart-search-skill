@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  searxng:
+    image: searxng/searxng:2025.5.18
+    container_name: search-workflow-searxng
+    hostname: searxng
+    restart: unless-stopped
+    
+    ports:
+      - "127.0.0.1:9090:8080"
+    
+    environment:
+      - INSTANCE_NAME=search-workflow-searxng
+      - BASE_URL=http://localhost:9090/
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+      - CONFIG_PATH=/etc/searxng
+      - DATA_PATH=/var/cache/searxng
+      - UWSGI_WORKERS=4
+      - UWSGI_THREADS=4
+      - AUTOCOMPLETE=google
+      - REDIS_URL=redis://redis:6379/0
+    
+    volumes:
+      - ./config/settings.yml:/etc/searxng/settings.yml:ro
+      - ./config/uwsgi.ini:/etc/searxng/uwsgi.ini:ro
+      - searxng-cache:/var/cache/searxng
+    
+    depends_on:
+      - redis
+    
+    networks:
+      - search-net
+    
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+    
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: search-workflow-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    
+    volumes:
+      - redis-data:/data
+    
+    networks:
+      - search-net
+    
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+volumes:
+  searxng-cache:
+  redis-data:
+
+networks:
+  search-net:
+    driver: bridge

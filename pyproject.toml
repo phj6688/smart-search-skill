@@ -1,3 +1,117 @@
+[project]
+name = "search-workflow"
+version = "0.2.0"
+description = "AI-powered search workflow with SearXNG and DuckDuckGo integration"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Buzzify AI", email = "admin@buzzify.ai" }
+]
+maintainers = [
+    { name = "Buzzify AI", email = "admin@buzzify.ai" }
+]
+keywords = ["search", "ai", "news", "searxng", "langchain"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.11"
+dependencies = [
+    # Core LangChain dependencies (updated versions)
+    "langchain-community>=0.2.17",
+    "langchain-core>=0.2.14", 
+    "langchain-openai>=0.1.22",
+    "langgraph>=0.2.6",
+    
+    # Core dependencies
+    "pydantic>=2.0.0",
+    "aiohttp>=3.8.0",
+    "typing-extensions>=4.5.0",
+    "python-dotenv>=1.0.1",
+    
+    # Search engines
+    "duckduckgo-search>=6.1.0",
+    
+    # Fix PyYAML compatibility issue
+    "pyyaml>=6.0.1",
+    
+    # Additional utilities
+    "requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+docker = [
+    "docker>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/buzzify-ai/search-workflow"
+Repository = "https://github.com/buzzify-ai/search-workflow.git"
+Issues = "https://github.com/buzzify-ai/search-workflow/issues"
+Documentation = "https://github.com/buzzify-ai/search-workflow#readme"
+
+[project.scripts]
+search-workflow = "search_workflow.cli:main"
+
 [build-system]
-requires = ["setuptools>=73.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/search_workflow"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md",
+    "/LICENSE",
+]
+
+# UV configuration
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+# Code quality tools
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501", "F401"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]

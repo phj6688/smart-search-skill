@@ -1,63 +1,141 @@
-"""Configurations for the custom agent, defining prompts, model, and limits."""
 
-from __future__ import annotations
-from dataclasses import dataclass, field, fields
-from typing import Optional
-from langchain_core.runnables import RunnableConfig, ensure_config
-from . import prompts
+"""Configuration management with environment variable support."""
 
-# Constants
-DEFAULT_MODEL = "gpt-4o-mini"
-MAX_SEARCH_RESULTS_TOOL = 10
-MAX_SEARCH_RESULTS_EVALUATOR = 5
+import os
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, Any
+from langchain_core.runnables import RunnableConfig
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 @dataclass(kw_only=True)
 class Configuration:
-    """Configurable parameters for the agent's operation."""
+    """Configuration for the search workflow."""
     
-    AGENT_PROMPT: str = field(
-        default=prompts.AGENT_PROMPT,
-        metadata={"description": "System prompt guiding the agent's interactions."}
-    )
-    
-    EVALUATOR_PROMPT: str = field(
-        default=prompts.EVALUATOR_PROMPT,
-        metadata={"description": "System prompt guiding the evaluator's interactions."}
-    )
-    
+    # Core LLM settings
     model: str = field(
-        default=DEFAULT_MODEL,
-        metadata={"description": "Identifier for the language model."}
+        default="gpt-4o-mini",
+        metadata={"description": "The LLM model to use for evaluation"}
     )
     
+    # OpenAI API configuration
+    openai_api_key: str = field(
+        default_factory=lambda: os.getenv("OPENAI_API_KEY", ""),
+        metadata={"description": "OpenAI API key"}
+    )
+    
+    # Search configuration
     max_search_results_tool: int = field(
-        default=MAX_SEARCH_RESULTS_TOOL,
-        metadata={"description": "Max search results to retrieve per query."}
+        default_factory=lambda: int(os.getenv("MAX_SEARCH_RESULTS_TOOL", "10")),
+        metadata={"description": "Maximum results to fetch from search engines"}
     )
     
     max_search_results_evaluator: int = field(
-        default=MAX_SEARCH_RESULTS_EVALUATOR,
-        metadata={"description": "Max results to return after evaluation."}
+        default_factory=lambda: int(os.getenv("MAX_SEARCH_RESULTS_EVALUATOR", "5")),
+        metadata={"description": "Maximum results to return after AI evaluation"}
     )
     
+    # SearXNG configuration
+    searxng_enabled: bool = field(
+        default=True,
+        metadata={"description": "Enable SearXNG search engine"}
+    )
+    
+    searxng_url: str = field(
+        default_factory=lambda: os.getenv("SEARXNG_URL", "http://localhost:9090"),
+        metadata={"description": "SearXNG instance URL"}
+    )
+    
+    searxng_timeout: int = field(
+        default=30,
+        metadata={"description": "SearXNG request timeout in seconds"}
+    )
+    
+    # Search strategy
+    search_strategy: str = field(
+        default="hybrid",  # "searxng", "duckduckgo", "hybrid"
+        metadata={"description": "Search strategy: hybrid, searxng-only, or duckduckgo-only"}
+    )
+    
+    # Debugging and logging
+    debug: bool = field(
+        default_factory=lambda: os.getenv("DEBUG", "false").lower() == "true",
+        metadata={"description": "Enable debug mode"}
+    )
+    
+    log_level: str = field(
+        default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"),
+        metadata={"description": "Logging level"}
+    )
+
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        # Changed from raising error to just warning
+        if not self.openai_api_key:
+            print("⚠️  Warning: OPENAI_API_KEY not set. Some features may not work.")
+        
+        if self.max_search_results_evaluator > self.max_search_results_tool:
+            raise ValueError(
+                "max_search_results_evaluator cannot be greater than max_search_results_tool"
+            )
+
+
+    
     @classmethod
-    def from_runnable_config(cls, config: Optional[RunnableConfig] = None) -> Configuration:
-        """Create a Configuration instance from a RunnableConfig object.
-
-        Args:
-            config (Optional[RunnableConfig]): Configuration from an external source.
-
-        Returns:
-            Configuration: Initialized configuration object with defaults or overrides.
-        """
-        config = ensure_config(config)
-        configurable_data = config.get("configurable", {})
-        valid_fields = {field.name for field in fields(cls) if field.init}
+    def from_runnable_config(cls, config: RunnableConfig) -> "Configuration":
+        """Create configuration from LangChain runnable config."""
+        # Get configurable values from the input config
+        configurable_values = config.get("configurable", {})
         
-        # Filter out any extraneous keys and initialize the Configuration
-        filtered_config = {key: value for key, value in configurable_data.items() if key in valid_fields}
+        # Get default values from environment or dataclass defaults
+        default_kwargs = {
+            f.name: f.default_factory() if callable(f.default_factory) else f.default
+            for f in cls.__dataclass_fields__.values()
+            if hasattr(f, 'default_factory') or hasattr(f, 'default')
+        }
         
-        try:
-            return cls(**filtered_config)
-        except TypeError as e:
-            raise ValueError(f"Invalid configuration data provided: {e}")
+        # Start with default values
+        final_kwargs = default_kwargs.copy()
+        
+        # Override with values from the configurable dictionary
+        for key, value in configurable_values.items():
+            if key in final_kwargs:
+                # Ensure correct type conversion for int fields
+                if key in ["max_search_results_tool", "max_search_results_evaluator", "searxng_timeout"]:
+                    try:
+                        final_kwargs[key] = int(value)
+                    except (ValueError, TypeError):
+                        print(f"⚠️  Warning: Could not convert '{key}' value '{value}' to int. Using default.")
+                elif key == "debug":
+                    final_kwargs[key] = str(value).lower() == "true"
+                else:
+                    final_kwargs[key] = value
+                    
+        # Create the Configuration object with final arguments
+        return cls(**final_kwargs)
+
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert configuration to dictionary."""
+        return {
+            field.name: getattr(self, field.name)
+            for field in self.__dataclass_fields__.values()
+        }
+    
+    def validate_environment(self) -> List[str]:
+        """Validate environment and return list of issues."""
+        issues = []
+        
+        if not self.openai_api_key:
+            issues.append("OPENAI_API_KEY is not set")
+        
+        if self.searxng_enabled:
+            # Could add SearXNG connectivity check here
+            pass
+            
+        return issues
+
+# Global configuration instance
+default_config = Configuration()

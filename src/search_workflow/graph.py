@@ -13,26 +13,18 @@ from .configuration import Configuration
 from .state import InputState, State
 from .tools import TOOLS
 from .utils import load_chat_model, ArticlesResponse
-
+from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT  
 
 import json
-
 
 async def agent(
     state: State, config: RunnableConfig
 ) -> Dict[str, List[AIMessage]]:
-    """Initialize the prompt, run the model, and handle tool calls as the main agent.
-
-    Args:
-        state (State): The conversation's current state.
-        config (RunnableConfig): Model run configuration.
-
-    Returns:
-        dict: Dictionary with the model's response message.
-    """
+    """Initialize the prompt, run the model, and handle tool calls as the main agent."""
     configuration = Configuration.from_runnable_config(config)
+    
     prompt = ChatPromptTemplate.from_messages([
-        ("system", configuration.AGENT_PROMPT),
+        ("system", AGENT_PROMPT),
         ("placeholder", "{messages}")
     ])
     model = load_chat_model(configuration.model).bind_tools(TOOLS)
@@ -58,31 +50,27 @@ async def agent(
         }
     return {"messages": [response]}
 
-
 async def evaluator(
     state: State, config: RunnableConfig
 ) -> Dict[str, List[AIMessage]]:
-    """Evaluate tool results and return the most relevant entries based on the search query.
+    """Evaluate tool results and return the most relevant entries based on the search query."""
 
-    Args:
-        state (State): The conversation's current state.
-        config (RunnableConfig): Model run configuration.
 
-    Returns:
-        dict: Dictionary with evaluated, filtered results.
-    """
     configuration = Configuration.from_runnable_config(config)
+    
     prompt = ChatPromptTemplate.from_messages([
-        ("system", configuration.EVALUATOR_PROMPT),
+        ("system", EVALUATOR_PROMPT),
         ("placeholder", "{messages}")
     ])
-    search_query = state.messages[0].content  # Assumes the initial message is the user query.
+    search_query = state.messages[0].content  
+    max_results = configuration.max_search_results_evaluator
+
 
     message_value = await prompt.ainvoke(
         {
             "messages": state.messages,
             "system_time": datetime.now(tz=timezone.utc).isoformat(),
-            "N_RESULT": configuration.max_search_results_evaluator,
+            "N_RESULT": max_results,
             "SEARCH_QUERY": search_query,
         },
         config,
@@ -96,9 +84,14 @@ async def evaluator(
         structured_response.articles if isinstance(structured_response, ArticlesResponse)
         else [item[0] if isinstance(item, tuple) else item for item in structured_response]
     )
+
+    articles_data.sort(key=lambda x: x.similarity, reverse=True)
+    if len(articles_data) > max_results:
+        articles_data = articles_data[:max_results]
+
+
     response_content = json.dumps([article.dict() for article in articles_data], ensure_ascii=False)
     return {"messages": [AIMessage(content=response_content)]}
-
 
 # Define workflow and its nodes
 workflow = StateGraph(State, input=InputState, config_schema=Configuration)
@@ -124,12 +117,13 @@ workflow.add_edge("evaluator", "__end__")
 graph = workflow.compile(interrupt_before=[], interrupt_after=[])
 graph.name = "NEWS_SEARCH_WORKFLOW"
 
-async def run_workflow(input_data: str) -> Union[Dict[str, Any], str]:
+async def run_workflow(input_data: str, config: RunnableConfig = None) -> Union[Dict[str, Any], str]:
     """
     Execute the news search workflow with given input data.
 
     Args:
         input_data (str): The user input or query for initiating the workflow.
+        config (RunnableConfig, optional): Configuration for the workflow.
 
     Returns:
         Union[Dict[str, Any], str]: The final message content in JSON format, 
@@ -141,8 +135,11 @@ async def run_workflow(input_data: str) -> Union[Dict[str, Any], str]:
             "messages": [HumanMessage(content=input_data)]
         }
         
-        # Run the workflow
-        final_state = await graph.ainvoke(initial_state)
+        # Run the workflow with optional config
+        if config:
+            final_state = await graph.ainvoke(initial_state, config)
+        else:
+            final_state = await graph.ainvoke(initial_state)
 
         # Ensure `final_state` is a dictionary and contains 'messages'
         messages = final_state.get('messages')
@@ -167,4 +164,3 @@ async def run_workflow(input_data: str) -> Union[Dict[str, Any], str]:
         return f"Error with message format: {str(ve)}"
     except Exception as e:
         return f"Workflow execution error: {str(e)}"
-

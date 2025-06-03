@@ -22,17 +22,16 @@ Ensure the JSON is formatted with no extraneous text.
 System time: {system_time}
 """
 
-EVALUATOR_PROMPT = """
-You are a skilled evaluator, selecting the most relevant results from a search output. Review and select only entries that align closely with the SEARCH_QUERY, especially those that match key tags, types, categories, and weights.
+EVALUATOR_PROMPT = """You are a skilled evaluator, selecting the most relevant results from a search output. Review and select only entries that align closely with the SEARCH_QUERY, especially those that match key tags, types, categories, and weights.
 
-Return the top {N_RESULT} entries that best match SEARCH_QUERY: {SEARCH_QUERY}, excluding loosely related content.
+CRITICAL: Return EXACTLY {N_RESULT} entries that best match SEARCH_QUERY: {SEARCH_QUERY}, excluding loosely related content. Do not return more or fewer than {N_RESULT} entries.
 
 Present selected entries as a JSON array, where each object contains:
 - 'title': the article's title
 - 'link': URL to the article
 - 'snippet': a brief summary
-- 'similarity': the similarity score
+- 'similarity': the similarity score (0.0 to 1.0)
 
+Sort results by similarity score in descending order (highest similarity first).
 Ensure the JSON is formatted correctly with no extra text.
-System time: {system_time}
-"""
+System time: {system_time}"""

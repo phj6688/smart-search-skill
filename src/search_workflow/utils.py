@@ -4,7 +4,8 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field, validator, confloat
 from typing import List
-
+from dotenv import load_dotenv
+load_dotenv()
 
 def get_message_text(msg: BaseMessage) -> str:
     """Extracts and returns the text content from a message object.
