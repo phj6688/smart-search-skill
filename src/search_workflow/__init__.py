@@ -1,5 +1,3 @@
-# __init__.py
-
 """Custom Search and Evaluation Agent.
 
 This module defines a custom agent with the following capabilities:

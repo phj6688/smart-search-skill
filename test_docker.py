@@ -1,4 +1,3 @@
-# test_docker.py - Test Docker SearXNG integration
 import asyncio
 import aiohttp
 

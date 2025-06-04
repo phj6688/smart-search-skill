@@ -1,4 +1,3 @@
-# test.py - Comprehensive Search Workflow Test Suite
 import asyncio
 import traceback
 import time

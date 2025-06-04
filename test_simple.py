@@ -1,4 +1,3 @@
-# test_simple.py - Quick functionality test
 import asyncio
 from src.search_workflow import run_workflow
 

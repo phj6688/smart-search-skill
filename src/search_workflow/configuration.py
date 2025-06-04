@@ -1,4 +1,3 @@
-
 """Configuration management with environment variable support."""
 
 import os
