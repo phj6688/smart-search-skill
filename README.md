@@ -65,7 +65,7 @@ results = await run_workflow("query", config=config)
 ## Development
 ```bash
 # Clone and setup
-git clone <your-repo>
+git clone https://github.com/phj6688/search_workflow.git
 cd search-workflow
 uv sync
 
