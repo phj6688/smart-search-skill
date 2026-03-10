@@ -62,14 +62,14 @@ search:
   suspended_times:
     # Engine suspension time after error (in seconds; set to 0 to disable)
     # For error "Access denied" and "HTTP error [402, 403]"
-    SearxEngineAccessDenied: 86400
+    SearxEngineAccessDenied: 900
     # For error "CAPTCHA"
-    SearxEngineCaptcha: 86400
+    SearxEngineCaptcha: 900
     # For error "Too many request" and "HTTP error 429"
-    SearxEngineTooManyRequests: 3600
+    SearxEngineTooManyRequests: 300
     # Cloudflare CAPTCHA
-    cf_SearxEngineCaptcha: 1296000
-    cf_SearxEngineAccessDenied: 86400
+    cf_SearxEngineCaptcha: 3600
+    cf_SearxEngineAccessDenied: 900
     # ReCAPTCHA
     recaptcha_SearxEngineCaptcha: 604800
 
@@ -98,7 +98,7 @@ server:
   # If your instance owns a /etc/searxng/settings.yml file, then set the following
   # values there.
 
-  secret_key: "8aHKOicdm6Eglv4jZNsgcW4HxiGMlv"  # Is overwritten by ${SEARXNG_SECRET}
+  secret_key: "${SEARXNG_SECRET}"  # Set via SEARXNG_SECRET env var — never hardcode
   # Proxy image results through SearXNG. Is overwritten by ${SEARXNG_IMAGE_PROXY}
   image_proxy: false
   # 1.0 and 1.1 are supported

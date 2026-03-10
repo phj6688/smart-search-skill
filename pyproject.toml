@@ -1,6 +1,6 @@
 [project]
 name = "search-workflow"
-version = "0.2.0"
+version = "0.3.0"
 description = "AI-powered search workflow with SearXNG and DuckDuckGo integration"
 readme = "README.md"
 license = { text = "MIT" }
@@ -37,6 +37,7 @@ dependencies = [
     
     # Search engines
     "duckduckgo-search>=6.1.0",
+    "ddgs>=9.0.0",
     
     # Fix PyYAML compatibility issue
     "pyyaml>=6.0.1",

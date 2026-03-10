@@ -49,19 +49,19 @@ fi
 
 # Start services
 echo "🐳 Starting Docker services..."
-docker-compose up -d
+docker compose up -d
 
 # Wait for services to be ready
 echo "⏳ Waiting for services to be healthy..."
 for i in {1..30}; do
-    if docker-compose exec -T searxng wget --quiet --tries=1 --spider http://localhost:8080/healthz 2>/dev/null; then
+    if docker compose exec -T searxng wget --quiet --tries=1 --spider http://localhost:8080/healthz 2>/dev/null; then
         break
     fi
     
     if [ $i -eq 30 ]; then
         echo "❌ Health check failed after 30 attempts"
         echo "📋 Checking logs..."
-        docker-compose logs searxng
+        docker compose logs searxng
         exit 1
     fi
     

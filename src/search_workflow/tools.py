@@ -1,6 +1,7 @@
 """Search tools for web scraping and retrieving information from news sources."""
 
 import asyncio
+import re
 import aiohttp
 from typing import Any, List, Optional, cast, Literal, Callable
 from langchain_community.tools import DuckDuckGoSearchResults
@@ -19,20 +20,22 @@ Timeframe = Optional[Literal['d', 'w', 'm', 'y']]
 class SearXNGClient:
     """SearXNG API client with fallback capabilities"""
     
-    def __init__(self, base_url: str = "http://localhost:9090"):
+    def __init__(self, base_url: str = "http://localhost:9090", timeout: int = 12):
         self.base_url = base_url.rstrip('/')
+        self.timeout = timeout
         
     async def search(
         self, 
         query: str, 
         language: str = "en",
         time_range: Optional[str] = None,
-        max_results: int = 10
+        max_results: int = 10,
+        categories: str = "general",
     ) -> List[dict]:
         """Search using SearXNG API"""
         params = {
             "q": query,
-            "categories": "news",
+            "categories": categories,
             "language": language,
             "format": "json",
             "safesearch": "0"
@@ -44,7 +47,7 @@ class SearXNGClient:
             params["time_range"] = time_map.get(time_range, time_range)
             
         try:
-            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout)) as session:
                 async with session.get(f"{self.base_url}/search", params=params) as response:
                     if response.status == 200:
                         data = await response.json()
@@ -72,10 +75,10 @@ class SearXNGClient:
         return normalized
     
     async def health_check(self) -> bool:
-        """Check if SearXNG is available"""
+        """Check if SearXNG is available via a real search probe."""
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f"{self.base_url}/healthz", timeout=5) as response:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
+                async with session.get(f"{self.base_url}/search", params={"q": "test", "format": "json"}) as response:
                     return response.status == 200
         except:
             return False
@@ -127,7 +130,7 @@ async def search(
         print("🔄 Using DuckDuckGo fallback")
         search_engine = DuckDuckGoSearchResults(
             max_results=configuration.max_search_results_tool,
-            backend='news'
+            backend='text'
         )
         
         result = await search_engine.ainvoke({
@@ -142,6 +145,72 @@ async def search(
     except Exception as e:
         print(f"❌ Both engines failed: {e}")
         return []
+
+async def _ddg_search(query: str, max_results: int) -> list:
+    """Run DDG search using DDGS().text() — returns up to max_results structured dicts."""
+    try:
+        from ddgs import DDGS
+        # DDGS().text() returns list of dicts: {title, href, body}
+        # Run in executor to avoid blocking the event loop
+        loop = asyncio.get_event_loop()
+        raw = await loop.run_in_executor(
+            None,
+            lambda: list(DDGS().text(query, max_results=max_results))
+        )
+        # Normalize to {title, link, snippet}
+        return [
+            {"title": r.get("title", ""), "link": r.get("href", ""), "snippet": r.get("body", "")}
+            for r in raw
+        ]
+    except Exception as e:
+        print(f"DuckDuckGo failed: {e}")
+        return []
+
+
+async def search_direct(
+    query: str,
+    max_results: int = 10,
+    searxng_url: str = "http://localhost:9090",
+    language: str = "en",
+    time_range: Optional[str] = None,
+    searxng_timeout: int = 12,
+    categories: str = "general",
+) -> List[dict[str, Any]]:
+    """Direct search: run SearXNG + DDG in parallel, merge and deduplicate.
+    
+    Args:
+        categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
+    """
+    client = SearXNGClient(searxng_url, timeout=searxng_timeout)
+
+    searxng_task = client.search(query, language, time_range, max_results, categories=categories)
+    ddg_task = _ddg_search(query, max_results)
+    searxng_results, ddg_results = await asyncio.gather(
+        searxng_task, ddg_task, return_exceptions=True
+    )
+
+    if isinstance(searxng_results, Exception):
+        searxng_results = []
+    if isinstance(ddg_results, Exception):
+        ddg_results = []
+
+    # Merge, deduplicate by link
+    seen_links: set = set()
+    merged = []
+    for r in list(searxng_results) + list(ddg_results):
+        link = r.get("link", "")
+        if link and link in seen_links:
+            continue
+        seen_links.add(link)
+        merged.append(r)
+
+    if not merged:
+        print(f"Warning: No results for '{query}' from either engine")
+    elif not searxng_results:
+        print(f"Warning: SearXNG returned 0 results for '{query}', used DDG only")
+
+    return merged[:max_results]
+
 
 # Exported tools for external use
 TOOLS: List[Callable[..., Any]] = [search]

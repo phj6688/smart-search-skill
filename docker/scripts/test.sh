@@ -4,7 +4,7 @@ set -e
 echo "🧪 Testing Search Workflow SearXNG..."
 
 # Check if services are running
-if ! docker-compose ps | grep -q "Up"; then
+if ! docker compose ps | grep -q "Up"; then
     echo "❌ Services are not running. Please run ./start.sh first"
     exit 1
 fi

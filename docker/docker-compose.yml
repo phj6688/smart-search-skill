@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     
     ports:
-      - "127.0.0.1:9090:8080"
+      - "9090:8080"
     
     environment:
       - INSTANCE_NAME=search-workflow-searxng
@@ -28,7 +28,7 @@ services:
       - redis
     
     networks:
-      - search-net
+      - librechat-net
     
     deploy:
       resources:
@@ -53,7 +53,7 @@ services:
       - redis-data:/data
     
     networks:
-      - search-net
+      - librechat-net
     
     deploy:
       resources:
@@ -65,5 +65,6 @@ volumes:
   redis-data:
 
 networks:
-  search-net:
-    driver: bridge
+  librechat-net:
+    name: librechat-net
+    external: true
