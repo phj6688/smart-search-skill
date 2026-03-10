@@ -1,5 +1,5 @@
 [project]
-name = "search-workflow"
+name = "smart-search-skill"
 version = "0.3.0"
 description = "AI-powered search workflow with SearXNG and DuckDuckGo integration"
 readme = "README.md"
