@@ -36,3 +36,8 @@ Thumbs.db
 docker/data/
 docker/logs/
 docker/.env
+
+# FORGE methodology artifacts (internal scaffolding, never commit)
+TASKSPEC*.md
+HANDOFF*.md
+AUDIT*.md
