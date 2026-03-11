@@ -138,18 +138,6 @@ uv run ruff check src/
 uv run black src/
 ```
 
-## Benchmark Results
-
-Measured on 10 technical queries (asyncio, FastAPI, PostgreSQL, Docker, Neo4j, etc.):
-
-| Metric | Before | After |
-|---|---|---|
-| Coverage | 70% | **100%** |
-| Avg results/query | 3.7 | **10.0** |
-| search_cost | 1.467 | 1.677 |
-
-> Note: search_cost increase reflects higher result volume, not worse quality. Formula: `avg_latency_ms / (coverage × snippet_quality × 1000)`
-
 ## License
 
-MIT License — © 2025 Peyman / Viridium Gruppe
+MIT License — © 2025 Peyman
