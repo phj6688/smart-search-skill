@@ -28,7 +28,7 @@ services:
       - redis
     
     networks:
-      - librechat-net
+      - search-workflow-net
     
     deploy:
       resources:
@@ -53,7 +53,7 @@ services:
       - redis-data:/data
     
     networks:
-      - librechat-net
+      - search-workflow-net
     
     deploy:
       resources:
@@ -65,6 +65,6 @@ volumes:
   redis-data:
 
 networks:
-  librechat-net:
-    name: librechat-net
-    external: true
+  search-workflow-net:
+    name: search-workflow-net
+    driver: bridge
