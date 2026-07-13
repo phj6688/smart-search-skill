@@ -1,3 +1,5 @@
+name: search-workflow
+
 services:
   searxng:
     image: searxng/searxng:latest
@@ -60,9 +62,15 @@ services:
         limits:
           memory: 256M
 
+# Pre-existing volumes adopted from the pre-reorg deployment; external so
+# `docker compose down -v` can never delete them.
 volumes:
   searxng-cache:
+    name: search-workflow_searxng-cache
+    external: true
   redis-data:
+    name: search-workflow_redis-data
+    external: true
 
 networks:
   search-workflow-net:
