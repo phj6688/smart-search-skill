@@ -1,0 +1,128 @@
+# Scheduled live integration canary (HLB-649). Canary only, never a merge
+# gate: ci.yml stays the required check and carries no wall-clock assertions.
+#
+# schedule and workflow_dispatch only fire from the default branch, so the
+# daily run starts once this file lands on master (operator step). The push
+# trigger on dev-v04 produces the baseline run for this batch.
+name: Live canary
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    # Off-minute on purpose: top-of-hour crons queue behind everyone else's.
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+  push:
+    branches: [dev-v04]
+
+jobs:
+  live-canary:
+    name: live integration canary
+    runs-on: ubuntu-latest
+    # Job-level wall-clock ceiling, canary only. ci.yml has none by design.
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          enable-cache: true
+
+      - run: uv sync
+
+      - name: Start throwaway SearXNG
+        id: searxng
+        # Startup failure is logged, not fatal: the job continues DDG-only.
+        run: |
+          SEARXNG_SETTINGS_DIR="$RUNNER_TEMP/searxng-etc"
+          mkdir -p "$SEARXNG_SETTINGS_DIR"
+          # Minimal settings: default engines plus the JSON format the
+          # canary and the recorded cassette both speak.
+          cat > "$SEARXNG_SETTINGS_DIR/settings.yml" <<'SETTINGS'
+          use_default_settings: true
+          search:
+            formats:
+              - html
+              - json
+          SETTINGS
+          SEARXNG_SECRET="$(python3 -c 'import secrets; print(secrets.token_hex(32))')"
+          export SEARXNG_SECRET SEARXNG_SETTINGS_DIR
+          up=false
+          if docker compose -f .github/searxng-compose.yml up -d; then
+            for _ in $(seq 1 30); do
+              if curl -fsS http://127.0.0.1:9090/healthz >/dev/null 2>&1; then
+                up=true
+                break
+              fi
+              sleep 2
+            done
+          fi
+          if [ "$up" != true ]; then
+            echo "::warning::SearXNG did not become ready; continuing DDG-only"
+            docker compose -f .github/searxng-compose.yml logs || true
+          fi
+          echo "up=$up" >> "$GITHUB_OUTPUT"
+
+      - name: Cassette staleness canary (SearXNG response shape)
+        id: cassette-canary
+        if: steps.searxng.outputs.up == 'true'
+        run: uv run python scripts/live_canary_checks.py --base-url http://127.0.0.1:9090
+
+      - name: Cassette staleness canary skipped
+        if: steps.searxng.outputs.up != 'true'
+        run: echo "::notice::SearXNG unavailable; cassette staleness canary skipped"
+
+      - name: Assert live search leg under ceiling
+        # Wall-clock ceiling for the live search leg, 60 seconds. Canary
+        # only, never a merge gate; ci.yml stays free of wall-clock asserts.
+        if: steps.searxng.outputs.up == 'true'
+        env:
+          LIVE_LEG_SECONDS: ${{ steps.cassette-canary.outputs.live_leg_seconds }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import sys
+
+          ceiling = 60.0
+          raw = os.environ.get("LIVE_LEG_SECONDS", "")
+          if not raw:
+              print("::warning::live leg duration not recorded; ceiling assert skipped")
+              sys.exit(0)
+          elapsed = float(raw)
+          print(f"live search leg took {elapsed:.2f}s (ceiling {ceiling:.0f}s)")
+          if elapsed >= ceiling:
+              print(f"::error::live search leg exceeded the {ceiling:.0f}s ceiling")
+              sys.exit(1)
+          PY
+
+      - name: ddgs import-path canary
+        # Intentionally live: the ddgs default primp backend cannot be
+        # intercepted by VCR or --block-network, so only a real query proves
+        # the import path still resolves and returns results.
+        if: ${{ !cancelled() }}
+        run: |
+          uv run python - <<'PY'
+          import sys
+
+          try:
+              from ddgs import DDGS
+              from ddgs.exceptions import RatelimitException
+          except ImportError as exc:
+              print(f"::error::ddgs import path broken: {exc}")
+              sys.exit(1)
+
+          try:
+              results = DDGS(timeout=20).text("python programming", max_results=3)
+          except RatelimitException as exc:
+              print(f"::warning::ddgs live query rate-limited, tolerated: {exc}")
+              sys.exit(0)
+
+          if not results:
+              print("::error::ddgs live query returned no results")
+              sys.exit(1)
+          print(f"ddgs live query returned {len(results)} results")
+          PY
