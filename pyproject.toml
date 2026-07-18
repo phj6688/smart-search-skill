@@ -57,6 +57,11 @@ dev = [
 docker = [
     "docker>=6.0.0",
 ]
+mcp = [
+    "mcp[cli]>=1.0",
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+]
 
 [project.urls]
 Homepage = "https://github.com/buzzify-ai/search-workflow"

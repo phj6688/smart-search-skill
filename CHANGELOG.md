@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- `search_workflow.mcp_server`: an SSE MCP server exposing hybrid web search as a single `web_search` tool (query, max_results). FastAPI app with `/health`, MCP mounted at `/mcp/sse`; uvicorn target `search_workflow.mcp_server:app`. Lets LibreChat and other MCP clients call the workflow directly.
+- `docker/Dockerfile.mcp`: container image for the MCP server.
+- `[project.optional-dependencies] mcp`: `mcp[cli]`, `fastapi`, `uvicorn` extras for running the server (`pip install '.[mcp]'`).
+
+### Fixed
+- `tools.py`: the module-level `searxng_client` now honours `SEARXNG_URL` (was hardcoded to `http://localhost:9090`). Inside a container the default was unreachable, silently forcing the DuckDuckGo-only fallback; the agentic `search` tool now reaches a SearXNG instance by service name.
+
 ## [0.3.0] - 2026-03-10
 
 ### Changed

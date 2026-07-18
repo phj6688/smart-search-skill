@@ -1,13 +1,16 @@
 """Search tools for web scraping and retrieving information from news sources."""
 
 import asyncio
+import os
 import re
+from collections.abc import Callable
+from typing import Annotated, Any, Literal, cast
+
 import aiohttp
-from typing import Any, List, Optional, cast, Literal, Callable
 from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import InjectedToolArg
-from typing_extensions import Annotated
+
 from .configuration import Configuration
 
 # Define available region and timeframe options
@@ -15,23 +18,23 @@ Region = Literal[
     'us-en', 'uk-en', 'au-en', 'ca-en', 'in-en', 'de-de', 'at-de',
     'ch-de', 'ch-fr', 'ch-it', 'es-es', 'mx-es', 'ar-es', 'ue-es'
 ]
-Timeframe = Optional[Literal['d', 'w', 'm', 'y']]
+Timeframe = Literal['d', 'w', 'm', 'y'] | None
 
 class SearXNGClient:
     """SearXNG API client with fallback capabilities"""
-    
+
     def __init__(self, base_url: str = "http://localhost:9090", timeout: int = 12):
         self.base_url = base_url.rstrip('/')
         self.timeout = timeout
-        
+
     async def search(
-        self, 
-        query: str, 
+        self,
+        query: str,
         language: str = "en",
-        time_range: Optional[str] = None,
+        time_range: str | None = None,
         max_results: int = 10,
         categories: str = "general",
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Search using SearXNG API"""
         params = {
             "q": query,
@@ -40,12 +43,12 @@ class SearXNGClient:
             "format": "json",
             "safesearch": "0"
         }
-        
+
         if time_range:
             # Map DuckDuckGo timeframes to SearXNG
             time_map = {'d': 'day', 'w': 'week', 'm': 'month', 'y': 'year'}
             params["time_range"] = time_map.get(time_range, time_range)
-            
+
         try:
             async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout)) as session:
                 async with session.get(f"{self.base_url}/search", params=params) as response:
@@ -58,8 +61,8 @@ class SearXNGClient:
         except Exception as e:
             print(f"SearXNG error: {e}")
             return []
-    
-    def _normalize_results(self, raw_results: List[dict], max_results: int) -> List[dict]:
+
+    def _normalize_results(self, raw_results: list[dict], max_results: int) -> list[dict]:
         """Normalize SearXNG results to DuckDuckGo format"""
         normalized = []
         for result in raw_results[:max_results]:
@@ -73,18 +76,20 @@ class SearXNGClient:
             }
             normalized.append(normalized_result)
         return normalized
-    
+
     async def health_check(self) -> bool:
         """Check if SearXNG is available via a real search probe."""
         try:
             async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
                 async with session.get(f"{self.base_url}/search", params={"q": "test", "format": "json"}) as response:
                     return response.status == 200
-        except:
+        except Exception:
             return False
 
-# Initialize SearXNG client
-searxng_client = SearXNGClient()
+# Initialize SearXNG client. Honour SEARXNG_URL so the agentic `search` tool
+# reaches a SearXNG instance by service name inside Docker (default localhost
+# is wrong from a container and silently forces the DuckDuckGo-only fallback).
+searxng_client = SearXNGClient(base_url=os.getenv("SEARXNG_URL", "http://localhost:9090"))
 
 def _extract_language(region: Region) -> str:
     """Extract language from region code"""
@@ -96,16 +101,16 @@ async def search(
     timelimit: Timeframe,
     *,
     config: Annotated[RunnableConfig, InjectedToolArg]
-) -> Optional[List[dict[str, Any]]]:
+) -> list[dict[str, Any]] | None:
     """Performs a web search for news-related content using SearXNG with DuckDuckGo fallback.
-    
+
     Args:
         query: Search query string
         region: Geographic region for localized results
         timelimit: Optional timeframe for filtering results
     """
     configuration = Configuration.from_runnable_config(config)
-    
+
     # Try SearXNG first
     try:
         if await searxng_client.health_check():
@@ -116,7 +121,7 @@ async def search(
                 time_range=timelimit,
                 max_results=configuration.max_search_results_tool
             )
-            
+
             if results:
                 print(f"✅ SearXNG: {len(results)} results")
                 return results
@@ -124,7 +129,7 @@ async def search(
                 print("⚠️ SearXNG: No results, trying DuckDuckGo")
     except Exception as e:
         print(f"❌ SearXNG failed: {e}")
-    
+
     # Fallback to DuckDuckGo
     try:
         print("🔄 Using DuckDuckGo fallback")
@@ -132,16 +137,16 @@ async def search(
             max_results=configuration.max_search_results_tool,
             backend='text'
         )
-        
+
         result = await search_engine.ainvoke({
             "query": query,
             "region": region,
             "timelimit": timelimit
         })
-        
-        print(f"✅ DuckDuckGo: Results retrieved")
-        return cast(List[dict[str, Any]], result)
-        
+
+        print("✅ DuckDuckGo: Results retrieved")
+        return cast(list[dict[str, Any]], result)
+
     except Exception as e:
         print(f"❌ Both engines failed: {e}")
         return []
@@ -172,12 +177,12 @@ async def search_direct(
     max_results: int = 10,
     searxng_url: str = "http://localhost:9090",
     language: str = "en",
-    time_range: Optional[str] = None,
+    time_range: str | None = None,
     searxng_timeout: int = 12,
     categories: str = "general",
-) -> List[dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Direct search: run SearXNG + DDG in parallel, merge and deduplicate.
-    
+
     Args:
         categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
     """
@@ -213,4 +218,4 @@ async def search_direct(
 
 
 # Exported tools for external use
-TOOLS: List[Callable[..., Any]] = [search]
+TOOLS: list[Callable[..., Any]] = [search]
