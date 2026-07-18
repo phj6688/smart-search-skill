@@ -1,9 +1,12 @@
 """Search tools for web scraping and retrieving information from news sources."""
 
 import asyncio
+import logging
 import os
 import re
-from collections.abc import Callable
+import threading
+import time
+from collections.abc import Callable, Iterable
 from typing import Annotated, Any, Literal, cast
 
 import aiohttp
@@ -12,6 +15,81 @@ from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import InjectedToolArg
 
 from .configuration import Configuration
+
+logger = logging.getLogger("search_workflow.tools")
+
+
+class SearchMetrics:
+    """Cumulative counters for the client/search_direct seam.
+
+    Read with snapshot(), zero with reset(). Every mutation takes the lock:
+    the DDG call runs in a worker thread, so unlocked increments could race.
+    """
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._outbound_search_requests = 0
+        self._llm_calls = 0
+        self._cache_hit = 0
+        self._engines_used: dict[str, int] = {}
+
+    def record_outbound_search_requests(self, count: int = 1) -> None:
+        with self._lock:
+            self._outbound_search_requests += count
+
+    def record_llm_call(self) -> None:
+        with self._lock:
+            self._llm_calls += 1
+
+    def record_cache_hit(self) -> None:
+        with self._lock:
+            self._cache_hit += 1
+
+    def record_engines_used(self, engines: Iterable[str]) -> None:
+        with self._lock:
+            for engine in engines:
+                self._engines_used[engine] = self._engines_used.get(engine, 0) + 1
+
+    def snapshot(self) -> dict[str, Any]:
+        with self._lock:
+            return {
+                "outbound_search_requests": self._outbound_search_requests,
+                "llm_calls": self._llm_calls,
+                "cache_hit": self._cache_hit,
+                "engines_used": dict(self._engines_used),
+            }
+
+    def reset(self) -> None:
+        with self._lock:
+            self._outbound_search_requests = 0
+            self._llm_calls = 0
+            self._cache_hit = 0
+            self._engines_used = {}
+
+
+METRICS = SearchMetrics()
+
+
+def _emit_provenance(provenance: dict[str, Any]) -> None:
+    """Log the one provenance record a query gets.
+
+    The dict rides on the record as `extra` for machine consumers; the message
+    repeats every field as key=value so plain-text logs stay parseable.
+    """
+    logger.info(
+        "search_direct provenance: query=%r n_searxng=%d n_ddg=%d "
+        "n_after_dedup=%d elapsed_ms=%.2f ddg_ok=%s fell_back=%s engines_used=%s",
+        provenance["query"],
+        provenance["n_searxng"],
+        provenance["n_ddg"],
+        provenance["n_after_dedup"],
+        provenance["elapsed_ms"],
+        provenance["ddg_ok"],
+        provenance["fell_back"],
+        ",".join(provenance["engines_used"]) or "none",
+        extra={"provenance": provenance},
+    )
+
 
 # Define available region and timeframe options
 Region = Literal[
@@ -186,35 +264,57 @@ async def search_direct(
     Args:
         categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
     """
+    started = time.monotonic()
     client = SearXNGClient(searxng_url, timeout=searxng_timeout)
 
     searxng_task = client.search(query, language, time_range, max_results, categories=categories)
     ddg_task = _ddg_search(query, max_results)
+    # Both engines are always dispatched from this seam, one request each.
+    METRICS.record_outbound_search_requests(2)
     searxng_results, ddg_results = await asyncio.gather(
         searxng_task, ddg_task, return_exceptions=True
     )
 
-    if isinstance(searxng_results, Exception):
-        searxng_results = []
-    if isinstance(ddg_results, Exception):
-        ddg_results = []
+    # ddg_ok reflects the call outcome; fell_back and engines_used come from
+    # attribution of the returned results below, because the fallback fires on
+    # a raise OR an empty response and a branch-keyed record would lie.
+    ddg_ok = not isinstance(ddg_results, Exception)
+    searxng_list = [] if isinstance(searxng_results, Exception) else list(searxng_results)
+    ddg_list = [] if isinstance(ddg_results, Exception) else list(ddg_results)
 
-    # Merge, deduplicate by link
+    # Merge, deduplicate by link; track each survivor's source engine
     seen_links: set = set()
     merged = []
-    for r in list(searxng_results) + list(ddg_results):
-        link = r.get("link", "")
-        if link and link in seen_links:
-            continue
-        seen_links.add(link)
-        merged.append(r)
+    merged_sources: list[str] = []
+    for source, engine_results in (("searxng", searxng_list), ("ddg", ddg_list)):
+        for r in engine_results:
+            link = r.get("link", "")
+            if link and link in seen_links:
+                continue
+            seen_links.add(link)
+            merged.append(r)
+            merged_sources.append(source)
 
     if not merged:
         print(f"Warning: No results for '{query}' from either engine")
-    elif not searxng_results:
+    elif not searxng_list:
         print(f"Warning: SearXNG returned 0 results for '{query}', used DDG only")
 
-    return merged[:max_results]
+    returned = merged[:max_results]
+    engines_used = set(merged_sources[: len(returned)])
+    fell_back = engines_used == {"ddg"}
+    METRICS.record_engines_used(engines_used)
+    _emit_provenance({
+        "query": query,
+        "n_searxng": len(searxng_list),
+        "n_ddg": len(ddg_list),
+        "n_after_dedup": len(merged),
+        "elapsed_ms": (time.monotonic() - started) * 1000.0,
+        "ddg_ok": ddg_ok,
+        "fell_back": fell_back,
+        "engines_used": sorted(engines_used),
+    })
+    return returned
 
 
 # Exported tools for external use

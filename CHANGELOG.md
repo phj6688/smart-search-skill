@@ -14,6 +14,8 @@
 - `search_workflow.mcp_server`: an SSE MCP server exposing hybrid web search as a single `web_search` tool (query, max_results). FastAPI app with `/health`, MCP mounted at `/mcp/sse`; uvicorn target `search_workflow.mcp_server:app`. Lets LibreChat and other MCP clients call the workflow directly.
 - `docker/Dockerfile.mcp`: container image for the MCP server.
 - `[project.optional-dependencies] mcp`: `mcp[cli]`, `fastapi`, `uvicorn` extras for running the server (`pip install '.[mcp]'`).
+- Per-query search instrumentation in `tools.py`: module-level `METRICS` (`SearchMetrics`) with lock-guarded counters `outbound_search_requests`, `llm_calls`, `cache_hit`, `engines_used`, plus `snapshot()` and `reset()`. `search_direct()` now emits one structured provenance log record per query (logger `search_workflow.tools`) with `n_searxng`, `n_ddg`, `n_after_dedup`, `elapsed_ms`, `ddg_ok`, `fell_back`; `fell_back` and `engines_used` derive from which engine's results were actually returned, not from the executed branch.
+- `tests/fixtures_fallback.py`: parametrized five-state `fallback_state` fixture (searxng_ok, searxng_raises, searxng_empty, searxng_ok_ddg_unused, both_fail) mocking the `SearXNGClient`/`_ddg_search` boundary, re-exported via `tests/conftest.py` for later stories. `tests/test_instrumentation.py`: caplog provenance assertions per state and known-count counter tests.
 
 ## [0.3.0] - 2026-03-10
 
