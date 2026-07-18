@@ -121,3 +121,6 @@ disallow_untyped_defs = true
 asyncio_mode = "auto"
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
+markers = [
+    "wheel_install: builds the wheel and installs it into a throwaway venv (skipped when installs are impossible)",
+]

@@ -4,7 +4,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/search-workflow)](https://pypi.org/project/search-workflow/)
+[![PyPI](https://img.shields.io/pypi/v/smart-search-skill)](https://pypi.org/project/smart-search-skill/)
 
 ---
 
@@ -31,10 +31,12 @@
 ## Installation
 
 ```bash
-pip install search-workflow
+pip install smart-search-skill
 # or
-uv add search-workflow
+uv add smart-search-skill
 ```
+
+The distribution is `smart-search-skill`; the import name stays `search_workflow` and the console script is `search-workflow`.
 
 ---
 
@@ -81,6 +83,12 @@ asyncio.run(main())
 ### CLI
 
 ```bash
+# Show usage and installed version
+python -m search_workflow --help
+python -m search_workflow --version
+search-workflow --help
+search-workflow --version
+
 # Basic query (JSON output)
 python -m search_workflow "neo4j python driver documentation"
 

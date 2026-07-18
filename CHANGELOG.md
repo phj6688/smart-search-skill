@@ -2,13 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed
+- CLI entry points: the `search-workflow` console script pointed at an async `main`, so it returned an unawaited coroutine and did nothing. `main` is now a sync wrapper around `_async_main` via `asyncio.run`. Behavior note: exceptions the unawaited coroutine silently swallowed now surface; runs that previously exited 0 without doing anything can now print an error and exit 1.
+- `python -m search_workflow` failed with "No module named search_workflow.__main__"; added `src/search_workflow/__main__.py`.
+- README install commands named the nonexistent `search-workflow` distribution; corrected to `smart-search-skill` (pip, uv, and the PyPI badge).
+- `tools.py`: the module-level `searxng_client` now honours `SEARXNG_URL` (was hardcoded to `http://localhost:9090`). Inside a container the default was unreachable, silently forcing the DuckDuckGo-only fallback; the agentic `search` tool now reaches a SearXNG instance by service name.
+
 ### Added
+- `--version` flag on both CLI entry points, resolved via `importlib.metadata` with a `0.0.0.dev0` fallback for uninstalled source checkouts.
+- `tests/test_entry_points.py`: entry-point contract tests, README honesty checks that run the documented non-network commands verbatim, an in-loop `search` tool test, and a wheel-install subprocess gate (marker `wheel_install`).
 - `search_workflow.mcp_server`: an SSE MCP server exposing hybrid web search as a single `web_search` tool (query, max_results). FastAPI app with `/health`, MCP mounted at `/mcp/sse`; uvicorn target `search_workflow.mcp_server:app`. Lets LibreChat and other MCP clients call the workflow directly.
 - `docker/Dockerfile.mcp`: container image for the MCP server.
 - `[project.optional-dependencies] mcp`: `mcp[cli]`, `fastapi`, `uvicorn` extras for running the server (`pip install '.[mcp]'`).
-
-### Fixed
-- `tools.py`: the module-level `searxng_client` now honours `SEARXNG_URL` (was hardcoded to `http://localhost:9090`). Inside a container the default was unreachable, silently forcing the DuckDuckGo-only fallback; the agentic `search` tool now reaches a SearXNG instance by service name.
 
 ## [0.3.0] - 2026-03-10
 
