@@ -77,9 +77,8 @@ def _emit_provenance(provenance: dict[str, Any]) -> None:
     repeats every field as key=value so plain-text logs stay parseable.
     """
     logger.info(
-        "search_direct provenance: query=%r n_searxng=%d n_ddg=%d "
+        "search_direct provenance: n_searxng=%d n_ddg=%d "
         "n_after_dedup=%d elapsed_ms=%.2f ddg_ok=%s fell_back=%s engines_used=%s",
-        provenance["query"],
         provenance["n_searxng"],
         provenance["n_ddg"],
         provenance["n_after_dedup"],
@@ -230,24 +229,25 @@ async def search(
         return []
 
 async def _ddg_search(query: str, max_results: int) -> list:
-    """Run DDG search using DDGS().text() — returns up to max_results structured dicts."""
-    try:
-        from ddgs import DDGS
-        # DDGS().text() returns list of dicts: {title, href, body}
-        # Run in executor to avoid blocking the event loop
-        loop = asyncio.get_event_loop()
-        raw = await loop.run_in_executor(
-            None,
-            lambda: list(DDGS().text(query, max_results=max_results))
-        )
-        # Normalize to {title, link, snippet}
-        return [
-            {"title": r.get("title", ""), "link": r.get("href", ""), "snippet": r.get("body", "")}
-            for r in raw
-        ]
-    except Exception as e:
-        print(f"DuckDuckGo failed: {e}")
-        return []
+    """Run DDG search using DDGS().text(), returning up to max_results structured dicts.
+
+    Failures propagate: search_direct gathers with return_exceptions=True and
+    records ddg_ok=False, so swallowing here would make outages look like
+    ordinary empty result sets.
+    """
+    from ddgs import DDGS
+    # DDGS().text() returns list of dicts: {title, href, body}
+    # Run in executor to avoid blocking the event loop
+    loop = asyncio.get_event_loop()
+    raw = await loop.run_in_executor(
+        None,
+        lambda: list(DDGS().text(query, max_results=max_results))
+    )
+    # Normalize to {title, link, snippet}
+    return [
+        {"title": r.get("title", ""), "link": r.get("href", ""), "snippet": r.get("body", "")}
+        for r in raw
+    ]
 
 
 async def search_direct(
@@ -305,7 +305,6 @@ async def search_direct(
     fell_back = engines_used == {"ddg"}
     METRICS.record_engines_used(engines_used)
     _emit_provenance({
-        "query": query,
         "n_searxng": len(searxng_list),
         "n_ddg": len(ddg_list),
         "n_after_dedup": len(merged),
