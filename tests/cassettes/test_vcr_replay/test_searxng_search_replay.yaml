@@ -1,0 +1,195 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: http://localhost:9090/search?q=python+programming&categories=general&language=en&format=json&safesearch=0
+  response:
+    body:
+      string: '{"query": "python programming", "number_of_results": 0, "results":
+        [{"url": "https://www.python.org/", "title": "Welcome to Python.org", "content":
+        "Python is a versatile and easy-to-learn programming language that lets you
+        work quickly and integrate systems more effectively. Learn Python basics,
+        download the latest version, access documentation, find jobs, events, success
+        stories and more on the official website.", "publishedDate": null, "engine":
+        "startpage", "template": "default.html", "parsed_url": ["https", "www.python.org",
+        "/", "", "", ""], "img_src": "", "thumbnail": "", "priority": "", "engines":
+        ["startpage", "duckduckgo"], "positions": [1, 1], "score": 4.0, "category":
+        "general"}, {"url": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+        "title": "Python (programming language) - Wikipedia", "content": "Python is
+        a high-level, general-purpose programming language that emphasizes code readability,
+        simplicity, and ease-of-writing with the use of significant indentation, [38]
+        an extensive (\"batteries-included\") standard library, and garbage collection.",
+        "publishedDate": null, "engine": "startpage", "template": "default.html",
+        "parsed_url": ["https", "en.wikipedia.org", "/wiki/Python_(programming_language)",
+        "", "", ""], "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage",
+        "duckduckgo"], "positions": [3, 3], "score": 1.3333333333333333, "category":
+        "general"}, {"url": "https://www.w3schools.com/python/python_intro.asp", "title":
+        "Introduction to Python - W3Schools", "content": "Learn what Python is, what
+        it can do, and why it is a popular programming language. This tutorial covers
+        the basics of Python syntax, features, and applications with examples and
+        videos.", "publishedDate": null, "engine": "startpage", "template": "default.html",
+        "parsed_url": ["https", "www.w3schools.com", "/python/python_intro.asp", "",
+        "", ""], "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage",
+        "duckduckgo"], "positions": [2, 8], "score": 1.25, "category": "general"},
+        {"url": "https://www.programiz.com/python-programming", "title": "Learn Python
+        Programming - Programiz", "content": "A comprehensive guide to learn Python,
+        one of the top programming languages in the world, widely used in AI, data
+        science, and web development. Find free tutorials, interactive courses, online
+        compiler, and career tips for beginners and advanced learners.", "publishedDate":
+        null, "engine": "startpage", "template": "default.html", "parsed_url": ["https",
+        "www.programiz.com", "/python-programming", "", "", ""], "img_src": "", "thumbnail":
+        "", "priority": "", "engines": ["startpage", "duckduckgo"], "positions": [5,
+        9], "score": 0.6222222222222222, "category": "general"}, {"template": "default.html",
+        "title": "Python Tutorial - W3Schools", "content": "Python is a popular programming
+        language. Python can be used on a server to create web applications. Python
+        is easy to learn - You will enjoy it!", "img_src": "", "iframe_src": "", "audio_src":
+        "", "thumbnail": "", "publishedDate": null, "pubdate": "", "length": null,
+        "views": "", "author": "", "metadata": "", "priority": "", "engines": ["duckduckgo"],
+        "open_group": false, "close_group": false, "positions": [2], "score": 0.5,
+        "category": "general", "url": "https://www.w3schools.com/python/", "engine":
+        "duckduckgo", "parsed_url": ["https", "www.w3schools.com", "/python/", "",
+        "", ""]}, {"url": "https://www.youtube.com/watch?v=K5KVEU3aaeQ", "title":
+        "Python Full Course for Beginners - YouTube", "content": "Comments ; Python
+        Machine Learning Tutorial (Data Science). Programming with Mosh \u00b7 3.5M
+        views ; \u200d Python for Beginners Tutorial. Kevin Stratvert\u00a0...", "publishedDate":
+        "2025-02-12T00:00:00", "engine": "startpage", "template": "default.html",
+        "parsed_url": ["https", "www.youtube.com", "/watch", "", "v=K5KVEU3aaeQ",
+        ""], "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage"],
+        "positions": [4], "score": 0.25, "category": "general", "pubdate": "2025-02-12
+        00:00:00"}, {"template": "default.html", "title": "Download Python | Python.org",
+        "content": "The official home of the Python Programming Language", "img_src":
+        "", "iframe_src": "", "audio_src": "", "thumbnail": "", "publishedDate": null,
+        "pubdate": "", "length": null, "views": "", "author": "", "metadata": "",
+        "priority": "", "engines": ["duckduckgo"], "open_group": false, "close_group":
+        false, "positions": [4], "score": 0.25, "category": "general", "url": "https://www.python.org/downloads/",
+        "engine": "duckduckgo", "parsed_url": ["https", "www.python.org", "/downloads/",
+        "", "", ""]}, {"template": "default.html", "title": "Online Python Compiler
+        (Interpreter) - Programiz", "content": "Write and run your Python code using
+        our online compiler. Enjoy additional features like code sharing, dark mode,
+        and support for multiple programming languages.", "img_src": "", "iframe_src":
+        "", "audio_src": "", "thumbnail": "", "publishedDate": null, "pubdate": "",
+        "length": null, "views": "", "author": "", "metadata": "", "priority": "",
+        "engines": ["duckduckgo"], "open_group": false, "close_group": false, "positions":
+        [5], "score": 0.2, "category": "general", "url": "https://www.programiz.com/python-programming/online-compiler/",
+        "engine": "duckduckgo", "parsed_url": ["https", "www.programiz.com", "/python-programming/online-compiler/",
+        "", "", ""]}, {"url": "https://www.codecademy.com/catalog/language/python",
+        "title": "Best Python Courses + Tutorials - Codecademy", "content": "Python
+        is a general-purpose, versatile, and powerful programming language. It''s
+        a great first language because Python code is concise and easy to read.",
+        "publishedDate": null, "engine": "startpage", "template": "default.html",
+        "parsed_url": ["https", "www.codecademy.com", "/catalog/language/python",
+        "", "", ""], "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage"],
+        "positions": [6], "score": 0.16666666666666666, "category": "general"}, {"template":
+        "default.html", "title": "Python Tutorial - GeeksforGeeks", "content": "Python
+        is one of the most popular programming languages. It''s simple to use, packed
+        with features and supported by a wide range of libraries and frameworks. Its
+        clean syntax makes it beginner-friendly. A high-level language, used in data
+        science, automation, AI, web development and more. Known for its readability,
+        which means code is easier to write, understand and maintain. Backed by strong
+        ...", "img_src": "", "iframe_src": "", "audio_src": "", "thumbnail": "", "publishedDate":
+        null, "pubdate": "", "length": null, "views": "", "author": "", "metadata":
+        "", "priority": "", "engines": ["duckduckgo"], "open_group": false, "close_group":
+        false, "positions": [6], "score": 0.16666666666666666, "category": "general",
+        "url": "https://www.geeksforgeeks.org/python/python-programming-language-tutorial/",
+        "engine": "duckduckgo", "parsed_url": ["https", "www.geeksforgeeks.org", "/python/python-programming-language-tutorial/",
+        "", "", ""]}, {"url": "https://www.halvorsen.blog/documents/programming/python/resources/Python%20Programming.pdf",
+        "title": "Python Programming.pdf", "content": "Python is a popular programming
+        language, and it is one of the most used pro- gramming languages today. Python
+        works on all the main platforms and operating\u00a0...", "publishedDate":
+        null, "engine": "startpage", "template": "default.html", "parsed_url": ["https",
+        "www.halvorsen.blog", "/documents/programming/python/resources/Python%20Programming.pdf",
+        "", "", ""], "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage"],
+        "positions": [7], "score": 0.14285714285714285, "category": "general"}, {"template":
+        "default.html", "title": "The Python Tutorial \u2014 Python 3.14.6 documentation",
+        "content": "Python is an easy to learn, powerful programming language. It
+        has efficient high-level data structures and a simple but effective approach
+        to object-oriented programming. Python''s elegant syntax an...", "img_src":
+        "", "iframe_src": "", "audio_src": "", "thumbnail": "", "publishedDate": null,
+        "pubdate": "", "length": null, "views": "", "author": "", "metadata": "",
+        "priority": "", "engines": ["duckduckgo"], "open_group": false, "close_group":
+        false, "positions": [7], "score": 0.14285714285714285, "category": "general",
+        "url": "https://docs.python.org/3/tutorial/index.html", "engine": "duckduckgo",
+        "parsed_url": ["https", "docs.python.org", "/3/tutorial/index.html", "", "",
+        ""]}, {"url": "https://www.coursera.org/articles/what-is-python-used-for-a-beginners-guide-to-using-python",
+        "title": "What Is Python Used For? A Beginner''s Guide - Coursera", "content":
+        "Python is a computer programming language often used to build websites and
+        software, automate tasks, and conduct data analysis.", "publishedDate": "2025-05-20T00:00:00",
+        "engine": "startpage", "template": "default.html", "parsed_url": ["https",
+        "www.coursera.org", "/articles/what-is-python-used-for-a-beginners-guide-to-using-python",
+        "", "", ""], "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage"],
+        "positions": [8], "score": 0.125, "category": "general", "pubdate": "2025-05-20
+        00:00:00"}, {"url": "https://developers.google.com/edu/python", "title": "Google''s
+        Python Class | Python Education - Google for Developers", "content": "Welcome
+        to Google''s Python Class -- this is a free class for people with a little
+        bit of programming experience who want to learn Python.", "publishedDate":
+        "2024-07-23T00:00:00", "engine": "startpage", "template": "default.html",
+        "parsed_url": ["https", "developers.google.com", "/edu/python", "", "", ""],
+        "img_src": "", "thumbnail": "", "priority": "", "engines": ["startpage"],
+        "positions": [9], "score": 0.1111111111111111, "category": "general", "pubdate":
+        "2024-07-23 00:00:00"}, {"url": "https://www.edx.org/learn/python", "title":
+        "Python courses online from Harvard, MIT and IBM - edX", "content": "Python
+        is a popular programming language used to build machine learning (ML) algorithms,
+        analyze data, develop software, automate processes, and more. It''s an\u00a0...",
+        "publishedDate": null, "engine": "startpage", "template": "default.html",
+        "parsed_url": ["https", "www.edx.org", "/learn/python", "", "", ""], "img_src":
+        "", "thumbnail": "", "priority": "", "engines": ["startpage"], "positions":
+        [10], "score": 0.1, "category": "general"}, {"template": "default.html", "title":
+        "Online Python - IDE, Editor, Compiler, Interpreter", "content": "Online Python
+        IDE Build, run, and share Python code online for free with the help of online-integrated
+        python''s development environment (IDE). It is one of the most efficient,
+        dependable, and potent online compilers for the Python programming language.
+        It is not necessary for you to bother about establishing a Python environment
+        in your local.", "img_src": "", "iframe_src": "", "audio_src": "", "thumbnail":
+        "", "publishedDate": null, "pubdate": "", "length": null, "views": "", "author":
+        "", "metadata": "", "priority": "", "engines": ["duckduckgo"], "open_group":
+        false, "close_group": false, "positions": [10], "score": 0.1, "category":
+        "general", "url": "https://www.online-python.com/", "engine": "duckduckgo",
+        "parsed_url": ["https", "www.online-python.com", "/", "", "", ""]}], "answers":
+        [{"url": "https://en.wikipedia.org/wiki/Python_(programming_language)", "engine":
+        "duckduckgo", "parsed_url": ["https", "en.wikipedia.org", "/wiki/Python_(programming_language)",
+        "", "", ""], "template": "answer/legacy.html", "answer": "Python is a high-level,
+        general-purpose programming language that emphasizes code readability, simplicity,
+        and ease-of-writing with the use of significant indentation, an extensive
+        standard library, and garbage collection. Python supports multiple programming
+        paradigms but with an emphasis on object-oriented programming and dynamic
+        typing. Guido van Rossum began working on Python in the late 1980s as a successor
+        to the ABC programming language. More at Wikipedia"}], "corrections": [],
+        "infoboxes": [{"infobox": "Python (programming language)", "id": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+        "content": "Python is a high-level, general-purpose programming language that
+        emphasizes code readability, simplicity, and ease-of-writing with the use
+        of significant indentation, an extensive (\"batteries-included\") standard
+        library, and garbage collection. Python supports multiple programming paradigms
+        but with an emphasis on object-oriented programming and dynamic typing.",
+        "img_src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/330px-Python-logo-notext.svg.png",
+        "urls": [{"title": "Wikipedia", "url": "https://en.wikipedia.org/wiki/Python_(programming_language)"}],
+        "engine": "wikipedia", "url": null, "template": "default.html", "parsed_url":
+        null, "title": "", "thumbnail": "", "priority": "", "engines": ["wikipedia"],
+        "positions": "", "score": 0, "category": "", "publishedDate": null, "attributes":
+        []}], "suggestions": [], "unresponsive_engines": [["brave", "too many requests"],
+        ["google", "access denied"]]}'
+    headers:
+      Content-Length:
+      - '13069'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 18 Jul 2026 18:33:52 GMT
+      Server:
+      - granian
+      referrer-policy:
+      - no-referrer
+      server-timing:
+      - total;dur=729.214, render;dur=0, total_0_wikipedia;dur=61.149, total_1_startpage;dur=467.955,
+        total_2_duckduckgo;dur=726.027, load_0_wikipedia;dur=58.229, load_1_startpage;dur=455.302,
+        load_2_duckduckgo;dur=713.793
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-robots-tag:
+      - noindex, nofollow
+    status:
+      code: 200
+      message: OK
+version: 1
