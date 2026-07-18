@@ -43,6 +43,10 @@ async def test_fallback_state_provenance(
 
     expected = fallback_state.expected
     provenance = record.provenance
+    # Raw queries can carry PII; they must never reach the provenance record
+    # or the log message.
+    assert "query" not in provenance
+    assert "instrumentation probe" not in record.getMessage()
     assert provenance["n_searxng"] == expected.n_searxng
     assert provenance["n_ddg"] == expected.n_ddg
     assert provenance["n_after_dedup"] == expected.n_after_dedup
@@ -57,6 +61,42 @@ async def test_fallback_state_provenance(
     message = record.getMessage()
     for field in PROVENANCE_FIELDS:
         assert field in message, f"{field} missing from provenance message"
+
+
+async def test_ddg_raise_reaches_provenance_as_failure(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A raising DDG backend must surface as ddg_ok=False, not an empty list.
+
+    Patches the DDGS class itself so the real _ddg_search runs: the old broad
+    except swallowed the raise and provenance recorded ddg_ok=True.
+    """
+
+    async def searxng_ok(
+        self: tools.SearXNGClient,
+        query: str,
+        language: str = "en",
+        time_range: str | None = None,
+        max_results: int = 10,
+        categories: str = "general",
+    ) -> list[dict[str, str]]:
+        return [{"title": "A", "link": "https://example.test/a", "snippet": "a"}]
+
+    def ddg_down(*args: object, **kwargs: object) -> None:
+        raise RuntimeError("ddg unreachable")
+
+    monkeypatch.setattr(tools.SearXNGClient, "search", searxng_ok)
+    monkeypatch.setattr("ddgs.DDGS", ddg_down)
+
+    with caplog.at_level(logging.INFO, logger=PROVENANCE_LOGGER):
+        results = await tools.search_direct("ddg outage probe")
+
+    provenance = _provenance_records(caplog)[0].provenance
+    assert provenance["ddg_ok"] is False
+    assert provenance["n_ddg"] == 0
+    assert "ddg" not in provenance["engines_used"]
+    # The failure never crashes search_direct; SearXNG results still return.
+    assert len(results) == 1
 
 
 async def test_counters_known_count_both_engines_up(
