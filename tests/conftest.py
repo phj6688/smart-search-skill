@@ -23,6 +23,29 @@ from tests.fixtures_fallback import (  # noqa: F401
     fallback_state,
 )
 
+# The offline-suite held-out probe shells out to `pytest tests/` in a
+# subprocess. Because python_files collects issue-*.py, that subprocess would
+# re-collect the probe and spawn its own `pytest tests/`, recursing without
+# bound. The first (top-level) run inherits no sentinel and runs the probe
+# normally, then exports the sentinel; any nested run sees it and skips the
+# self-suite test, so the recursion terminates after one level.
+_SELF_SUITE_ENV = "SW_HELDOUT_SELF_SUITE"
+_IN_NESTED_SELF_SUITE = os.environ.get(_SELF_SUITE_ENV) == "1"
+os.environ[_SELF_SUITE_ENV] = "1"
+
+
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
+    if not _IN_NESTED_SELF_SUITE:
+        return
+    skip = pytest.mark.skip(
+        reason="nested heldout self-suite run; skip to avoid unbounded pytest recursion"
+    )
+    for item in items:
+        if "test_suite_passes_offline_with_block_network_and_no_api_key" in item.nodeid:
+            item.add_marker(skip)
+
 # Written into cassettes in place of Authorization / X-Api-Key values, so the
 # hygiene test can assert the scrub ran instead of proving a negative.
 HEADER_PLACEHOLDER = "SCRUBBED"
