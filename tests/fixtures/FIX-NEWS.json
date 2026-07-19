@@ -1,0 +1,1382 @@
+[
+  {
+    "id": "news-0001",
+    "query": "central bank interest rate decision",
+    "results": [
+      {
+        "title": "central bank rate decision: latest update",
+        "link": "https://news.example.net/economy/rate-decision",
+        "snippet": "Breaking coverage of central bank rate decision, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "central bank rate decision: live blog",
+        "link": "https://live.example.net/economy/rate-decision",
+        "snippet": "Rolling live blog tracking central bank rate decision as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "climate report findings: background explainer",
+        "link": "https://ref.example.org/science/climate-report",
+        "snippet": "Reference explainer on climate report findings, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "climate report findings: product page",
+        "link": "https://shop.example.com/science/climate-report",
+        "snippet": "Commercial listing about climate report findings with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0002",
+    "query": "coastal wildfire evacuation orders",
+    "results": [
+      {
+        "title": "coastal wildfire evacuations: latest update",
+        "link": "https://news.example.org/region/wildfire-evacuation",
+        "snippet": "Breaking coverage of coastal wildfire evacuations, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "coastal wildfire evacuations: live blog",
+        "link": "https://live.example.net/region/wildfire-evacuation",
+        "snippet": "Rolling live blog tracking coastal wildfire evacuations as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "port labor agreement: background explainer",
+        "link": "https://ref.example.org/business/port-agreement",
+        "snippet": "Reference explainer on port labor agreement, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "port labor agreement: product page",
+        "link": "https://shop.example.com/business/port-agreement",
+        "snippet": "Commercial listing about port labor agreement with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0003",
+    "query": "regional election runoff results",
+    "results": [
+      {
+        "title": "election runoff results: latest update",
+        "link": "https://news.example.com/politics/runoff-results",
+        "snippet": "Breaking coverage of election runoff results, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "election runoff results: live blog",
+        "link": "https://live.example.net/politics/runoff-results",
+        "snippet": "Rolling live blog tracking election runoff results as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "transit expansion plan: background explainer",
+        "link": "https://ref.example.org/local/transit-expansion",
+        "snippet": "Reference explainer on transit expansion plan, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "transit expansion plan: product page",
+        "link": "https://shop.example.com/local/transit-expansion",
+        "snippet": "Commercial listing about transit expansion plan with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0004",
+    "query": "major tech firm announces layoffs",
+    "results": [
+      {
+        "title": "tech firm layoffs: latest update",
+        "link": "https://news.example.io/business/tech-layoffs",
+        "snippet": "Breaking coverage of tech firm layoffs, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "tech firm layoffs: live blog",
+        "link": "https://live.example.net/business/tech-layoffs",
+        "snippet": "Rolling live blog tracking tech firm layoffs as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "storm flooding coverage: background explainer",
+        "link": "https://ref.example.org/weather/storm-flooding",
+        "snippet": "Reference explainer on storm flooding coverage, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "storm flooding coverage: product page",
+        "link": "https://shop.example.com/weather/storm-flooding",
+        "snippet": "Commercial listing about storm flooding coverage with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0005",
+    "query": "national team qualifying match",
+    "results": [
+      {
+        "title": "qualifying match report: latest update",
+        "link": "https://news.example.net/sports/qualifying-match",
+        "snippet": "Breaking coverage of qualifying match report, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "qualifying match report: live blog",
+        "link": "https://live.example.net/sports/qualifying-match",
+        "snippet": "Rolling live blog tracking qualifying match report as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "launch window delay: background explainer",
+        "link": "https://ref.example.org/science/launch-delay",
+        "snippet": "Reference explainer on launch window delay, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "launch window delay: product page",
+        "link": "https://shop.example.com/science/launch-delay",
+        "snippet": "Commercial listing about launch window delay with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0006",
+    "query": "new climate report released",
+    "results": [
+      {
+        "title": "climate report findings: latest update",
+        "link": "https://news.example.org/science/climate-report",
+        "snippet": "Breaking coverage of climate report findings, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "climate report findings: live blog",
+        "link": "https://live.example.net/science/climate-report",
+        "snippet": "Rolling live blog tracking climate report findings as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Python asyncio: background explainer",
+        "link": "https://ref.example.org/python/asyncio-tutorial",
+        "snippet": "Reference explainer on Python asyncio, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Python asyncio: product page",
+        "link": "https://shop.example.com/python/asyncio-tutorial",
+        "snippet": "Commercial listing about Python asyncio with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0007",
+    "query": "port workers reach labor agreement",
+    "results": [
+      {
+        "title": "port labor agreement: latest update",
+        "link": "https://news.example.com/business/port-agreement",
+        "snippet": "Breaking coverage of port labor agreement, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "port labor agreement: live blog",
+        "link": "https://live.example.net/business/port-agreement",
+        "snippet": "Rolling live blog tracking port labor agreement as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Kubernetes ingress: background explainer",
+        "link": "https://ref.example.org/kubernetes/ingress",
+        "snippet": "Reference explainer on Kubernetes ingress, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Kubernetes ingress: product page",
+        "link": "https://shop.example.com/kubernetes/ingress",
+        "snippet": "Commercial listing about Kubernetes ingress with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0008",
+    "query": "city approves transit expansion",
+    "results": [
+      {
+        "title": "transit expansion plan: latest update",
+        "link": "https://news.example.io/local/transit-expansion",
+        "snippet": "Breaking coverage of transit expansion plan, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "transit expansion plan: live blog",
+        "link": "https://live.example.net/local/transit-expansion",
+        "snippet": "Rolling live blog tracking transit expansion plan as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "PostgreSQL indexes: background explainer",
+        "link": "https://ref.example.org/postgres/index-types",
+        "snippet": "Reference explainer on PostgreSQL indexes, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "PostgreSQL indexes: product page",
+        "link": "https://shop.example.com/postgres/index-types",
+        "snippet": "Commercial listing about PostgreSQL indexes with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0009",
+    "query": "severe storm floods lowlands",
+    "results": [
+      {
+        "title": "storm flooding coverage: latest update",
+        "link": "https://news.example.net/weather/storm-flooding",
+        "snippet": "Breaking coverage of storm flooding coverage, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "storm flooding coverage: live blog",
+        "link": "https://live.example.net/weather/storm-flooding",
+        "snippet": "Rolling live blog tracking storm flooding coverage as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "React useEffect cleanup: background explainer",
+        "link": "https://ref.example.org/react/useeffect-cleanup",
+        "snippet": "Reference explainer on React useEffect cleanup, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "React useEffect cleanup: product page",
+        "link": "https://shop.example.com/react/useeffect-cleanup",
+        "snippet": "Commercial listing about React useEffect cleanup with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0010",
+    "query": "space agency delays launch window",
+    "results": [
+      {
+        "title": "launch window delay: latest update",
+        "link": "https://news.example.org/science/launch-delay",
+        "snippet": "Breaking coverage of launch window delay, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "launch window delay: live blog",
+        "link": "https://live.example.net/science/launch-delay",
+        "snippet": "Rolling live blog tracking launch window delay as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Rust ownership: background explainer",
+        "link": "https://ref.example.org/rust/ownership",
+        "snippet": "Reference explainer on Rust ownership, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Rust ownership: product page",
+        "link": "https://shop.example.com/rust/ownership",
+        "snippet": "Commercial listing about Rust ownership with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0011",
+    "query": "python asyncio tutorial",
+    "results": [
+      {
+        "title": "Python asyncio: latest update",
+        "link": "https://docs.example.com/python/asyncio-tutorial",
+        "snippet": "Breaking coverage of Python asyncio, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Python asyncio: live blog",
+        "link": "https://live.example.net/python/asyncio-tutorial",
+        "snippet": "Rolling live blog tracking Python asyncio as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Docker multi-stage builds: background explainer",
+        "link": "https://ref.example.org/docker/multi-stage",
+        "snippet": "Reference explainer on Docker multi-stage builds, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Docker multi-stage builds: product page",
+        "link": "https://shop.example.com/docker/multi-stage",
+        "snippet": "Commercial listing about Docker multi-stage builds with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0012",
+    "query": "kubernetes ingress configuration",
+    "results": [
+      {
+        "title": "Kubernetes ingress: latest update",
+        "link": "https://docs.example.io/kubernetes/ingress",
+        "snippet": "Breaking coverage of Kubernetes ingress, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Kubernetes ingress: live blog",
+        "link": "https://live.example.net/kubernetes/ingress",
+        "snippet": "Rolling live blog tracking Kubernetes ingress as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "TypeScript generics: background explainer",
+        "link": "https://ref.example.org/typescript/generics",
+        "snippet": "Reference explainer on TypeScript generics, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "TypeScript generics: product page",
+        "link": "https://shop.example.com/typescript/generics",
+        "snippet": "Commercial listing about TypeScript generics with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0013",
+    "query": "postgresql index types explained",
+    "results": [
+      {
+        "title": "PostgreSQL indexes: latest update",
+        "link": "https://wiki.example.org/postgres/index-types",
+        "snippet": "Breaking coverage of PostgreSQL indexes, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "PostgreSQL indexes: live blog",
+        "link": "https://live.example.net/postgres/index-types",
+        "snippet": "Rolling live blog tracking PostgreSQL indexes as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Nginx reverse proxy: background explainer",
+        "link": "https://ref.example.org/nginx/reverse-proxy",
+        "snippet": "Reference explainer on Nginx reverse proxy, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Nginx reverse proxy: product page",
+        "link": "https://shop.example.com/nginx/reverse-proxy",
+        "snippet": "Commercial listing about Nginx reverse proxy with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0014",
+    "query": "react useeffect cleanup pattern",
+    "results": [
+      {
+        "title": "React useEffect cleanup: latest update",
+        "link": "https://docs.example.dev/react/useeffect-cleanup",
+        "snippet": "Breaking coverage of React useEffect cleanup, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "React useEffect cleanup: live blog",
+        "link": "https://live.example.net/react/useeffect-cleanup",
+        "snippet": "Rolling live blog tracking React useEffect cleanup as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Git interactive rebase: background explainer",
+        "link": "https://ref.example.org/git/interactive-rebase",
+        "snippet": "Reference explainer on Git interactive rebase, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Git interactive rebase: product page",
+        "link": "https://shop.example.com/git/interactive-rebase",
+        "snippet": "Commercial listing about Git interactive rebase with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0015",
+    "query": "rust ownership and borrowing",
+    "results": [
+      {
+        "title": "Rust ownership: latest update",
+        "link": "https://book.example.io/rust/ownership",
+        "snippet": "Breaking coverage of Rust ownership, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Rust ownership: live blog",
+        "link": "https://live.example.net/rust/ownership",
+        "snippet": "Rolling live blog tracking Rust ownership as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "SQLAlchemy loading strategies: background explainer",
+        "link": "https://ref.example.org/sqlalchemy/loading",
+        "snippet": "Reference explainer on SQLAlchemy loading strategies, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "SQLAlchemy loading strategies: product page",
+        "link": "https://shop.example.com/sqlalchemy/loading",
+        "snippet": "Commercial listing about SQLAlchemy loading strategies with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0016",
+    "query": "docker multi stage build guide",
+    "results": [
+      {
+        "title": "Docker multi-stage builds: latest update",
+        "link": "https://docs.example.net/docker/multi-stage",
+        "snippet": "Breaking coverage of Docker multi-stage builds, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Docker multi-stage builds: live blog",
+        "link": "https://live.example.net/docker/multi-stage",
+        "snippet": "Rolling live blog tracking Docker multi-stage builds as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Go concurrency: background explainer",
+        "link": "https://ref.example.org/go/goroutines",
+        "snippet": "Reference explainer on Go concurrency, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Go concurrency: product page",
+        "link": "https://shop.example.com/go/goroutines",
+        "snippet": "Commercial listing about Go concurrency with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0017",
+    "query": "typescript generics deep dive",
+    "results": [
+      {
+        "title": "TypeScript generics: latest update",
+        "link": "https://handbook.example.dev/typescript/generics",
+        "snippet": "Breaking coverage of TypeScript generics, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "TypeScript generics: live blog",
+        "link": "https://live.example.net/typescript/generics",
+        "snippet": "Rolling live blog tracking TypeScript generics as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Terraform state locking: background explainer",
+        "link": "https://ref.example.org/terraform/state-locking",
+        "snippet": "Reference explainer on Terraform state locking, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Terraform state locking: product page",
+        "link": "https://shop.example.com/terraform/state-locking",
+        "snippet": "Commercial listing about Terraform state locking with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0018",
+    "query": "nginx reverse proxy setup",
+    "results": [
+      {
+        "title": "Nginx reverse proxy: latest update",
+        "link": "https://docs.example.org/nginx/reverse-proxy",
+        "snippet": "Breaking coverage of Nginx reverse proxy, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Nginx reverse proxy: live blog",
+        "link": "https://live.example.net/nginx/reverse-proxy",
+        "snippet": "Rolling live blog tracking Nginx reverse proxy as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Redis persistence: background explainer",
+        "link": "https://ref.example.org/redis/persistence",
+        "snippet": "Reference explainer on Redis persistence, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Redis persistence: product page",
+        "link": "https://shop.example.com/redis/persistence",
+        "snippet": "Commercial listing about Redis persistence with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0019",
+    "query": "git interactive rebase workflow",
+    "results": [
+      {
+        "title": "Git interactive rebase: latest update",
+        "link": "https://guide.example.com/git/interactive-rebase",
+        "snippet": "Breaking coverage of Git interactive rebase, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Git interactive rebase: live blog",
+        "link": "https://live.example.net/git/interactive-rebase",
+        "snippet": "Rolling live blog tracking Git interactive rebase as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "GraphQL schema stitching: background explainer",
+        "link": "https://ref.example.org/graphql/schema-stitching",
+        "snippet": "Reference explainer on GraphQL schema stitching, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "GraphQL schema stitching: product page",
+        "link": "https://shop.example.com/graphql/schema-stitching",
+        "snippet": "Commercial listing about GraphQL schema stitching with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0020",
+    "query": "sqlalchemy relationship loading",
+    "results": [
+      {
+        "title": "SQLAlchemy loading strategies: latest update",
+        "link": "https://docs.example.dev/sqlalchemy/loading",
+        "snippet": "Breaking coverage of SQLAlchemy loading strategies, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "SQLAlchemy loading strategies: live blog",
+        "link": "https://live.example.net/sqlalchemy/loading",
+        "snippet": "Rolling live blog tracking SQLAlchemy loading strategies as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "HTTP caching headers: background explainer",
+        "link": "https://ref.example.org/http/caching-headers",
+        "snippet": "Reference explainer on HTTP caching headers, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "HTTP caching headers: product page",
+        "link": "https://shop.example.com/http/caching-headers",
+        "snippet": "Commercial listing about HTTP caching headers with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0021",
+    "query": "go goroutines and channels",
+    "results": [
+      {
+        "title": "Go concurrency: latest update",
+        "link": "https://docs.example.io/go/goroutines",
+        "snippet": "Breaking coverage of Go concurrency, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Go concurrency: live blog",
+        "link": "https://live.example.net/go/goroutines",
+        "snippet": "Rolling live blog tracking Go concurrency as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Kafka consumer groups: background explainer",
+        "link": "https://ref.example.org/kafka/consumer-groups",
+        "snippet": "Reference explainer on Kafka consumer groups, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Kafka consumer groups: product page",
+        "link": "https://shop.example.com/kafka/consumer-groups",
+        "snippet": "Commercial listing about Kafka consumer groups with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0022",
+    "query": "terraform state locking",
+    "results": [
+      {
+        "title": "Terraform state locking: latest update",
+        "link": "https://docs.example.net/terraform/state-locking",
+        "snippet": "Breaking coverage of Terraform state locking, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Terraform state locking: live blog",
+        "link": "https://live.example.net/terraform/state-locking",
+        "snippet": "Rolling live blog tracking Terraform state locking as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Linux cgroups v2: background explainer",
+        "link": "https://ref.example.org/linux/cgroups-v2",
+        "snippet": "Reference explainer on Linux cgroups v2, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Linux cgroups v2: product page",
+        "link": "https://shop.example.com/linux/cgroups-v2",
+        "snippet": "Commercial listing about Linux cgroups v2 with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0023",
+    "query": "redis persistence options",
+    "results": [
+      {
+        "title": "Redis persistence: latest update",
+        "link": "https://wiki.example.org/redis/persistence",
+        "snippet": "Breaking coverage of Redis persistence, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Redis persistence: live blog",
+        "link": "https://live.example.net/redis/persistence",
+        "snippet": "Rolling live blog tracking Redis persistence as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "WebAssembly memory: background explainer",
+        "link": "https://ref.example.org/wasm/memory-model",
+        "snippet": "Reference explainer on WebAssembly memory, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "WebAssembly memory: product page",
+        "link": "https://shop.example.com/wasm/memory-model",
+        "snippet": "Commercial listing about WebAssembly memory with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0024",
+    "query": "graphql schema stitching",
+    "results": [
+      {
+        "title": "GraphQL schema stitching: latest update",
+        "link": "https://docs.example.dev/graphql/schema-stitching",
+        "snippet": "Breaking coverage of GraphQL schema stitching, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "GraphQL schema stitching: live blog",
+        "link": "https://live.example.net/graphql/schema-stitching",
+        "snippet": "Rolling live blog tracking GraphQL schema stitching as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "OAuth2 auth code flow: background explainer",
+        "link": "https://ref.example.org/oauth2/auth-code",
+        "snippet": "Reference explainer on OAuth2 auth code flow, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "OAuth2 auth code flow: product page",
+        "link": "https://shop.example.com/oauth2/auth-code",
+        "snippet": "Commercial listing about OAuth2 auth code flow with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0025",
+    "query": "http caching headers reference",
+    "results": [
+      {
+        "title": "HTTP caching headers: latest update",
+        "link": "https://developer.example.org/http/caching-headers",
+        "snippet": "Breaking coverage of HTTP caching headers, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "HTTP caching headers: live blog",
+        "link": "https://live.example.net/http/caching-headers",
+        "snippet": "Rolling live blog tracking HTTP caching headers as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "Elasticsearch mappings: background explainer",
+        "link": "https://ref.example.org/elasticsearch/mappings",
+        "snippet": "Reference explainer on Elasticsearch mappings, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "Elasticsearch mappings: product page",
+        "link": "https://shop.example.com/elasticsearch/mappings",
+        "snippet": "Commercial listing about Elasticsearch mappings with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0026",
+    "query": "kafka consumer group rebalance",
+    "results": [
+      {
+        "title": "Kafka consumer groups: latest update",
+        "link": "https://docs.example.io/kafka/consumer-groups",
+        "snippet": "Breaking coverage of Kafka consumer groups, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Kafka consumer groups: live blog",
+        "link": "https://live.example.net/kafka/consumer-groups",
+        "snippet": "Rolling live blog tracking Kafka consumer groups as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "beginner hiking trails: background explainer",
+        "link": "https://ref.example.org/outdoors/beginner-trails",
+        "snippet": "Reference explainer on beginner hiking trails, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "beginner hiking trails: product page",
+        "link": "https://shop.example.com/outdoors/beginner-trails",
+        "snippet": "Commercial listing about beginner hiking trails with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0027",
+    "query": "linux cgroups v2 overview",
+    "results": [
+      {
+        "title": "Linux cgroups v2: latest update",
+        "link": "https://wiki.example.net/linux/cgroups-v2",
+        "snippet": "Breaking coverage of Linux cgroups v2, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Linux cgroups v2: live blog",
+        "link": "https://live.example.net/linux/cgroups-v2",
+        "snippet": "Rolling live blog tracking Linux cgroups v2 as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "pour over coffee: background explainer",
+        "link": "https://ref.example.org/coffee/pour-over",
+        "snippet": "Reference explainer on pour over coffee, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "pour over coffee: product page",
+        "link": "https://shop.example.com/coffee/pour-over",
+        "snippet": "Commercial listing about pour over coffee with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0028",
+    "query": "webassembly memory model",
+    "results": [
+      {
+        "title": "WebAssembly memory: latest update",
+        "link": "https://docs.example.dev/wasm/memory-model",
+        "snippet": "Breaking coverage of WebAssembly memory, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "WebAssembly memory: live blog",
+        "link": "https://live.example.net/wasm/memory-model",
+        "snippet": "Rolling live blog tracking WebAssembly memory as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "houseplant watering: background explainer",
+        "link": "https://ref.example.org/plants/watering-schedule",
+        "snippet": "Reference explainer on houseplant watering, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "houseplant watering: product page",
+        "link": "https://shop.example.com/plants/watering-schedule",
+        "snippet": "Commercial listing about houseplant watering with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0029",
+    "query": "oauth2 authorization code flow",
+    "results": [
+      {
+        "title": "OAuth2 auth code flow: latest update",
+        "link": "https://docs.example.org/oauth2/auth-code",
+        "snippet": "Breaking coverage of OAuth2 auth code flow, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "OAuth2 auth code flow: live blog",
+        "link": "https://live.example.net/oauth2/auth-code",
+        "snippet": "Rolling live blog tracking OAuth2 auth code flow as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "sourdough bread: background explainer",
+        "link": "https://ref.example.org/bread/sourdough",
+        "snippet": "Reference explainer on sourdough bread, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "sourdough bread: product page",
+        "link": "https://shop.example.com/bread/sourdough",
+        "snippet": "Commercial listing about sourdough bread with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  },
+  {
+    "id": "news-0030",
+    "query": "elasticsearch mapping tuning",
+    "results": [
+      {
+        "title": "Elasticsearch mappings: latest update",
+        "link": "https://docs.example.io/elasticsearch/mappings",
+        "snippet": "Breaking coverage of Elasticsearch mappings, updated within the hour with official statements.",
+        "engine": "searxng",
+        "rank": 1,
+        "kind": "news"
+      },
+      {
+        "title": "Elasticsearch mappings: live blog",
+        "link": "https://live.example.net/elasticsearch/mappings",
+        "snippet": "Rolling live blog tracking Elasticsearch mappings as events develop through the day.",
+        "engine": "duckduckgo",
+        "rank": 2,
+        "kind": "news"
+      },
+      {
+        "title": "budget europe travel: background explainer",
+        "link": "https://ref.example.org/europe/budget-tips",
+        "snippet": "Reference explainer on budget europe travel, not tied to any current event.",
+        "engine": "searxng",
+        "rank": 3,
+        "kind": "non_news"
+      },
+      {
+        "title": "budget europe travel: product page",
+        "link": "https://shop.example.com/europe/budget-tips",
+        "snippet": "Commercial listing about budget europe travel with pricing and specifications.",
+        "engine": "duckduckgo",
+        "rank": 4,
+        "kind": "non_news"
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ]
+    }
+  }
+]

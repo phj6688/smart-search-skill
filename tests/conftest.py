@@ -9,6 +9,7 @@ OpenAI stub so the suite runs offline with OPENAI_API_KEY unset.
 """
 
 import os
+import socket
 from collections.abc import Iterator
 
 import pytest
@@ -53,6 +54,34 @@ HEADER_PLACEHOLDER = "SCRUBBED"
 # Lets the delete-a-cassette negative test point a pytest subprocess at a
 # pruned copy of tests/cassettes/ without touching the checked-in cassettes.
 CASSETTE_ROOT_ENV = "SEARCH_WORKFLOW_CASSETTE_ROOT"
+
+# Hosts a guarded test is allowed to reach. Everything else is treated as
+# outbound egress and blocked.
+EGRESS_ALLOWLIST = frozenset({"localhost", "127.0.0.1", "::1"})
+
+
+class EgressBlockedError(RuntimeError):
+    """Raised when a guarded test attempts a non-allowlisted outbound connect."""
+
+
+@pytest.fixture
+def egress_guard(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    """Fail a test that opens a socket to a non-allowlisted host.
+
+    Wraps socket.socket.connect so a connect to anything outside
+    EGRESS_ALLOWLIST raises EgressBlockedError instead of touching the network.
+    Allowlisted local addresses fall through to the real connect.
+    """
+    real_connect = socket.socket.connect
+
+    def guarded_connect(self: socket.socket, address: object) -> object:
+        host = address[0] if isinstance(address, (tuple, list)) else address
+        if host not in EGRESS_ALLOWLIST:
+            raise EgressBlockedError(f"blocked outbound connect to {host!r}")
+        return real_connect(self, address)
+
+    monkeypatch.setattr(socket.socket, "connect", guarded_connect)
+    yield
 
 
 @pytest.fixture(autouse=True)
