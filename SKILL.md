@@ -61,7 +61,7 @@ python -m search_workflow LLM benchmarks 2025 --timelimit w
 import asyncio
 from search_workflow import run_workflow
 
-outcome = asyncio.run(run_workflow(your query here))
+outcome = asyncio.run(run_workflow("your query here"))
 if outcome["status"] == "ok":
     for r in outcome["results"]:
         print(r['title'], r['link'])

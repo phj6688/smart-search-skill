@@ -166,7 +166,8 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[s
         dict[str, Any]: A discriminated result. Success is
         {"status": "ok", "results": [...]}; failure is
         {"status": "error", "error": {"type": <str>, "message": <str>}}. A bare
-        string is never returned; only a genuinely unexpected error propagates.
+        string is never returned; handled failures return the typed error
+        envelope rather than propagating.
     """
     try:
         # Prepare initial state with user input as a HumanMessage
