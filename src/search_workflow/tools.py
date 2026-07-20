@@ -32,6 +32,12 @@ class SearchMetrics:
         self._llm_calls = 0
         self._cache_hit = 0
         self._engines_used: dict[str, int] = {}
+        # Last per-query provenance record (n_searxng/n_ddg/engines_used/...),
+        # kept so result-path consumers can read attribution without a logging
+        # handler. snapshot()'s engines_used is post-dedup and cumulative; the
+        # per-query record additionally carries the raw n_searxng/n_ddg needed
+        # to tell a genuine single-engine fallback from a deduped-away one.
+        self._last_provenance: dict[str, Any] | None = None
 
     def record_outbound_search_requests(self, count: int = 1) -> None:
         with self._lock:
@@ -50,6 +56,14 @@ class SearchMetrics:
             for engine in engines:
                 self._engines_used[engine] = self._engines_used.get(engine, 0) + 1
 
+    def record_provenance(self, provenance: dict[str, Any]) -> None:
+        with self._lock:
+            self._last_provenance = dict(provenance)
+
+    def last_provenance(self) -> dict[str, Any] | None:
+        with self._lock:
+            return dict(self._last_provenance) if self._last_provenance else None
+
     def snapshot(self) -> dict[str, Any]:
         with self._lock:
             return {
@@ -65,6 +79,7 @@ class SearchMetrics:
             self._llm_calls = 0
             self._cache_hit = 0
             self._engines_used = {}
+            self._last_provenance = None
 
 
 METRICS = SearchMetrics()
@@ -350,7 +365,7 @@ async def _fetch_and_merge(
     engines_used = set(merged_sources[: len(returned)])
     fell_back = engines_used == {"ddg"}
     METRICS.record_engines_used(engines_used)
-    _emit_provenance({
+    provenance = {
         "n_searxng": len(searxng_list),
         "n_ddg": len(ddg_list),
         "n_after_dedup": len(merged),
@@ -358,7 +373,9 @@ async def _fetch_and_merge(
         "ddg_ok": ddg_ok,
         "fell_back": fell_back,
         "engines_used": sorted(engines_used),
-    })
+    }
+    METRICS.record_provenance(provenance)
+    _emit_provenance(provenance)
     return returned
 
 
