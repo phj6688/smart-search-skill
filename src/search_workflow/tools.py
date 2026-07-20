@@ -212,15 +212,6 @@ class SearXNGClient:
             normalized.append(normalized_result)
         return normalized
 
-    async def health_check(self) -> bool:
-        """Check if SearXNG is available via a real search probe."""
-        try:
-            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
-                async with session.get(f"{self.base_url}/search", params={"q": "test", "format": "json"}) as response:
-                    return response.status == 200
-        except Exception:
-            return False
-
 # Initialize SearXNG client. Honour SEARXNG_URL so the agentic `search` tool
 # reaches a SearXNG instance by service name inside Docker (default localhost
 # is wrong from a container and silently forces the DuckDuckGo-only fallback).
@@ -246,16 +237,11 @@ async def search(
     """
     configuration = Configuration.from_runnable_config(config)
 
-    # The health probe stays on the tool path (its wiring is owned by the
-    # later S09/S10 stories); it no longer gates the fetch. The actual
-    # fetch+merge routes through the shared core so both engines run in
-    # parallel here, identical to the search_direct path.
-    try:
-        if not await searxng_client.health_check():
-            print("⚠️ SearXNG health probe failed; core still fetches both engines")
-    except Exception as e:
-        print(f"❌ SearXNG health probe error: {e}")
-
+    # No pre-fetch health probe. It was a second real GET /search per query on
+    # top of the actual search. The shared core dispatches SearXNG and DDG in
+    # parallel and already tolerates an empty or raising SearXNG leg (see the
+    # return_exceptions gather in _fetch_and_merge), so DDG still merges when
+    # SearXNG is down; probing first only bought a redundant round trip.
     language = _extract_language(region)
     return await _fetch_and_merge(
         query,
