@@ -2,6 +2,7 @@
 import argparse
 import asyncio
 import json
+import sys
 from importlib.metadata import PackageNotFoundError, version
 
 from . import run_workflow
@@ -39,8 +40,16 @@ async def _async_main() -> int:
     }
 
     try:
-        results = await run_workflow(args.query, config=config)
+        outcome = await run_workflow(args.query, config=config)
 
+        # run_workflow returns a discriminated dict: {"status": "error", ...}
+        # carries a typed error, {"status": "ok", "results": [...]} the hits.
+        if outcome.get("status") == "error":
+            message = outcome.get("error", {}).get("message", "unknown error")
+            print(f"Error: {message}", file=sys.stderr)
+            return 1
+
+        results = outcome.get("results", [])
         if args.format == 'json':
             print(json.dumps(results, indent=2))
         else:
@@ -51,7 +60,7 @@ async def _async_main() -> int:
                 print()
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}", file=sys.stderr)
         return 1
 
     return 0

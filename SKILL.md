@@ -61,21 +61,31 @@ python -m search_workflow LLM benchmarks 2025 --timelimit w
 import asyncio
 from search_workflow import run_workflow
 
-results = asyncio.run(run_workflow(your query here))
-for r in results:
-    print(r['title'], r['link'])
+outcome = asyncio.run(run_workflow(your query here))
+if outcome["status"] == "ok":
+    for r in outcome["results"]:
+        print(r['title'], r['link'])
+else:
+    print("search failed:", outcome["error"]["message"])
 ```
 
-## Output Format (JSON)
+## Output Format
+
+`run_workflow` returns a discriminated dict. Success:
 
 ```json
-[
-  {
-    title: Result title,
-    link: https://example.com/page,
-    snippet: Short description of the result...
-  }
-]
+{
+  "status": "ok",
+  "results": [
+    {"title": "Result title", "link": "https://example.com/page", "snippet": "Short description..."}
+  ]
+}
+```
+
+Failure:
+
+```json
+{"status": "error", "error": {"type": "json_parse_error", "message": "..."}}
 ```
 
 ## Configuration

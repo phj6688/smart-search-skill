@@ -41,16 +41,21 @@ _TRANSPORT_SECURITY = TransportSecuritySettings(
 
 
 def _coerce_results(raw: Any) -> list[dict]:
-    """Normalise run_workflow's Union return into a list of result dicts.
+    """Normalise run_workflow's discriminated dict into a list of result dicts.
 
-    run_workflow returns a list of {title, link, snippet} on success, a
-    {"result": ...} wrapper for a single object, or an error string on failure.
+    run_workflow returns {"status": "ok", "results": [...]} on success and
+    {"status": "error", "error": {"type", "message"}} on failure. Map the ok
+    shape to its results list and the error shape to a single {"error": ...}
+    entry, so the calling model sees the failure rather than an empty array.
     """
-    if isinstance(raw, list):
-        return raw
-    if isinstance(raw, dict):
-        return [raw]
-    return [{"error": str(raw)}]
+    if isinstance(raw, dict) and raw.get("status") == "ok":
+        results = raw.get("results", [])
+        return results if isinstance(results, list) else [results]
+    if isinstance(raw, dict) and raw.get("status") == "error":
+        return [{"error": raw.get("error", {})}]
+    # Contract guarantees a discriminated dict; surface anything else as an error
+    # instead of guessing its shape.
+    return [{"error": {"type": "unexpected_shape", "message": str(raw)}}]
 
 
 def create_mcp_server() -> FastMCP:
@@ -89,7 +94,7 @@ def create_mcp_server() -> FastMCP:
 def create_app() -> FastAPI:
     app = FastAPI(
         title="search-mcp",
-        version="0.1.0",
+        version="0.4.0",
         description="Hybrid web search (SearXNG + DuckDuckGo) exposed as an MCP SSE tool",
     )
 
