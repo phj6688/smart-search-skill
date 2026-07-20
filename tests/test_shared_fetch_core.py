@@ -299,11 +299,13 @@ async def test_tool_query_issues_one_searxng_request(
 
     results = await tools.search("probe", "us-en", None, config={})
 
-    searxng_hits = [u for u in searxng_gets if u.endswith("/search")]
-    assert len(searxng_hits) == 1, (
-        "tool path must issue exactly one SearXNG /search request; the second "
-        f"was the redundant health probe. got: {searxng_gets}"
+    # DDG is stubbed out, so every captured aiohttp GET is a SearXNG request:
+    # assert the whole list is one, so a restored /health probe also fails here.
+    assert len(searxng_gets) == 1, (
+        "tool path must issue exactly one SearXNG request; a second was the "
+        f"redundant health probe. got: {searxng_gets}"
     )
+    assert searxng_gets[0].endswith("/search")
     # The single search leg still contributes its result to the merge.
     assert [r["link"] for r in results] == ["https://searxng.test/x"]
     assert tools.METRICS.snapshot()["engines_used"] == {"searxng": 1}
