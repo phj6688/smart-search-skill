@@ -20,10 +20,10 @@ from langchain_core.tools import tool
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
-from search_workflow.errors import SearchError
 from typing_extensions import TypedDict
 
 from search_workflow import graph
+from search_workflow.errors import SearchError
 
 
 def _stub_ainvoke(monkeypatch: pytest.MonkeyPatch, behavior) -> None:
