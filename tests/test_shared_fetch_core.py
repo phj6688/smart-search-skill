@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+import aiohttp
 import pytest
 from langchain_core.messages import AIMessage
 
@@ -233,13 +234,9 @@ async def test_run_workflow_drives_shared_core_end_to_end(
     model = _ToolCallingModel()
     monkeypatch.setattr("search_workflow.graph.load_chat_model", lambda name: model)
 
-    # Both engines answer at the seam the core dispatches to.
+    # Both engines answer at the seam the core dispatches to. No health probe
+    # to stub: the tool path no longer issues one.
     configure_fallback_state(monkeypatch, "searxng_ok")
-
-    async def healthy() -> bool:
-        return True
-
-    monkeypatch.setattr(tools.searxng_client, "health_check", healthy)
 
     out = await graph.run_workflow("shared core probe")
 
@@ -253,3 +250,63 @@ async def test_run_workflow_drives_shared_core_end_to_end(
     assert snapshot["outbound_search_requests"] == 2
     assert snapshot["engines_used"] == {"searxng": 1, "ddg": 1}
     assert snapshot["llm_calls"] == 0
+
+
+# --- probe removal: the SearXNG leg makes one request per tool query -------
+
+
+class _FakeSearxngResponse:
+    """Minimal stand-in for the aiohttp response context manager.
+
+    SearXNGClient.search does `async with session.get(...) as response:` then
+    reads `response.status` and `await response.json()`. Nothing else is
+    touched, so only those three surfaces are implemented.
+    """
+
+    status = 200
+
+    async def json(self) -> dict[str, Any]:
+        return {
+            "results": [
+                {"url": "https://searxng.test/x", "title": "x", "content": "c"}
+            ]
+        }
+
+    async def __aenter__(self) -> "_FakeSearxngResponse":
+        return self
+
+    async def __aexit__(self, *exc: object) -> bool:
+        return False
+
+
+async def test_tool_query_issues_one_searxng_request(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Count real outbound GETs to SearXNG. Before the probe was dropped a single
+    # tool query hit SearXNG twice: once for health_check, once for the search.
+    # The redundant probe is gone, so the SearXNG leg must now make exactly one
+    # request. DDG rides DDGS().text(), not aiohttp, so patching ClientSession
+    # here isolates the SearXNG leg; stubbing _ddg_search keeps it offline.
+    searxng_gets: list[str] = []
+
+    def fake_get(self: aiohttp.ClientSession, url: str, *args: Any, **kwargs: Any) -> _FakeSearxngResponse:
+        searxng_gets.append(url)
+        return _FakeSearxngResponse()
+
+    monkeypatch.setattr(aiohttp.ClientSession, "get", fake_get)
+
+    async def no_ddg(query: str, max_results: int) -> list[dict[str, Any]]:
+        return []
+
+    monkeypatch.setattr(tools, "_ddg_search", no_ddg)
+
+    results = await tools.search("probe", "us-en", None, config={})
+
+    searxng_hits = [u for u in searxng_gets if u.endswith("/search")]
+    assert len(searxng_hits) == 1, (
+        "tool path must issue exactly one SearXNG /search request; the second "
+        f"was the redundant health probe. got: {searxng_gets}"
+    )
+    # The single search leg still contributes its result to the merge.
+    assert [r["link"] for r in results] == ["https://searxng.test/x"]
+    assert tools.METRICS.snapshot()["engines_used"] == {"searxng": 1}
