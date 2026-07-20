@@ -15,7 +15,7 @@ from collections.abc import Iterator
 import pytest
 from langchain_core.messages import AIMessage
 
-from search_workflow.utils import ArticlesResponse, ArticleStrict
+from search_workflow.utils import ArticlesResponse, ArticleStrict, SelectionResponse
 from tests.fixtures_fallback import (  # noqa: F401
     FALLBACK_STATE_NAMES,
     FallbackExpectation,
@@ -145,9 +145,17 @@ def vcr_config() -> dict[str, object]:
 
 
 class CannedStructuredModel:
-    """Stand-in for `chat_model.with_structured_output(ArticlesResponse)`."""
+    """Stand-in for `chat_model.with_structured_output(schema)`."""
 
-    async def ainvoke(self, value: object, config: object = None) -> ArticlesResponse:
+    def __init__(self, schema: object) -> None:
+        self._schema = schema
+
+    async def ainvoke(self, value: object, config: object = None) -> object:
+        # The evaluator now selects by index; picking 0 exercises the join back
+        # to the fetched objects offline. Anything else keeps the legacy article
+        # shape so unrelated callers of with_structured_output stay covered.
+        if self._schema is SelectionResponse:
+            return SelectionResponse(selected=[0])
         return ArticlesResponse(
             articles=[
                 ArticleStrict(
@@ -167,7 +175,7 @@ class CannedChatModel:
         return self
 
     def with_structured_output(self, schema: object) -> CannedStructuredModel:
-        return CannedStructuredModel()
+        return CannedStructuredModel(schema)
 
     async def ainvoke(self, value: object, config: object = None) -> AIMessage:
         return AIMessage(content="canned agent reply")
@@ -184,9 +192,11 @@ def stub_openai(monkeypatch: pytest.MonkeyPatch) -> CannedChatModel:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     model = CannedChatModel()
     monkeypatch.setattr(
-        "search_workflow.utils.load_chat_model", lambda model_name: model
+        "search_workflow.utils.load_chat_model",
+        lambda model_name, temperature=0.1: model,
     )
     monkeypatch.setattr(
-        "search_workflow.graph.load_chat_model", lambda model_name: model
+        "search_workflow.graph.load_chat_model",
+        lambda model_name, temperature=0.1: model,
     )
     return model

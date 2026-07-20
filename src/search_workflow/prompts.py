@@ -26,11 +26,7 @@ EVALUATOR_PROMPT = """You are a skilled evaluator, selecting the most relevant r
 
 CRITICAL: Return EXACTLY {N_RESULT} entries that best match SEARCH_QUERY: {SEARCH_QUERY}, excluding loosely related content. Do not return more or fewer than {N_RESULT} entries.
 
-Present selected entries as a JSON array, where each object contains:
-- 'title': the article's title
-- 'link': URL to the article
-- 'snippet': a brief summary
-- 'similarity': the similarity score (0.0 to 1.0)
+Return a JSON object with a single field `selected` holding the list of 0-based indices, in the order the entries appear in the search results, of the entries that best match SEARCH_QUERY.
 
 Sort results by similarity score in descending order (highest similarity first).
 Ensure the JSON is formatted correctly with no extra text.
