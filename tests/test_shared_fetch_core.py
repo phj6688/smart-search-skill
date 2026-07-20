@@ -46,6 +46,24 @@ def test_normalize_url_keeps_non_default_port() -> None:
     )
 
 
+def test_normalize_url_default_port_is_scheme_paired() -> None:
+    # An explicit non-default port must be kept even when it equals the OTHER
+    # scheme's default, so the two never collapse onto the wrong dedup key.
+    assert tools.normalize_url("https://example.com:80/a") != tools.normalize_url(
+        "https://example.com/a"
+    )
+    assert tools.normalize_url("http://example.com:443/a") != tools.normalize_url(
+        "http://example.com/a"
+    )
+
+
+def test_normalize_url_malformed_port_falls_back_to_raw() -> None:
+    # An out-of-range port makes urlsplit().port raise; the raw string is
+    # returned so one bad result cannot abort the whole merge.
+    bad = "http://example.com:99999/a"
+    assert tools.normalize_url(bad) == bad
+
+
 def test_normalize_url_strips_single_trailing_slash() -> None:
     assert tools.normalize_url("https://example.com/a/") == "https://example.com/a"
     # Only one slash comes off, never two.

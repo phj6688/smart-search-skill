@@ -108,33 +108,44 @@ def normalize_url(url: str) -> str:
     trailing slash, and removes only tracking params (utm_*, fbclid, gclid).
     Path and query CASE are left untouched and every non-tracking param is
     kept, so pages that differ by a real param (e.g. ?page=2) stay distinct.
-    The fragment is not listed for stripping, so it is preserved.
+    The fragment is not listed for stripping, so it is preserved. A URL that
+    cannot be parsed (e.g. an out-of-range port that makes ``parts.port``
+    raise) is returned unchanged, so one malformed result becomes its own
+    dedup key instead of aborting the whole merge.
     """
-    parts = urlsplit(url)
+    try:
+        parts = urlsplit(url)
 
-    scheme = parts.scheme.lower()
+        scheme = parts.scheme.lower()
 
-    host = (parts.hostname or "").lower()
-    # Rebuild userinfo verbatim; only host case and default ports change.
-    userinfo = ""
-    if parts.username is not None:
-        userinfo = parts.username
-        if parts.password is not None:
-            userinfo += f":{parts.password}"
-        userinfo += "@"
-    port = parts.port
-    netloc = f"{userinfo}{host}"
-    if port is not None and port not in (80, 443):
-        netloc = f"{netloc}:{port}"
+        host = (parts.hostname or "").lower()
+        # Rebuild userinfo verbatim; only host case and default ports change.
+        userinfo = ""
+        if parts.username is not None:
+            userinfo = parts.username
+            if parts.password is not None:
+                userinfo += f":{parts.password}"
+            userinfo += "@"
+        port = parts.port
+        netloc = f"{userinfo}{host}"
+        # Drop the port only when it is the default FOR THIS scheme; an
+        # explicit :80 on https (or :443 on http) is meaningful and kept.
+        default_port = {"http": 80, "https": 443}.get(scheme)
+        if port is not None and port != default_port:
+            netloc = f"{netloc}:{port}"
 
-    path = parts.path[:-1] if parts.path.endswith("/") else parts.path
+        path = parts.path[:-1] if parts.path.endswith("/") else parts.path
 
-    # Filter on the raw pairs so remaining params keep their exact encoding
-    # and case; parse_qsl would decode and reorder them.
-    kept = [p for p in parts.query.split("&") if p and not _is_tracking_param(p)]
-    query = "&".join(kept)
+        # Filter on the raw pairs so remaining params keep their exact encoding
+        # and case; parse_qsl would decode and reorder them.
+        kept = [p for p in parts.query.split("&") if p and not _is_tracking_param(p)]
+        query = "&".join(kept)
 
-    return urlunsplit((scheme, netloc, path, query, parts.fragment))
+        return urlunsplit((scheme, netloc, path, query, parts.fragment))
+    except ValueError:
+        # Malformed URL (e.g. out-of-range port). Fall back to the raw string
+        # so this one result dedups on itself rather than aborting the merge.
+        return url
 
 
 # Define available region and timeframe options
