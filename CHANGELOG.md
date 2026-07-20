@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- BREAKING (v0.4.0): `run_workflow` no longer returns a bare error string. Its contract is now a discriminated dict: success is `{"status": "ok", "results": [...]}` and failure is `{"status": "error", "error": {"type": <str>, "message": <str>}}`. A `SearchError` (in `search_workflow.errors`) carries the internal failure and serializes to that error shape; a bare string is never returned. Consumer changes: the CLI now prints `error.message` to stderr and exits 1 on `status == "error"`; the Python API, LangGraph TOOLS path, and OpenClaw SKILL.md must read `outcome["status"]` and use `outcome["results"]` instead of iterating the return directly; `mcp_server._coerce_results` reads the discriminated shape natively instead of guessing whether a string was an error. README and SKILL.md snippets updated.
+
 ### Fixed
 - CLI entry points: the `search-workflow` console script pointed at an async `main`, so it returned an unawaited coroutine and did nothing. `main` is now a sync wrapper around `_async_main` via `asyncio.run`. Behavior note: exceptions the unawaited coroutine silently swallowed now surface; runs that previously exited 0 without doing anything can now print an error and exit 1.
 - `python -m search_workflow` failed with "No module named search_workflow.__main__"; added `src/search_workflow/__main__.py`.

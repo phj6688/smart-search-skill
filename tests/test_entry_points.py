@@ -115,9 +115,13 @@ def test_readme_query_command_with_stubbed_workflow(
 
     assert README_QUERY_COMMAND in README.read_text()
 
-    async def fake_run_workflow(query: str, config: Any = None) -> list[dict[str, str]]:
+    async def fake_run_workflow(query: str, config: Any = None) -> dict[str, Any]:
         assert query == "neo4j python driver documentation"
-        return [{"title": "t", "link": "https://example.com", "snippet": "s"}]
+        # run_workflow returns the discriminated success shape.
+        return {
+            "status": "ok",
+            "results": [{"title": "t", "link": "https://example.com", "snippet": "s"}],
+        }
 
     monkeypatch.setattr(cli, "run_workflow", fake_run_workflow)
     cli_args = shlex.split(README_QUERY_COMMAND)[3:]  # drop "python -m search_workflow"

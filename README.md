@@ -72,8 +72,14 @@ import asyncio
 from search_workflow import run_workflow
 
 async def main():
-    results = await run_workflow("FastAPI authentication JWT tutorial")
-    for r in results:
+    # run_workflow returns a discriminated dict:
+    #   success -> {"status": "ok", "results": [...]}
+    #   failure -> {"status": "error", "error": {"type": ..., "message": ...}}
+    outcome = await run_workflow("FastAPI authentication JWT tutorial")
+    if outcome["status"] == "error":
+        print(f"search failed: {outcome['error']['message']}")
+        return
+    for r in outcome["results"]:
         print(f"• {r['title']}")
         print(f"  {r['link']}")
 
