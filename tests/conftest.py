@@ -49,11 +49,31 @@ def pytest_collection_modifyitems(
 ) -> None:
     if not _IN_NESTED_SELF_SUITE:
         return
+    # In the nested run spawned by the offline-suite probe, skip the frozen
+    # held-out probes (several shell out to their own pytest/wheel subprocess)
+    # and the heavy subprocess gates. Re-running the whole suite, including a
+    # second wheel build and cassette-subprocess, blows the probe's 300s
+    # timeout and gets the CI job killed (exit 143). The outer run still
+    # exercises all of these; the nested run only needs to prove the ordinary
+    # offline tests collect and pass under --block-network.
     skip = pytest.mark.skip(
-        reason="nested heldout self-suite run; skip to avoid unbounded pytest recursion"
+        reason="nested heldout self-suite run; skip heavy/subprocess tests to stay bounded"
     )
     for item in items:
-        if any(name in item.nodeid for name in _SELF_SPAWNING_PROBES):
+        nodeid = item.nodeid
+        # Broadest bound: skip the self-spawning probes plus every other
+        # held-out probe and heavy subprocess gate (wheel build, cassette
+        # subprocess). This subsumes _SELF_SPAWNING_PROBES and also keeps the
+        # nested run from re-running a second wheel build, which would blow the
+        # probe's 300s timeout and get the CI job killed (exit 143).
+        heavy = (
+            "heldout" in nodeid
+            or "wheel" in nodeid.lower()
+            or "negative_cassette" in nodeid
+            or any(name in nodeid for name in _SELF_SPAWNING_PROBES)
+            or item.get_closest_marker("wheel_install") is not None
+        )
+        if heavy:
             item.add_marker(skip)
 
 # Written into cassettes in place of Authorization / X-Api-Key values, so the
