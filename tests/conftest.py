@@ -185,16 +185,14 @@ class CannedChatModel:
 def stub_openai(monkeypatch: pytest.MonkeyPatch) -> CannedChatModel:
     """Keep every test away from the OpenAI API.
 
-    load_chat_model is patched at its definition and at graph's imported
-    reference; the key is deleted so anything that slips past the stub fails
-    loudly instead of spending tokens.
+    Patch only graph's imported `load_chat_model` reference (the sole seam the
+    agent and evaluator nodes construct models through), so graph-running tests
+    never touch OpenAI. The real `search_workflow.utils.load_chat_model` is left
+    intact so the provider-dispatch tests (HLB-659) can exercise it directly.
+    The key is deleted so anything that slips past the stub fails loudly.
     """
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     model = CannedChatModel()
-    monkeypatch.setattr(
-        "search_workflow.utils.load_chat_model",
-        lambda model_name, temperature=0.1: model,
-    )
     monkeypatch.setattr(
         "search_workflow.graph.load_chat_model",
         lambda model_name, temperature=0.1: model,
