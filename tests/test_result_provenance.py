@@ -76,11 +76,8 @@ def _wire_tool_path(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         "search_workflow.graph.load_chat_model", lambda name, **kwargs: model
     )
-
-    async def healthy() -> bool:
-        return True
-
-    monkeypatch.setattr(tools.searxng_client, "health_check", healthy)
+    # HLB-652 removed the SearXNG health probe; the fallback fixture stubs the
+    # engine boundary directly, so no health_check patch is needed.
 
 
 @pytest.mark.parametrize("state", FALLBACK_STATE_NAMES)
