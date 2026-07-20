@@ -1,8 +1,10 @@
 """Utility functions and data models for agent interaction."""
 
+from collections.abc import Callable
+
 from dotenv import load_dotenv
+from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import BaseMessage
-from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field, confloat, validator
 
 load_dotenv()
@@ -26,18 +28,74 @@ def get_message_text(msg: BaseMessage) -> str:
     return ""
 
 
-def load_chat_model(model_name: str, temperature: float = 0.1) -> ChatOpenAI:
-    """Initialize and return the chat model based on the model name.
+# Points the missing-dependency error at the exact install incantation, so a
+# user who asks for a local model without the extra learns how to get it.
+_LOCAL_EXTRA_HINT = (
+    "langchain-ollama is not installed; install the 'local' extra: "
+    "pip install smart-search-skill[local]"
+)
+
+
+def _load_openai(model_name: str, temperature: float) -> BaseChatModel:
+    # langchain-openai is a base dependency, but the import lives here so the
+    # provider dispatch is the single place the concrete integration is named.
+    from langchain_openai import ChatOpenAI
+
+    return ChatOpenAI(model=model_name, temperature=temperature)
+
+
+def _load_ollama(model_name: str, temperature: float) -> BaseChatModel:
+    # langchain-ollama ships only in the `local` extra, so a base install must
+    # not import it; defer the import until an ollama model is actually asked
+    # for and translate the miss into a hint naming the extra.
+    try:
+        from langchain_ollama import ChatOllama
+    except ImportError as exc:
+        raise ImportError(_LOCAL_EXTRA_HINT) from exc
+
+    return ChatOllama(model=model_name, temperature=temperature)
+
+
+# provider -> constructor. A plain dict keeps the base install to langchain-core
+# plus langchain-openai: no `langchain` meta-package and no init_chat_model.
+_PROVIDERS: dict[str, Callable[[str, float], BaseChatModel]] = {
+    "openai": _load_openai,
+    "ollama": _load_ollama,
+}
+
+
+def load_chat_model(model_name: str, temperature: float = 0.1) -> BaseChatModel:
+    """Load a chat model from a ``provider/model`` string.
+
+    A bare name with no ``/`` (e.g. "gpt-4o-mini") resolves to the openai
+    provider, so the historical config strings and the deployed
+    "openai/gpt-4o-mini" default both keep working.
 
     Args:
-        model_name (str): The name of the model, such as "gpt-4".
-        temperature (float): Sampling temperature. The evaluator's index
-            selection passes 0 so the same fetched set maps to the same picks.
+        model_name (str): Either "provider/model" (e.g. "ollama/llama3.1") or a
+            bare model name, which defaults to the openai provider.
+        temperature (float): Sampling temperature forwarded to the integration.
+            The evaluator's index selection passes 0 so the same fetched set
+            maps to the same picks.
 
     Returns:
-        ChatOpenAI: An initialized ChatOpenAI instance configured with standard parameters.
+        BaseChatModel: An initialized chat model for the requested provider.
+
+    Raises:
+        ValueError: The provider prefix is not a known provider.
+        ImportError: An ollama model was requested without the ``local`` extra.
     """
-    return ChatOpenAI(model=model_name, temperature=temperature)
+    provider, separator, name = model_name.partition("/")
+    if not separator:
+        # No slash means the whole string is an openai model name.
+        provider, name = "openai", model_name
+    constructor = _PROVIDERS.get(provider)
+    if constructor is None:
+        raise ValueError(
+            f"Unknown model provider {provider!r} in {model_name!r}; "
+            f"known providers: {sorted(_PROVIDERS)}"
+        )
+    return constructor(name, temperature)
 
 
 class ArticleStrict(BaseModel):

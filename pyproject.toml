@@ -63,6 +63,12 @@ mcp = [
     "fastapi>=0.111",
     "uvicorn[standard]>=0.30",
 ]
+# Local-model support. Kept out of the base install so a default deployment
+# stays langchain-core + langchain-openai; load_chat_model imports it lazily
+# and only when an "ollama/" model is requested.
+local = [
+    "langchain-ollama>=1.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/buzzify-ai/search-workflow"
