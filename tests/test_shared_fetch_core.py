@@ -20,7 +20,7 @@ import pytest
 from langchain_core.messages import AIMessage
 
 from search_workflow import graph, tools
-from search_workflow.utils import ArticlesResponse, ArticleStrict
+from search_workflow.utils import SelectionResponse
 from tests.fixtures_fallback import configure_fallback_state
 
 FIX_MERGE = json.loads(
@@ -202,19 +202,10 @@ class _AgentBound:
 
 
 class _EvaluatorBound:
-    """The evaluator step: rank the merged tool output into one article."""
+    """The evaluator step: select the first merged result by index."""
 
-    async def ainvoke(self, value: object, config: object = None) -> ArticlesResponse:
-        return ArticlesResponse(
-            articles=[
-                ArticleStrict(
-                    title="Merged article",
-                    link="https://example.test/a",
-                    snippet="ranked from the merged core output",
-                    similarity=0.9,
-                )
-            ]
-        )
+    async def ainvoke(self, value: object, config: object = None) -> SelectionResponse:
+        return SelectionResponse(selected=[0])
 
 
 class _ToolCallingModel:
@@ -231,7 +222,11 @@ async def test_run_workflow_drives_shared_core_end_to_end(
     # Override the default agent stub so the agent emits a tool call: without
     # it the graph ends at the agent and never touches the shared core.
     model = _ToolCallingModel()
-    monkeypatch.setattr("search_workflow.graph.load_chat_model", lambda name: model)
+    # load_chat_model now takes a temperature kwarg (temperature=0 for the
+    # select-by-index evaluator call), so the stub must accept it.
+    monkeypatch.setattr(
+        "search_workflow.graph.load_chat_model", lambda name, **kwargs: model
+    )
 
     # Both engines answer at the seam the core dispatches to.
     configure_fallback_state(monkeypatch, "searxng_ok")
@@ -245,7 +240,9 @@ async def test_run_workflow_drives_shared_core_end_to_end(
 
     assert out["status"] == "ok"
     assert isinstance(out["results"], list) and out["results"]
-    assert out["results"][0]["link"] == "https://example.test/a"
+    # Select-by-index returns a fetched result verbatim; assert the shape
+    # rather than an invented link (the evaluator no longer regenerates URLs).
+    assert out["results"][0]["link"].startswith("http")
 
     # The tool path fetched both engines in parallel through the shared core:
     # one outbound request each, no LLM call inside the core.
