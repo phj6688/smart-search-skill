@@ -54,7 +54,7 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --python ${{ matrix.python-version }}
-      - run: uv run pytest tests/ -q
+      - run: uv run pytest tests/ -q --block-network
 
   import-probe:
     name: fresh-runner import probe
