@@ -142,14 +142,26 @@ async def test_search_tool_awaitable_inside_running_loop(
 
     stub_results = [{"title": "t", "link": "https://example.com", "snippet": "s"}]
 
-    async def fake_health_check() -> bool:
+    async def fake_health_check(self: tools.SearXNGClient) -> bool:
         return True
 
-    async def fake_searxng_search(**kwargs: Any) -> list[dict[str, str]]:
+    async def fake_searxng_search(
+        self: tools.SearXNGClient, **kwargs: Any
+    ) -> list[dict[str, str]]:
         return stub_results
 
-    monkeypatch.setattr(tools.searxng_client, "health_check", fake_health_check)
-    monkeypatch.setattr(tools.searxng_client, "search", fake_searxng_search)
+    # The tool now routes through the shared fetch core, which queries both
+    # engines in parallel; stub DDG too so the call stays offline and returns
+    # only the SearXNG results (DDG's auto backend rides primp, which slips
+    # past --block-network). Patch at the class, not the module-global
+    # instance: monkeypatch would otherwise restore instance attributes onto
+    # the shared searxng_client and shadow later class-level stubs.
+    async def fake_ddg_search(query: str, max_results: int) -> list[dict[str, str]]:
+        return []
+
+    monkeypatch.setattr(tools.SearXNGClient, "health_check", fake_health_check)
+    monkeypatch.setattr(tools.SearXNGClient, "search", fake_searxng_search)
+    monkeypatch.setattr(tools, "_ddg_search", fake_ddg_search)
 
     assert asyncio.get_running_loop() is not None
     try:
