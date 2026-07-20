@@ -15,7 +15,7 @@ from collections.abc import Iterator
 import pytest
 from langchain_core.messages import AIMessage
 
-from search_workflow.utils import ArticlesResponse, ArticleStrict
+from search_workflow.utils import ArticlesResponse, ArticleStrict, SelectionResponse
 from tests.fixtures_fallback import (  # noqa: F401
     FALLBACK_STATE_NAMES,
     FallbackExpectation,
@@ -24,15 +24,23 @@ from tests.fixtures_fallback import (  # noqa: F401
     fallback_state,
 )
 
-# The offline-suite held-out probe shells out to `pytest tests/` in a
-# subprocess. Because python_files collects issue-*.py, that subprocess would
-# re-collect the probe and spawn its own `pytest tests/`, recursing without
-# bound. The first (top-level) run inherits no sentinel and runs the probe
-# normally, then exports the sentinel; any nested run sees it and skips the
-# self-suite test, so the recursion terminates after one level.
+# Two held-out probes shell out to `pytest tests/` in a subprocess, and because
+# python_files collects issue-*.py the subprocess re-collects the probe and
+# spawns its own pytest, recursing without bound: the HLB-647 offline-suite
+# probe re-runs the whole suite, and the HLB-648 egress-canary probe runs
+# `pytest -k egress_canary`, a selector that also matches the probe's own
+# `test_egress_canary_passes_under_pytest`. The first (top-level) run inherits
+# no sentinel and runs both probes normally, then exports the sentinel; any
+# nested run sees it and skips both self-referential probes, so the recursion
+# terminates after one level.
 _SELF_SUITE_ENV = "SW_HELDOUT_SELF_SUITE"
 _IN_NESTED_SELF_SUITE = os.environ.get(_SELF_SUITE_ENV) == "1"
 os.environ[_SELF_SUITE_ENV] = "1"
+
+_NESTED_RECURSION_SENTINELS = (
+    "test_suite_passes_offline_with_block_network_and_no_api_key",
+    "test_egress_canary_passes_under_pytest",
+)
 
 
 def pytest_collection_modifyitems(
@@ -44,7 +52,7 @@ def pytest_collection_modifyitems(
         reason="nested heldout self-suite run; skip to avoid unbounded pytest recursion"
     )
     for item in items:
-        if "test_suite_passes_offline_with_block_network_and_no_api_key" in item.nodeid:
+        if any(name in item.nodeid for name in _NESTED_RECURSION_SENTINELS):
             item.add_marker(skip)
 
 # Written into cassettes in place of Authorization / X-Api-Key values, so the
@@ -116,9 +124,17 @@ def vcr_config() -> dict[str, object]:
 
 
 class CannedStructuredModel:
-    """Stand-in for `chat_model.with_structured_output(ArticlesResponse)`."""
+    """Stand-in for `chat_model.with_structured_output(schema)`."""
 
-    async def ainvoke(self, value: object, config: object = None) -> ArticlesResponse:
+    def __init__(self, schema: object) -> None:
+        self._schema = schema
+
+    async def ainvoke(self, value: object, config: object = None) -> object:
+        # The evaluator now selects by index; picking 0 exercises the join back
+        # to the fetched objects offline. Anything else keeps the legacy article
+        # shape so unrelated callers of with_structured_output stay covered.
+        if self._schema is SelectionResponse:
+            return SelectionResponse(selected=[0])
         return ArticlesResponse(
             articles=[
                 ArticleStrict(
@@ -138,7 +154,7 @@ class CannedChatModel:
         return self
 
     def with_structured_output(self, schema: object) -> CannedStructuredModel:
-        return CannedStructuredModel()
+        return CannedStructuredModel(schema)
 
     async def ainvoke(self, value: object, config: object = None) -> AIMessage:
         return AIMessage(content="canned agent reply")
@@ -155,9 +171,11 @@ def stub_openai(monkeypatch: pytest.MonkeyPatch) -> CannedChatModel:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     model = CannedChatModel()
     monkeypatch.setattr(
-        "search_workflow.utils.load_chat_model", lambda model_name: model
+        "search_workflow.utils.load_chat_model",
+        lambda model_name, temperature=0.1: model,
     )
     monkeypatch.setattr(
-        "search_workflow.graph.load_chat_model", lambda model_name: model
+        "search_workflow.graph.load_chat_model",
+        lambda model_name, temperature=0.1: model,
     )
     return model

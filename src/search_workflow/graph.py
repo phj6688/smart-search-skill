@@ -4,7 +4,7 @@ import json
 from datetime import UTC, datetime
 from typing import Any, Literal, cast
 
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph
@@ -15,7 +15,7 @@ from .errors import SearchError
 from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT
 from .state import InputState, State
 from .tools import TOOLS
-from .utils import ArticlesResponse, load_chat_model
+from .utils import SelectionResponse, load_chat_model
 
 
 async def agent(
@@ -51,11 +51,34 @@ async def agent(
         }
     return {"messages": [response]}
 
+def _fetched_results(messages: list[Any]) -> list[dict[str, Any]]:
+    """Return the results the tool path fetched, from the most recent ToolMessage.
+
+    ToolNode serializes the search tool's list return as a JSON string on the
+    ToolMessage. Parsing it here lets the evaluator select by position instead
+    of asking the model to re-emit (and possibly mutate) each field.
+    """
+    for message in reversed(messages):
+        if not isinstance(message, ToolMessage):
+            continue
+        content = message.content
+        if isinstance(content, str):
+            try:
+                parsed = json.loads(content)
+            except json.JSONDecodeError:
+                return []
+        else:
+            parsed = content
+        if isinstance(parsed, list):
+            return [item for item in parsed if isinstance(item, dict)]
+        return []
+    return []
+
+
 async def evaluator(
     state: State, config: RunnableConfig
 ) -> dict[str, list[AIMessage]]:
-    """Evaluate tool results and return the most relevant entries based on the search query."""
-
+    """Select the most relevant fetched results by index, without regenerating them."""
 
     configuration = Configuration.from_runnable_config(config)
 
@@ -66,6 +89,7 @@ async def evaluator(
     search_query = state.messages[0].content
     max_results = configuration.max_search_results_evaluator
 
+    fetched = _fetched_results(list(state.messages))
 
     message_value = await prompt.ainvoke(
         {
@@ -77,21 +101,33 @@ async def evaluator(
         config,
     )
 
-    model = load_chat_model(configuration.model).with_structured_output(ArticlesResponse)
+    # temperature=0 keeps the same fetched set mapping to the same picks; the
+    # model returns indices into `fetched`, never regenerated article fields.
+    model = load_chat_model(
+        configuration.model, temperature=0
+    ).with_structured_output(SelectionResponse)
     structured_response: Any = await model.ainvoke(message_value, config)
+    selected_indices = structured_response.selected
 
-    # Process and serialize response
-    articles_data = (
-        structured_response.articles if isinstance(structured_response, ArticlesResponse)
-        else [item[0] if isinstance(item, tuple) else item for item in structured_response]
-    )
+    # Join the picked indices back to the fetched objects. Values are copied
+    # verbatim (no lowercasing, no regeneration); out-of-range indices drop, and
+    # the cap keeps at most max_results without padding the shortfall.
+    selected: list[dict[str, Any]] = []
+    for index in selected_indices:
+        if not 0 <= index < len(fetched):
+            continue
+        source = fetched[index]
+        selected.append(
+            {
+                "title": source.get("title", ""),
+                "link": source.get("link", ""),
+                "snippet": source.get("snippet", ""),
+            }
+        )
+        if len(selected) >= max_results:
+            break
 
-    articles_data.sort(key=lambda x: x.similarity, reverse=True)
-    if len(articles_data) > max_results:
-        articles_data = articles_data[:max_results]
-
-
-    response_content = json.dumps([article.dict() for article in articles_data], ensure_ascii=False)
+    response_content = json.dumps(selected, ensure_ascii=False)
     return {"messages": [AIMessage(content=response_content)]}
 
 # Define workflow and its nodes

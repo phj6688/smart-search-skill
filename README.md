@@ -14,7 +14,7 @@
 - 🛡️ **Privacy-first** — self-hosted SearXNG, no queries sent to commercial APIs
 - ⚙️ **Configurable categories** — `general`, `news`, `it`, or combined per query
 - 🔄 **Resilient fallback** — SearXNG down? DuckDuckGo fills automatically
-- 🤖 **AI-evaluated results** — LLM ranks and filters results for relevance
+- 🤖 **AI-evaluated results** — LLM selects the most relevant results by index from the fetched set
 - 📦 **LangGraph-compatible** — drop-in tool for any LangGraph agent
 - 🔌 **OpenClaw skill** — invoke directly from any OpenClaw agent via `SKILL.md`
 
@@ -221,7 +221,7 @@ query
 
 Both engines run in parallel. Results are merged and deduplicated by URL.
 If SearXNG returns 0 results, DuckDuckGo fills transparently.
-The LLM evaluator ranks results for relevance before returning.
+The LLM evaluator selects results by index from the fetched set before returning.
 
 ---
 

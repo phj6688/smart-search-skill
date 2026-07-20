@@ -14,7 +14,7 @@ metadata:
 # smart-search Skill
 
 Parallel hybrid search: SearXNG + DuckDuckGo run simultaneously, results
-merged, deduplicated, and ranked by an LLM evaluator.
+merged, deduplicated, then selected by index from the fetched set by an LLM evaluator.
 
 ## Prerequisites
 
@@ -95,9 +95,9 @@ Failure:
 |  | — | Required for AI result evaluation |
 |  |  | SearXNG instance URL |
 |  |  | Results fetched per engine |
-|  |  | Results returned after AI ranking |
+|  |  | Results the evaluator selects by index |
 
 ## Fallback Behavior
 
 - SearXNG down or returns 0 results → DuckDuckGo fills automatically
-- No  → results returned unranked (no AI evaluation step)
+- No  → results returned without evaluator selection (no AI evaluation step)
