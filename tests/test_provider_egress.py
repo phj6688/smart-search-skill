@@ -105,13 +105,9 @@ async def test_run_workflow_local_provider_has_zero_openai_egress(
     monkeypatch.setattr(graph, "load_chat_model", real_load_chat_model)
 
     # Keep the tools node off the real network: stub both search engines at the
-    # seam the shared core dispatches to, plus the SearXNG health probe.
+    # seam the shared core dispatches to. HLB-652 removed the SearXNG health
+    # probe, so no health_check patch is needed.
     configure_fallback_state(monkeypatch, "searxng_ok")
-
-    async def healthy() -> bool:
-        return True
-
-    monkeypatch.setattr(tools.searxng_client, "health_check", healthy)
 
     # Record every socket peer on top of the active egress guard, so the
     # zero-OpenAI-egress claim is asserted at the socket level too. The guard is
