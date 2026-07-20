@@ -1,0 +1,3182 @@
+[
+  {
+    "id": "merge-dup-0001",
+    "category": "dup_pair",
+    "variant": "trailing_slash",
+    "query": "python asyncio tutorial",
+    "results": [
+      {
+        "title": "Python asyncio: complete guide",
+        "link": "https://docs.example.com/python/asyncio-tutorial",
+        "snippet": "A guide covering python asyncio, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Python asyncio: complete guide",
+        "link": "https://docs.example.com/python/asyncio-tutorial/",
+        "snippet": "A guide covering python asyncio, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Python asyncio reference",
+        "link": "https://ref.example.net/python/asyncio-tutorial",
+        "snippet": "A reference covering python asyncio, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Python asyncio FAQ",
+        "link": "https://faq.example.org/python/asyncio-tutorial",
+        "snippet": "A faq covering python asyncio, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0002",
+    "category": "dup_pair",
+    "variant": "utm_query",
+    "query": "kubernetes ingress configuration",
+    "results": [
+      {
+        "title": "Kubernetes ingress: complete guide",
+        "link": "https://docs.example.io/kubernetes/ingress",
+        "snippet": "A guide covering kubernetes ingress, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Kubernetes ingress: complete guide",
+        "link": "https://docs.example.io/kubernetes/ingress?utm_source=newsletter",
+        "snippet": "A guide covering kubernetes ingress, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Kubernetes ingress reference",
+        "link": "https://ref.example.net/kubernetes/ingress",
+        "snippet": "A reference covering kubernetes ingress, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Kubernetes ingress FAQ",
+        "link": "https://faq.example.org/kubernetes/ingress",
+        "snippet": "A faq covering kubernetes ingress, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0003",
+    "category": "dup_pair",
+    "variant": "scheme_http",
+    "query": "postgresql index types explained",
+    "results": [
+      {
+        "title": "PostgreSQL indexes: complete guide",
+        "link": "https://wiki.example.org/postgres/index-types",
+        "snippet": "A guide covering postgresql indexes, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "PostgreSQL indexes: complete guide",
+        "link": "http://wiki.example.org/postgres/index-types",
+        "snippet": "A guide covering postgresql indexes, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "PostgreSQL indexes reference",
+        "link": "https://ref.example.net/postgres/index-types",
+        "snippet": "A reference covering postgresql indexes, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "PostgreSQL indexes FAQ",
+        "link": "https://faq.example.org/postgres/index-types",
+        "snippet": "A faq covering postgresql indexes, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0004",
+    "category": "dup_pair",
+    "variant": "fragment",
+    "query": "react useeffect cleanup pattern",
+    "results": [
+      {
+        "title": "React useEffect cleanup: complete guide",
+        "link": "https://docs.example.dev/react/useeffect-cleanup",
+        "snippet": "A guide covering react useeffect cleanup, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "React useEffect cleanup: complete guide",
+        "link": "https://docs.example.dev/react/useeffect-cleanup#introduction",
+        "snippet": "A guide covering react useeffect cleanup, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "React useEffect cleanup reference",
+        "link": "https://ref.example.net/react/useeffect-cleanup",
+        "snippet": "A reference covering react useeffect cleanup, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "React useEffect cleanup FAQ",
+        "link": "https://faq.example.org/react/useeffect-cleanup",
+        "snippet": "A faq covering react useeffect cleanup, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0005",
+    "category": "dup_pair",
+    "variant": "www_prefix",
+    "query": "rust ownership and borrowing",
+    "results": [
+      {
+        "title": "Rust ownership: complete guide",
+        "link": "https://book.example.io/rust/ownership",
+        "snippet": "A guide covering rust ownership, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Rust ownership: complete guide",
+        "link": "https://www.book.example.io/rust/ownership",
+        "snippet": "A guide covering rust ownership, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Rust ownership reference",
+        "link": "https://ref.example.net/rust/ownership",
+        "snippet": "A reference covering rust ownership, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Rust ownership FAQ",
+        "link": "https://faq.example.org/rust/ownership",
+        "snippet": "A faq covering rust ownership, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0006",
+    "category": "dup_pair",
+    "variant": "index_html",
+    "query": "docker multi stage build guide",
+    "results": [
+      {
+        "title": "Docker multi-stage builds: complete guide",
+        "link": "https://docs.example.net/docker/multi-stage",
+        "snippet": "A guide covering docker multi-stage builds, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Docker multi-stage builds: complete guide",
+        "link": "https://docs.example.net/docker/multi-stage/index.html",
+        "snippet": "A guide covering docker multi-stage builds, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Docker multi-stage builds reference",
+        "link": "https://ref.example.net/docker/multi-stage",
+        "snippet": "A reference covering docker multi-stage builds, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Docker multi-stage builds FAQ",
+        "link": "https://faq.example.org/docker/multi-stage",
+        "snippet": "A faq covering docker multi-stage builds, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0007",
+    "category": "dup_pair",
+    "variant": "trailing_slash",
+    "query": "typescript generics deep dive",
+    "results": [
+      {
+        "title": "TypeScript generics: complete guide",
+        "link": "https://handbook.example.dev/typescript/generics",
+        "snippet": "A guide covering typescript generics, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "TypeScript generics: complete guide",
+        "link": "https://handbook.example.dev/typescript/generics/",
+        "snippet": "A guide covering typescript generics, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "TypeScript generics reference",
+        "link": "https://ref.example.net/typescript/generics",
+        "snippet": "A reference covering typescript generics, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "TypeScript generics FAQ",
+        "link": "https://faq.example.org/typescript/generics",
+        "snippet": "A faq covering typescript generics, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0008",
+    "category": "dup_pair",
+    "variant": "utm_query",
+    "query": "nginx reverse proxy setup",
+    "results": [
+      {
+        "title": "Nginx reverse proxy: complete guide",
+        "link": "https://docs.example.org/nginx/reverse-proxy",
+        "snippet": "A guide covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Nginx reverse proxy: complete guide",
+        "link": "https://docs.example.org/nginx/reverse-proxy?utm_source=newsletter",
+        "snippet": "A guide covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Nginx reverse proxy reference",
+        "link": "https://ref.example.net/nginx/reverse-proxy",
+        "snippet": "A reference covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Nginx reverse proxy FAQ",
+        "link": "https://faq.example.org/nginx/reverse-proxy",
+        "snippet": "A faq covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0009",
+    "category": "dup_pair",
+    "variant": "scheme_http",
+    "query": "git interactive rebase workflow",
+    "results": [
+      {
+        "title": "Git interactive rebase: complete guide",
+        "link": "https://guide.example.com/git/interactive-rebase",
+        "snippet": "A guide covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Git interactive rebase: complete guide",
+        "link": "http://guide.example.com/git/interactive-rebase",
+        "snippet": "A guide covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Git interactive rebase reference",
+        "link": "https://ref.example.net/git/interactive-rebase",
+        "snippet": "A reference covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Git interactive rebase FAQ",
+        "link": "https://faq.example.org/git/interactive-rebase",
+        "snippet": "A faq covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0010",
+    "category": "dup_pair",
+    "variant": "fragment",
+    "query": "sqlalchemy relationship loading",
+    "results": [
+      {
+        "title": "SQLAlchemy loading strategies: complete guide",
+        "link": "https://docs.example.dev/sqlalchemy/loading",
+        "snippet": "A guide covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "SQLAlchemy loading strategies: complete guide",
+        "link": "https://docs.example.dev/sqlalchemy/loading#introduction",
+        "snippet": "A guide covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "SQLAlchemy loading strategies reference",
+        "link": "https://ref.example.net/sqlalchemy/loading",
+        "snippet": "A reference covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "SQLAlchemy loading strategies FAQ",
+        "link": "https://faq.example.org/sqlalchemy/loading",
+        "snippet": "A faq covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0011",
+    "category": "dup_pair",
+    "variant": "www_prefix",
+    "query": "go goroutines and channels",
+    "results": [
+      {
+        "title": "Go concurrency: complete guide",
+        "link": "https://docs.example.io/go/goroutines",
+        "snippet": "A guide covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Go concurrency: complete guide",
+        "link": "https://www.docs.example.io/go/goroutines",
+        "snippet": "A guide covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Go concurrency reference",
+        "link": "https://ref.example.net/go/goroutines",
+        "snippet": "A reference covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Go concurrency FAQ",
+        "link": "https://faq.example.org/go/goroutines",
+        "snippet": "A faq covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0012",
+    "category": "dup_pair",
+    "variant": "index_html",
+    "query": "terraform state locking",
+    "results": [
+      {
+        "title": "Terraform state locking: complete guide",
+        "link": "https://docs.example.net/terraform/state-locking",
+        "snippet": "A guide covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Terraform state locking: complete guide",
+        "link": "https://docs.example.net/terraform/state-locking/index.html",
+        "snippet": "A guide covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Terraform state locking reference",
+        "link": "https://ref.example.net/terraform/state-locking",
+        "snippet": "A reference covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Terraform state locking FAQ",
+        "link": "https://faq.example.org/terraform/state-locking",
+        "snippet": "A faq covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0013",
+    "category": "dup_pair",
+    "variant": "trailing_slash",
+    "query": "redis persistence options",
+    "results": [
+      {
+        "title": "Redis persistence: complete guide",
+        "link": "https://wiki.example.org/redis/persistence",
+        "snippet": "A guide covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Redis persistence: complete guide",
+        "link": "https://wiki.example.org/redis/persistence/",
+        "snippet": "A guide covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Redis persistence reference",
+        "link": "https://ref.example.net/redis/persistence",
+        "snippet": "A reference covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Redis persistence FAQ",
+        "link": "https://faq.example.org/redis/persistence",
+        "snippet": "A faq covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0014",
+    "category": "dup_pair",
+    "variant": "utm_query",
+    "query": "graphql schema stitching",
+    "results": [
+      {
+        "title": "GraphQL schema stitching: complete guide",
+        "link": "https://docs.example.dev/graphql/schema-stitching",
+        "snippet": "A guide covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "GraphQL schema stitching: complete guide",
+        "link": "https://docs.example.dev/graphql/schema-stitching?utm_source=newsletter",
+        "snippet": "A guide covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "GraphQL schema stitching reference",
+        "link": "https://ref.example.net/graphql/schema-stitching",
+        "snippet": "A reference covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "GraphQL schema stitching FAQ",
+        "link": "https://faq.example.org/graphql/schema-stitching",
+        "snippet": "A faq covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0015",
+    "category": "dup_pair",
+    "variant": "scheme_http",
+    "query": "http caching headers reference",
+    "results": [
+      {
+        "title": "HTTP caching headers: complete guide",
+        "link": "https://developer.example.org/http/caching-headers",
+        "snippet": "A guide covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "HTTP caching headers: complete guide",
+        "link": "http://developer.example.org/http/caching-headers",
+        "snippet": "A guide covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "HTTP caching headers reference",
+        "link": "https://ref.example.net/http/caching-headers",
+        "snippet": "A reference covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "HTTP caching headers FAQ",
+        "link": "https://faq.example.org/http/caching-headers",
+        "snippet": "A faq covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0016",
+    "category": "dup_pair",
+    "variant": "fragment",
+    "query": "kafka consumer group rebalance",
+    "results": [
+      {
+        "title": "Kafka consumer groups: complete guide",
+        "link": "https://docs.example.io/kafka/consumer-groups",
+        "snippet": "A guide covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Kafka consumer groups: complete guide",
+        "link": "https://docs.example.io/kafka/consumer-groups#introduction",
+        "snippet": "A guide covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Kafka consumer groups reference",
+        "link": "https://ref.example.net/kafka/consumer-groups",
+        "snippet": "A reference covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Kafka consumer groups FAQ",
+        "link": "https://faq.example.org/kafka/consumer-groups",
+        "snippet": "A faq covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0017",
+    "category": "dup_pair",
+    "variant": "www_prefix",
+    "query": "linux cgroups v2 overview",
+    "results": [
+      {
+        "title": "Linux cgroups v2: complete guide",
+        "link": "https://wiki.example.net/linux/cgroups-v2",
+        "snippet": "A guide covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Linux cgroups v2: complete guide",
+        "link": "https://www.wiki.example.net/linux/cgroups-v2",
+        "snippet": "A guide covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Linux cgroups v2 reference",
+        "link": "https://ref.example.net/linux/cgroups-v2",
+        "snippet": "A reference covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Linux cgroups v2 FAQ",
+        "link": "https://faq.example.org/linux/cgroups-v2",
+        "snippet": "A faq covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0018",
+    "category": "dup_pair",
+    "variant": "index_html",
+    "query": "webassembly memory model",
+    "results": [
+      {
+        "title": "WebAssembly memory: complete guide",
+        "link": "https://docs.example.dev/wasm/memory-model",
+        "snippet": "A guide covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "WebAssembly memory: complete guide",
+        "link": "https://docs.example.dev/wasm/memory-model/index.html",
+        "snippet": "A guide covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "WebAssembly memory reference",
+        "link": "https://ref.example.net/wasm/memory-model",
+        "snippet": "A reference covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "WebAssembly memory FAQ",
+        "link": "https://faq.example.org/wasm/memory-model",
+        "snippet": "A faq covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0019",
+    "category": "dup_pair",
+    "variant": "trailing_slash",
+    "query": "oauth2 authorization code flow",
+    "results": [
+      {
+        "title": "OAuth2 auth code flow: complete guide",
+        "link": "https://docs.example.org/oauth2/auth-code",
+        "snippet": "A guide covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "OAuth2 auth code flow: complete guide",
+        "link": "https://docs.example.org/oauth2/auth-code/",
+        "snippet": "A guide covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "OAuth2 auth code flow reference",
+        "link": "https://ref.example.net/oauth2/auth-code",
+        "snippet": "A reference covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "OAuth2 auth code flow FAQ",
+        "link": "https://faq.example.org/oauth2/auth-code",
+        "snippet": "A faq covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-dup-0020",
+    "category": "dup_pair",
+    "variant": "utm_query",
+    "query": "elasticsearch mapping tuning",
+    "results": [
+      {
+        "title": "Elasticsearch mappings: complete guide",
+        "link": "https://docs.example.io/elasticsearch/mappings",
+        "snippet": "A guide covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Elasticsearch mappings: complete guide",
+        "link": "https://docs.example.io/elasticsearch/mappings?utm_source=newsletter",
+        "snippet": "A guide covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Elasticsearch mappings reference",
+        "link": "https://ref.example.net/elasticsearch/mappings",
+        "snippet": "A reference covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Elasticsearch mappings FAQ",
+        "link": "https://faq.example.org/elasticsearch/mappings",
+        "snippet": "A faq covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        "dg-a",
+        "dg-a",
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0001",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "nginx reverse proxy setup",
+    "results": [
+      {
+        "title": "Nginx reverse proxy step by step tutorial",
+        "link": "https://docs.example.org/nginx/reverse-proxy",
+        "snippet": "A tutorial covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Nginx reverse proxy: archived edition",
+        "link": "https://docs.example.org/Nginx/REVERSE-PROXY",
+        "snippet": "A overview covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Nginx reverse proxy reference",
+        "link": "https://ref.example.io/nginx/reverse-proxy",
+        "snippet": "A reference covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Nginx reverse proxy FAQ",
+        "link": "https://faq.example.dev/nginx/reverse-proxy",
+        "snippet": "A faq covering nginx reverse proxy, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0002",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "git interactive rebase workflow",
+    "results": [
+      {
+        "title": "Git interactive rebase step by step tutorial",
+        "link": "https://guide.example.com/git/interactive-rebase",
+        "snippet": "A tutorial covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Git interactive rebase: archived edition",
+        "link": "https://guide.example.com/Git/INTERACTIVE-REBASE",
+        "snippet": "A overview covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Git interactive rebase reference",
+        "link": "https://ref.example.io/git/interactive-rebase",
+        "snippet": "A reference covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Git interactive rebase FAQ",
+        "link": "https://faq.example.dev/git/interactive-rebase",
+        "snippet": "A faq covering git interactive rebase, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0003",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "sqlalchemy relationship loading",
+    "results": [
+      {
+        "title": "SQLAlchemy loading strategies step by step tutorial",
+        "link": "https://docs.example.dev/sqlalchemy/loading",
+        "snippet": "A tutorial covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "SQLAlchemy loading strategies: archived edition",
+        "link": "https://docs.example.dev/Sqlalchemy/LOADING",
+        "snippet": "A overview covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "SQLAlchemy loading strategies reference",
+        "link": "https://ref.example.io/sqlalchemy/loading",
+        "snippet": "A reference covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "SQLAlchemy loading strategies FAQ",
+        "link": "https://faq.example.dev/sqlalchemy/loading",
+        "snippet": "A faq covering sqlalchemy loading strategies, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0004",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "go goroutines and channels",
+    "results": [
+      {
+        "title": "Go concurrency step by step tutorial",
+        "link": "https://docs.example.io/go/goroutines",
+        "snippet": "A tutorial covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Go concurrency: archived edition",
+        "link": "https://docs.example.io/Go/GOROUTINES",
+        "snippet": "A overview covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Go concurrency reference",
+        "link": "https://ref.example.io/go/goroutines",
+        "snippet": "A reference covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Go concurrency FAQ",
+        "link": "https://faq.example.dev/go/goroutines",
+        "snippet": "A faq covering go concurrency, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0005",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "terraform state locking",
+    "results": [
+      {
+        "title": "Terraform state locking step by step tutorial",
+        "link": "https://docs.example.net/terraform/state-locking",
+        "snippet": "A tutorial covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Terraform state locking: archived edition",
+        "link": "https://docs.example.net/Terraform/STATE-LOCKING",
+        "snippet": "A overview covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Terraform state locking reference",
+        "link": "https://ref.example.io/terraform/state-locking",
+        "snippet": "A reference covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Terraform state locking FAQ",
+        "link": "https://faq.example.dev/terraform/state-locking",
+        "snippet": "A faq covering terraform state locking, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0006",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "redis persistence options",
+    "results": [
+      {
+        "title": "Redis persistence step by step tutorial",
+        "link": "https://wiki.example.org/redis/persistence",
+        "snippet": "A tutorial covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Redis persistence: archived edition",
+        "link": "https://wiki.example.org/Redis/PERSISTENCE",
+        "snippet": "A overview covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Redis persistence reference",
+        "link": "https://ref.example.io/redis/persistence",
+        "snippet": "A reference covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Redis persistence FAQ",
+        "link": "https://faq.example.dev/redis/persistence",
+        "snippet": "A faq covering redis persistence, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0007",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "graphql schema stitching",
+    "results": [
+      {
+        "title": "GraphQL schema stitching step by step tutorial",
+        "link": "https://docs.example.dev/graphql/schema-stitching",
+        "snippet": "A tutorial covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "GraphQL schema stitching: archived edition",
+        "link": "https://docs.example.dev/Graphql/SCHEMA-STITCHING",
+        "snippet": "A overview covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "GraphQL schema stitching reference",
+        "link": "https://ref.example.io/graphql/schema-stitching",
+        "snippet": "A reference covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "GraphQL schema stitching FAQ",
+        "link": "https://faq.example.dev/graphql/schema-stitching",
+        "snippet": "A faq covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0008",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "http caching headers reference",
+    "results": [
+      {
+        "title": "HTTP caching headers step by step tutorial",
+        "link": "https://developer.example.org/http/caching-headers",
+        "snippet": "A tutorial covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "HTTP caching headers: archived edition",
+        "link": "https://developer.example.org/Http/CACHING-HEADERS",
+        "snippet": "A overview covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "HTTP caching headers reference",
+        "link": "https://ref.example.io/http/caching-headers",
+        "snippet": "A reference covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "HTTP caching headers FAQ",
+        "link": "https://faq.example.dev/http/caching-headers",
+        "snippet": "A faq covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0009",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "kafka consumer group rebalance",
+    "results": [
+      {
+        "title": "Kafka consumer groups step by step tutorial",
+        "link": "https://docs.example.io/kafka/consumer-groups",
+        "snippet": "A tutorial covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Kafka consumer groups: archived edition",
+        "link": "https://docs.example.io/Kafka/CONSUMER-GROUPS",
+        "snippet": "A overview covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Kafka consumer groups reference",
+        "link": "https://ref.example.io/kafka/consumer-groups",
+        "snippet": "A reference covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Kafka consumer groups FAQ",
+        "link": "https://faq.example.dev/kafka/consumer-groups",
+        "snippet": "A faq covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0010",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "linux cgroups v2 overview",
+    "results": [
+      {
+        "title": "Linux cgroups v2 step by step tutorial",
+        "link": "https://wiki.example.net/linux/cgroups-v2",
+        "snippet": "A tutorial covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Linux cgroups v2: archived edition",
+        "link": "https://wiki.example.net/Linux/CGROUPS-V2",
+        "snippet": "A overview covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Linux cgroups v2 reference",
+        "link": "https://ref.example.io/linux/cgroups-v2",
+        "snippet": "A reference covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Linux cgroups v2 FAQ",
+        "link": "https://faq.example.dev/linux/cgroups-v2",
+        "snippet": "A faq covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0011",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "webassembly memory model",
+    "results": [
+      {
+        "title": "WebAssembly memory step by step tutorial",
+        "link": "https://docs.example.dev/wasm/memory-model",
+        "snippet": "A tutorial covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "WebAssembly memory: archived edition",
+        "link": "https://docs.example.dev/Wasm/MEMORY-MODEL",
+        "snippet": "A overview covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "WebAssembly memory reference",
+        "link": "https://ref.example.io/wasm/memory-model",
+        "snippet": "A reference covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "WebAssembly memory FAQ",
+        "link": "https://faq.example.dev/wasm/memory-model",
+        "snippet": "A faq covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0012",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "oauth2 authorization code flow",
+    "results": [
+      {
+        "title": "OAuth2 auth code flow step by step tutorial",
+        "link": "https://docs.example.org/oauth2/auth-code",
+        "snippet": "A tutorial covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "OAuth2 auth code flow: archived edition",
+        "link": "https://docs.example.org/Oauth2/AUTH-CODE",
+        "snippet": "A overview covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "OAuth2 auth code flow reference",
+        "link": "https://ref.example.io/oauth2/auth-code",
+        "snippet": "A reference covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "OAuth2 auth code flow FAQ",
+        "link": "https://faq.example.dev/oauth2/auth-code",
+        "snippet": "A faq covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0013",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "elasticsearch mapping tuning",
+    "results": [
+      {
+        "title": "Elasticsearch mappings step by step tutorial",
+        "link": "https://docs.example.io/elasticsearch/mappings",
+        "snippet": "A tutorial covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Elasticsearch mappings: archived edition",
+        "link": "https://docs.example.io/Elasticsearch/MAPPINGS",
+        "snippet": "A overview covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Elasticsearch mappings reference",
+        "link": "https://ref.example.io/elasticsearch/mappings",
+        "snippet": "A reference covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Elasticsearch mappings FAQ",
+        "link": "https://faq.example.dev/elasticsearch/mappings",
+        "snippet": "A faq covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0014",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "best beginner hiking trails",
+    "results": [
+      {
+        "title": "beginner hiking trails step by step tutorial",
+        "link": "https://blog.example.com/outdoors/beginner-trails",
+        "snippet": "A tutorial covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "beginner hiking trails: archived edition",
+        "link": "https://blog.example.com/Outdoors/BEGINNER-TRAILS",
+        "snippet": "A overview covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "beginner hiking trails reference",
+        "link": "https://ref.example.io/outdoors/beginner-trails",
+        "snippet": "A reference covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "beginner hiking trails FAQ",
+        "link": "https://faq.example.dev/outdoors/beginner-trails",
+        "snippet": "A faq covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0015",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "how to brew pour over coffee",
+    "results": [
+      {
+        "title": "pour over coffee step by step tutorial",
+        "link": "https://blog.example.org/coffee/pour-over",
+        "snippet": "A tutorial covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "pour over coffee: archived edition",
+        "link": "https://blog.example.org/Coffee/POUR-OVER",
+        "snippet": "A overview covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "pour over coffee reference",
+        "link": "https://ref.example.io/coffee/pour-over",
+        "snippet": "A reference covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "pour over coffee FAQ",
+        "link": "https://faq.example.dev/coffee/pour-over",
+        "snippet": "A faq covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0016",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "houseplant watering schedule",
+    "results": [
+      {
+        "title": "houseplant watering step by step tutorial",
+        "link": "https://garden.example.net/plants/watering-schedule",
+        "snippet": "A tutorial covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "houseplant watering: archived edition",
+        "link": "https://garden.example.net/Plants/WATERING-SCHEDULE",
+        "snippet": "A overview covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "houseplant watering reference",
+        "link": "https://ref.example.io/plants/watering-schedule",
+        "snippet": "A reference covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "houseplant watering FAQ",
+        "link": "https://faq.example.dev/plants/watering-schedule",
+        "snippet": "A faq covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0017",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "beginner sourdough bread recipe",
+    "results": [
+      {
+        "title": "sourdough bread step by step tutorial",
+        "link": "https://kitchen.example.io/bread/sourdough",
+        "snippet": "A tutorial covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "sourdough bread: archived edition",
+        "link": "https://kitchen.example.io/Bread/SOURDOUGH",
+        "snippet": "A overview covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "sourdough bread reference",
+        "link": "https://ref.example.io/bread/sourdough",
+        "snippet": "A reference covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "sourdough bread FAQ",
+        "link": "https://faq.example.dev/bread/sourdough",
+        "snippet": "A faq covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0018",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "budget travel tips for europe",
+    "results": [
+      {
+        "title": "budget europe travel step by step tutorial",
+        "link": "https://travel.example.com/europe/budget-tips",
+        "snippet": "A tutorial covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "budget europe travel: archived edition",
+        "link": "https://travel.example.com/Europe/BUDGET-TIPS",
+        "snippet": "A overview covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "budget europe travel reference",
+        "link": "https://ref.example.io/europe/budget-tips",
+        "snippet": "A reference covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "budget europe travel FAQ",
+        "link": "https://faq.example.dev/europe/budget-tips",
+        "snippet": "A faq covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0019",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "home office desk setup ideas",
+    "results": [
+      {
+        "title": "desk setup ideas step by step tutorial",
+        "link": "https://blog.example.dev/workspace/desk-setup",
+        "snippet": "A tutorial covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "desk setup ideas: archived edition",
+        "link": "https://blog.example.dev/Workspace/DESK-SETUP",
+        "snippet": "A overview covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "desk setup ideas reference",
+        "link": "https://ref.example.io/workspace/desk-setup",
+        "snippet": "A reference covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "desk setup ideas FAQ",
+        "link": "https://faq.example.dev/workspace/desk-setup",
+        "snippet": "A faq covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-case-0020",
+    "category": "case_sensitive_path",
+    "variant": "path_case_only",
+    "query": "basic car maintenance checklist",
+    "results": [
+      {
+        "title": "car maintenance checklist step by step tutorial",
+        "link": "https://auto.example.org/maintenance/checklist",
+        "snippet": "A tutorial covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "car maintenance checklist: archived edition",
+        "link": "https://auto.example.org/Maintenance/CHECKLIST",
+        "snippet": "A overview covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "car maintenance checklist reference",
+        "link": "https://ref.example.io/maintenance/checklist",
+        "snippet": "A reference covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "car maintenance checklist FAQ",
+        "link": "https://faq.example.dev/maintenance/checklist",
+        "snippet": "A faq covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0001",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "graphql schema stitching",
+    "results": [
+      {
+        "title": "GraphQL schema stitching: complete guide",
+        "link": "https://docs.example.dev/graphql/guide",
+        "snippet": "A guide covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "GraphQL schema stitching reference",
+        "link": "https://docs.example.dev/graphql/reference",
+        "snippet": "A reference covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "GraphQL schema stitching FAQ",
+        "link": "https://docs.example.dev/graphql/faq",
+        "snippet": "A faq covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "GraphQL schema stitching step by step tutorial",
+        "link": "https://docs.example.dev/graphql/tutorial",
+        "snippet": "A tutorial covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "GraphQL schema stitching changelog",
+        "link": "https://docs.example.dev/graphql/changelog",
+        "snippet": "A changelog covering graphql schema stitching, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0002",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "http caching headers reference",
+    "results": [
+      {
+        "title": "HTTP caching headers: complete guide",
+        "link": "https://developer.example.org/http/guide",
+        "snippet": "A guide covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "HTTP caching headers reference",
+        "link": "https://developer.example.org/http/reference",
+        "snippet": "A reference covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "HTTP caching headers FAQ",
+        "link": "https://developer.example.org/http/faq",
+        "snippet": "A faq covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "HTTP caching headers step by step tutorial",
+        "link": "https://developer.example.org/http/tutorial",
+        "snippet": "A tutorial covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "HTTP caching headers changelog",
+        "link": "https://developer.example.org/http/changelog",
+        "snippet": "A changelog covering http caching headers, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0003",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "kafka consumer group rebalance",
+    "results": [
+      {
+        "title": "Kafka consumer groups: complete guide",
+        "link": "https://docs.example.io/kafka/guide",
+        "snippet": "A guide covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Kafka consumer groups reference",
+        "link": "https://docs.example.io/kafka/reference",
+        "snippet": "A reference covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Kafka consumer groups FAQ",
+        "link": "https://docs.example.io/kafka/faq",
+        "snippet": "A faq covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Kafka consumer groups step by step tutorial",
+        "link": "https://docs.example.io/kafka/tutorial",
+        "snippet": "A tutorial covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "Kafka consumer groups changelog",
+        "link": "https://docs.example.io/kafka/changelog",
+        "snippet": "A changelog covering kafka consumer groups, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0004",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "linux cgroups v2 overview",
+    "results": [
+      {
+        "title": "Linux cgroups v2: complete guide",
+        "link": "https://wiki.example.net/linux/guide",
+        "snippet": "A guide covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Linux cgroups v2 reference",
+        "link": "https://wiki.example.net/linux/reference",
+        "snippet": "A reference covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Linux cgroups v2 FAQ",
+        "link": "https://wiki.example.net/linux/faq",
+        "snippet": "A faq covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Linux cgroups v2 step by step tutorial",
+        "link": "https://wiki.example.net/linux/tutorial",
+        "snippet": "A tutorial covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "Linux cgroups v2 changelog",
+        "link": "https://wiki.example.net/linux/changelog",
+        "snippet": "A changelog covering linux cgroups v2, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0005",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "webassembly memory model",
+    "results": [
+      {
+        "title": "WebAssembly memory: complete guide",
+        "link": "https://docs.example.dev/wasm/guide",
+        "snippet": "A guide covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "WebAssembly memory reference",
+        "link": "https://docs.example.dev/wasm/reference",
+        "snippet": "A reference covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "WebAssembly memory FAQ",
+        "link": "https://docs.example.dev/wasm/faq",
+        "snippet": "A faq covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "WebAssembly memory step by step tutorial",
+        "link": "https://docs.example.dev/wasm/tutorial",
+        "snippet": "A tutorial covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "WebAssembly memory changelog",
+        "link": "https://docs.example.dev/wasm/changelog",
+        "snippet": "A changelog covering webassembly memory, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0006",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "oauth2 authorization code flow",
+    "results": [
+      {
+        "title": "OAuth2 auth code flow: complete guide",
+        "link": "https://docs.example.org/oauth2/guide",
+        "snippet": "A guide covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "OAuth2 auth code flow reference",
+        "link": "https://docs.example.org/oauth2/reference",
+        "snippet": "A reference covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "OAuth2 auth code flow FAQ",
+        "link": "https://docs.example.org/oauth2/faq",
+        "snippet": "A faq covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "OAuth2 auth code flow step by step tutorial",
+        "link": "https://docs.example.org/oauth2/tutorial",
+        "snippet": "A tutorial covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "OAuth2 auth code flow changelog",
+        "link": "https://docs.example.org/oauth2/changelog",
+        "snippet": "A changelog covering oauth2 auth code flow, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0007",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "elasticsearch mapping tuning",
+    "results": [
+      {
+        "title": "Elasticsearch mappings: complete guide",
+        "link": "https://docs.example.io/elasticsearch/guide",
+        "snippet": "A guide covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "Elasticsearch mappings reference",
+        "link": "https://docs.example.io/elasticsearch/reference",
+        "snippet": "A reference covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "Elasticsearch mappings FAQ",
+        "link": "https://docs.example.io/elasticsearch/faq",
+        "snippet": "A faq covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "Elasticsearch mappings step by step tutorial",
+        "link": "https://docs.example.io/elasticsearch/tutorial",
+        "snippet": "A tutorial covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "Elasticsearch mappings changelog",
+        "link": "https://docs.example.io/elasticsearch/changelog",
+        "snippet": "A changelog covering elasticsearch mappings, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0008",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "best beginner hiking trails",
+    "results": [
+      {
+        "title": "beginner hiking trails: complete guide",
+        "link": "https://blog.example.com/outdoors/guide",
+        "snippet": "A guide covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "beginner hiking trails reference",
+        "link": "https://blog.example.com/outdoors/reference",
+        "snippet": "A reference covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "beginner hiking trails FAQ",
+        "link": "https://blog.example.com/outdoors/faq",
+        "snippet": "A faq covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "beginner hiking trails step by step tutorial",
+        "link": "https://blog.example.com/outdoors/tutorial",
+        "snippet": "A tutorial covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "beginner hiking trails changelog",
+        "link": "https://blog.example.com/outdoors/changelog",
+        "snippet": "A changelog covering beginner hiking trails, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0009",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "how to brew pour over coffee",
+    "results": [
+      {
+        "title": "pour over coffee: complete guide",
+        "link": "https://blog.example.org/coffee/guide",
+        "snippet": "A guide covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "pour over coffee reference",
+        "link": "https://blog.example.org/coffee/reference",
+        "snippet": "A reference covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "pour over coffee FAQ",
+        "link": "https://blog.example.org/coffee/faq",
+        "snippet": "A faq covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "pour over coffee step by step tutorial",
+        "link": "https://blog.example.org/coffee/tutorial",
+        "snippet": "A tutorial covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "pour over coffee changelog",
+        "link": "https://blog.example.org/coffee/changelog",
+        "snippet": "A changelog covering pour over coffee, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0010",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "houseplant watering schedule",
+    "results": [
+      {
+        "title": "houseplant watering: complete guide",
+        "link": "https://garden.example.net/plants/guide",
+        "snippet": "A guide covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "houseplant watering reference",
+        "link": "https://garden.example.net/plants/reference",
+        "snippet": "A reference covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "houseplant watering FAQ",
+        "link": "https://garden.example.net/plants/faq",
+        "snippet": "A faq covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "houseplant watering step by step tutorial",
+        "link": "https://garden.example.net/plants/tutorial",
+        "snippet": "A tutorial covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "houseplant watering changelog",
+        "link": "https://garden.example.net/plants/changelog",
+        "snippet": "A changelog covering houseplant watering, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0011",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "beginner sourdough bread recipe",
+    "results": [
+      {
+        "title": "sourdough bread: complete guide",
+        "link": "https://kitchen.example.io/bread/guide",
+        "snippet": "A guide covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "sourdough bread reference",
+        "link": "https://kitchen.example.io/bread/reference",
+        "snippet": "A reference covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "sourdough bread FAQ",
+        "link": "https://kitchen.example.io/bread/faq",
+        "snippet": "A faq covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "sourdough bread step by step tutorial",
+        "link": "https://kitchen.example.io/bread/tutorial",
+        "snippet": "A tutorial covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "sourdough bread changelog",
+        "link": "https://kitchen.example.io/bread/changelog",
+        "snippet": "A changelog covering sourdough bread, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0012",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "budget travel tips for europe",
+    "results": [
+      {
+        "title": "budget europe travel: complete guide",
+        "link": "https://travel.example.com/europe/guide",
+        "snippet": "A guide covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "budget europe travel reference",
+        "link": "https://travel.example.com/europe/reference",
+        "snippet": "A reference covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "budget europe travel FAQ",
+        "link": "https://travel.example.com/europe/faq",
+        "snippet": "A faq covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "budget europe travel step by step tutorial",
+        "link": "https://travel.example.com/europe/tutorial",
+        "snippet": "A tutorial covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "budget europe travel changelog",
+        "link": "https://travel.example.com/europe/changelog",
+        "snippet": "A changelog covering budget europe travel, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0013",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "home office desk setup ideas",
+    "results": [
+      {
+        "title": "desk setup ideas: complete guide",
+        "link": "https://blog.example.dev/workspace/guide",
+        "snippet": "A guide covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "desk setup ideas reference",
+        "link": "https://blog.example.dev/workspace/reference",
+        "snippet": "A reference covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "desk setup ideas FAQ",
+        "link": "https://blog.example.dev/workspace/faq",
+        "snippet": "A faq covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "desk setup ideas step by step tutorial",
+        "link": "https://blog.example.dev/workspace/tutorial",
+        "snippet": "A tutorial covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "desk setup ideas changelog",
+        "link": "https://blog.example.dev/workspace/changelog",
+        "snippet": "A changelog covering desk setup ideas, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0014",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "basic car maintenance checklist",
+    "results": [
+      {
+        "title": "car maintenance checklist: complete guide",
+        "link": "https://auto.example.org/maintenance/guide",
+        "snippet": "A guide covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "car maintenance checklist reference",
+        "link": "https://auto.example.org/maintenance/reference",
+        "snippet": "A reference covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "car maintenance checklist FAQ",
+        "link": "https://auto.example.org/maintenance/faq",
+        "snippet": "A faq covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "car maintenance checklist step by step tutorial",
+        "link": "https://auto.example.org/maintenance/tutorial",
+        "snippet": "A tutorial covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "car maintenance checklist changelog",
+        "link": "https://auto.example.org/maintenance/changelog",
+        "snippet": "A changelog covering car maintenance checklist, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0015",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "indoor workout without equipment",
+    "results": [
+      {
+        "title": "no equipment workout: complete guide",
+        "link": "https://fitness.example.net/workouts/guide",
+        "snippet": "A guide covering no equipment workout, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "no equipment workout reference",
+        "link": "https://fitness.example.net/workouts/reference",
+        "snippet": "A reference covering no equipment workout, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "no equipment workout FAQ",
+        "link": "https://fitness.example.net/workouts/faq",
+        "snippet": "A faq covering no equipment workout, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "no equipment workout step by step tutorial",
+        "link": "https://fitness.example.net/workouts/tutorial",
+        "snippet": "A tutorial covering no equipment workout, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "no equipment workout changelog",
+        "link": "https://fitness.example.net/workouts/changelog",
+        "snippet": "A changelog covering no equipment workout, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0016",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "beginner watercolor techniques",
+    "results": [
+      {
+        "title": "watercolor techniques: complete guide",
+        "link": "https://art.example.io/watercolor/guide",
+        "snippet": "A guide covering watercolor techniques, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "watercolor techniques reference",
+        "link": "https://art.example.io/watercolor/reference",
+        "snippet": "A reference covering watercolor techniques, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "watercolor techniques FAQ",
+        "link": "https://art.example.io/watercolor/faq",
+        "snippet": "A faq covering watercolor techniques, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "watercolor techniques step by step tutorial",
+        "link": "https://art.example.io/watercolor/tutorial",
+        "snippet": "A tutorial covering watercolor techniques, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "watercolor techniques changelog",
+        "link": "https://art.example.io/watercolor/changelog",
+        "snippet": "A changelog covering watercolor techniques, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0017",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "meal prep for busy weeks",
+    "results": [
+      {
+        "title": "weekly meal prep: complete guide",
+        "link": "https://kitchen.example.com/mealprep/guide",
+        "snippet": "A guide covering weekly meal prep, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "weekly meal prep reference",
+        "link": "https://kitchen.example.com/mealprep/reference",
+        "snippet": "A reference covering weekly meal prep, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "weekly meal prep FAQ",
+        "link": "https://kitchen.example.com/mealprep/faq",
+        "snippet": "A faq covering weekly meal prep, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "weekly meal prep step by step tutorial",
+        "link": "https://kitchen.example.com/mealprep/tutorial",
+        "snippet": "A tutorial covering weekly meal prep, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "weekly meal prep changelog",
+        "link": "https://kitchen.example.com/mealprep/changelog",
+        "snippet": "A changelog covering weekly meal prep, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0018",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "central bank interest rate decision",
+    "results": [
+      {
+        "title": "central bank rate decision: complete guide",
+        "link": "https://news.example.net/economy/guide",
+        "snippet": "A guide covering central bank rate decision, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "central bank rate decision reference",
+        "link": "https://news.example.net/economy/reference",
+        "snippet": "A reference covering central bank rate decision, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "central bank rate decision FAQ",
+        "link": "https://news.example.net/economy/faq",
+        "snippet": "A faq covering central bank rate decision, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "central bank rate decision step by step tutorial",
+        "link": "https://news.example.net/economy/tutorial",
+        "snippet": "A tutorial covering central bank rate decision, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "central bank rate decision changelog",
+        "link": "https://news.example.net/economy/changelog",
+        "snippet": "A changelog covering central bank rate decision, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0019",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "coastal wildfire evacuation orders",
+    "results": [
+      {
+        "title": "coastal wildfire evacuations: complete guide",
+        "link": "https://news.example.org/region/guide",
+        "snippet": "A guide covering coastal wildfire evacuations, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "coastal wildfire evacuations reference",
+        "link": "https://news.example.org/region/reference",
+        "snippet": "A reference covering coastal wildfire evacuations, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "coastal wildfire evacuations FAQ",
+        "link": "https://news.example.org/region/faq",
+        "snippet": "A faq covering coastal wildfire evacuations, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "coastal wildfire evacuations step by step tutorial",
+        "link": "https://news.example.org/region/tutorial",
+        "snippet": "A tutorial covering coastal wildfire evacuations, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "coastal wildfire evacuations changelog",
+        "link": "https://news.example.org/region/changelog",
+        "snippet": "A changelog covering coastal wildfire evacuations, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  {
+    "id": "merge-cluster-0020",
+    "category": "same_domain_cluster",
+    "variant": "distinct_pages_one_domain",
+    "query": "regional election runoff results",
+    "results": [
+      {
+        "title": "election runoff results: complete guide",
+        "link": "https://news.example.com/politics/guide",
+        "snippet": "A guide covering election runoff results, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 1
+      },
+      {
+        "title": "election runoff results reference",
+        "link": "https://news.example.com/politics/reference",
+        "snippet": "A reference covering election runoff results, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 2
+      },
+      {
+        "title": "election runoff results FAQ",
+        "link": "https://news.example.com/politics/faq",
+        "snippet": "A faq covering election runoff results, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 3
+      },
+      {
+        "title": "election runoff results step by step tutorial",
+        "link": "https://news.example.com/politics/tutorial",
+        "snippet": "A tutorial covering election runoff results, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "duckduckgo",
+        "rank": 4
+      },
+      {
+        "title": "election runoff results changelog",
+        "link": "https://news.example.com/politics/changelog",
+        "snippet": "A changelog covering election runoff results, with worked examples and common pitfalls to avoid when you apply it in practice.",
+        "engine": "searxng",
+        "rank": 5
+      }
+    ],
+    "labels": {
+      "relevance": [
+        2,
+        2,
+        1,
+        1,
+        0
+      ],
+      "duplicate_groups": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  }
+]
