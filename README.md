@@ -164,7 +164,8 @@ config = {
         "model": "gpt-4o-mini",
     }
 }
-results = await run_workflow("Python asyncio best practices", config=config)
+outcome = await run_workflow("Python asyncio best practices", config=config)
+# outcome is {"status": "ok", "results": [...]} or {"status": "error", "error": {...}}
 ```
 
 ### Direct Search (no LangGraph)
