@@ -120,7 +120,7 @@ disallow_untyped_defs = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-python_files = ["test_*.py", "*_test.py"]
+python_files = ["test_*.py", "*_test.py", "issue-*.py"]
 markers = [
     "wheel_install: builds the wheel and installs it into a throwaway venv (skipped when installs are impossible)",
 ]
