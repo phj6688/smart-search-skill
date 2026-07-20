@@ -1,7 +1,8 @@
 """Define a custom Reasoning and Action agent with tool support."""
 
-from datetime import datetime, timezone
-from typing import Dict, List, Literal, cast, Any, Union
+import json
+from datetime import UTC, datetime
+from typing import Any, Literal, cast
 
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
@@ -10,19 +11,19 @@ from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
 from .configuration import Configuration
+from .errors import SearchError
+from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT
 from .state import InputState, State
 from .tools import TOOLS
-from .utils import load_chat_model, ArticlesResponse
-from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT  
+from .utils import ArticlesResponse, load_chat_model
 
-import json
 
 async def agent(
     state: State, config: RunnableConfig
-) -> Dict[str, List[AIMessage]]:
+) -> dict[str, list[AIMessage]]:
     """Initialize the prompt, run the model, and handle tool calls as the main agent."""
     configuration = Configuration.from_runnable_config(config)
-    
+
     prompt = ChatPromptTemplate.from_messages([
         ("system", AGENT_PROMPT),
         ("placeholder", "{messages}")
@@ -32,7 +33,7 @@ async def agent(
     message_value = await prompt.ainvoke(
         {
             "messages": state.messages,
-            "system_time": datetime.now(tz=timezone.utc).isoformat(),
+            "system_time": datetime.now(tz=UTC).isoformat(),
         },
         config,
     )
@@ -52,24 +53,24 @@ async def agent(
 
 async def evaluator(
     state: State, config: RunnableConfig
-) -> Dict[str, List[AIMessage]]:
+) -> dict[str, list[AIMessage]]:
     """Evaluate tool results and return the most relevant entries based on the search query."""
 
 
     configuration = Configuration.from_runnable_config(config)
-    
+
     prompt = ChatPromptTemplate.from_messages([
         ("system", EVALUATOR_PROMPT),
         ("placeholder", "{messages}")
     ])
-    search_query = state.messages[0].content  
+    search_query = state.messages[0].content
     max_results = configuration.max_search_results_evaluator
 
 
     message_value = await prompt.ainvoke(
         {
             "messages": state.messages,
-            "system_time": datetime.now(tz=timezone.utc).isoformat(),
+            "system_time": datetime.now(tz=UTC).isoformat(),
             "N_RESULT": max_results,
             "SEARCH_QUERY": search_query,
         },
@@ -117,7 +118,7 @@ workflow.add_edge("evaluator", "__end__")
 graph = workflow.compile(interrupt_before=[], interrupt_after=[])
 graph.name = "NEWS_SEARCH_WORKFLOW"
 
-async def run_workflow(input_data: str, config: RunnableConfig = None) -> Union[Dict[str, Any], str]:
+async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[str, Any]:
     """
     Execute the news search workflow with given input data.
 
@@ -126,15 +127,18 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> Union[
         config (RunnableConfig, optional): Configuration for the workflow.
 
     Returns:
-        Union[Dict[str, Any], str]: The final message content in JSON format, 
-        or an error message if the workflow fails.
+        dict[str, Any]: A discriminated result. Success is
+        {"status": "ok", "results": [...]}; failure is
+        {"status": "error", "error": {"type": <str>, "message": <str>}}. A bare
+        string is never returned; handled failures return the typed error
+        envelope rather than propagating.
     """
     try:
         # Prepare initial state with user input as a HumanMessage
         initial_state = {
             "messages": [HumanMessage(content=input_data)]
         }
-        
+
         # Run the workflow with optional config
         if config:
             final_state = await graph.ainvoke(initial_state, config)
@@ -144,23 +148,35 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> Union[
         # Ensure `final_state` is a dictionary and contains 'messages'
         messages = final_state.get('messages')
         if not messages:
-            return "Error: No messages returned by the workflow."
+            raise SearchError(
+                "No messages returned by the workflow.", error_type="empty_result"
+            )
 
         # Retrieve the last message from the 'messages' list
         final_message = messages[-1]
 
-        # Try to parse the final message content as JSON
+        # Parse the final message content as JSON. JSONDecodeError subclasses
+        # ValueError, so convert it before the ValueError handler can claim it.
         try:
             output_content = json.loads(final_message.content)
-            if isinstance(output_content, list):
-                return output_content  # Return as list of dicts if JSON-parsed correctly
-            else:
-                return {"result": output_content}  # Wrap if single dict or other structure
-
         except json.JSONDecodeError as json_error:
-            return f"Error parsing JSON response: {json_error}"
+            raise SearchError(
+                f"Error parsing JSON response: {json_error}",
+                error_type="json_parse_error",
+            ) from json_error
 
+        results = output_content if isinstance(output_content, list) else [output_content]
+        return {"status": "ok", "results": results}
+
+    except SearchError as search_error:
+        return search_error.to_dict()
     except ValueError as ve:
-        return f"Error with message format: {str(ve)}"
+        return SearchError(
+            f"Error with message format: {str(ve)}",
+            error_type="message_format_error",
+        ).to_dict()
     except Exception as e:
-        return f"Workflow execution error: {str(e)}"
+        return SearchError(
+            f"Workflow execution error: {str(e)}",
+            error_type="workflow_error",
+        ).to_dict()
