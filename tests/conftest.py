@@ -24,20 +24,21 @@ from tests.fixtures_fallback import (  # noqa: F401
     fallback_state,
 )
 
-# Two held-out probes shell out to `pytest tests/` in a subprocess, and because
-# python_files collects issue-*.py the subprocess re-collects the probe and
-# spawns its own pytest, recursing without bound: the HLB-647 offline-suite
-# probe re-runs the whole suite, and the HLB-648 egress-canary probe runs
-# `pytest -k egress_canary`, a selector that also matches the probe's own
-# `test_egress_canary_passes_under_pytest`. The first (top-level) run inherits
-# no sentinel and runs both probes normally, then exports the sentinel; any
-# nested run sees it and skips both self-referential probes, so the recursion
-# terminates after one level.
+# Two held-out probes shell out to pytest in a subprocess. Because
+# python_files collects issue-*.py, each subprocess re-collects the probe that
+# spawned it and shells out again, recursing without bound:
+#   - the offline-suite probe runs `pytest tests/`;
+#   - the egress-canary probe runs `pytest tests/ -k egress_canary`, and that
+#     -k filter matches the probe's own name too.
+# The first (top-level) run inherits no sentinel and runs both probes normally,
+# then exports the sentinel; any nested run sees it and skips the self-spawning
+# probes, so their nested child exits cleanly and the recursion stops after one
+# level.
 _SELF_SUITE_ENV = "SW_HELDOUT_SELF_SUITE"
 _IN_NESTED_SELF_SUITE = os.environ.get(_SELF_SUITE_ENV) == "1"
 os.environ[_SELF_SUITE_ENV] = "1"
 
-_NESTED_RECURSION_SENTINELS = (
+_SELF_SPAWNING_PROBES = (
     "test_suite_passes_offline_with_block_network_and_no_api_key",
     "test_egress_canary_passes_under_pytest",
 )
@@ -62,13 +63,14 @@ def pytest_collection_modifyitems(
         nodeid = item.nodeid
         # Broadest bound: skip the self-spawning probes plus every other
         # held-out probe and heavy subprocess gate (wheel build, cassette
-        # subprocess), so the nested run cannot re-spawn pytest or a second
-        # wheel build and blow the probe's 300s timeout (exit 143).
+        # subprocess). This subsumes _SELF_SPAWNING_PROBES and also keeps the
+        # nested run from re-running a second wheel build, which would blow the
+        # probe's 300s timeout and get the CI job killed (exit 143).
         heavy = (
             "heldout" in nodeid
             or "wheel" in nodeid.lower()
             or "negative_cassette" in nodeid
-            or any(name in nodeid for name in _NESTED_RECURSION_SENTINELS)
+            or any(name in nodeid for name in _SELF_SPAWNING_PROBES)
             or item.get_closest_marker("wheel_install") is not None
         )
         if heavy:

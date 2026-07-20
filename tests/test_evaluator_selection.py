@@ -140,6 +140,21 @@ async def test_out_of_range_indices_are_dropped(
     assert payload == [fetched[0]]
 
 
+async def test_duplicate_indices_yield_each_result_once(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A model that repeats an index must not return the same result twice.
+    fetched = [
+        {"title": "Alpha", "link": "https://a.example/x", "snippet": "s"},
+        {"title": "Bravo", "link": "https://b.example/y", "snippet": "s"},
+    ]
+
+    message = await _run_evaluator(monkeypatch, [0, 0, 1, 1, 0], fetched)
+
+    payload = json.loads(message.content)
+    assert payload == [fetched[0], fetched[1]]
+
+
 async def test_selection_capped_at_max_results(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

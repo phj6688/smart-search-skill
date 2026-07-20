@@ -4,7 +4,7 @@ description: >
   Privacy-first hybrid web search using SearXNG + DuckDuckGo in parallel.
   Returns AI-evaluated, deduplicated results for any query — no commercial
   search API keys required. Use when: any agent needs web search results.
-  Requires: Python env with search-workflow installed. SearXNG optional
+  Requires: Python env with smart-search-skill installed. SearXNG optional
   (DuckDuckGo runs as automatic fallback).
 metadata:
   openclaw:
@@ -20,9 +20,9 @@ merged, deduplicated, then selected by index from the fetched set by an LLM eval
 
 1. Python environment with the package installed:
    ```bash
-   pip install search-workflow
+   pip install smart-search-skill
    # or
-   uv add search-workflow
+   uv add smart-search-skill
    ```
 
 2. Set your OpenAI API key (used for result evaluation):

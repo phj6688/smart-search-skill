@@ -113,9 +113,13 @@ async def evaluator(
     # verbatim (no lowercasing, no regeneration); out-of-range indices drop, and
     # the cap keeps at most max_results without padding the shortfall.
     selected: list[dict[str, Any]] = []
+    seen_indices: set[int] = set()
     for index in selected_indices:
-        if not 0 <= index < len(fetched):
+        # Drop out-of-range and repeated indices; a model that returns the same
+        # index twice must not yield the same result twice.
+        if index in seen_indices or not 0 <= index < len(fetched):
             continue
+        seen_indices.add(index)
         source = fetched[index]
         selected.append(
             {

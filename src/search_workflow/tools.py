@@ -7,10 +7,10 @@ import re
 import threading
 import time
 from collections.abc import Callable, Iterable
-from typing import Annotated, Any, Literal, cast
+from typing import Annotated, Any, Literal
+from urllib.parse import urlsplit, urlunsplit
 
 import aiohttp
-from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import InjectedToolArg
 
@@ -88,6 +88,64 @@ def _emit_provenance(provenance: dict[str, Any]) -> None:
         ",".join(provenance["engines_used"]) or "none",
         extra={"provenance": provenance},
     )
+
+
+# Query params that identify a marketing/tracking source, not a distinct page.
+# utm_* is matched by prefix; the rest by exact name. Stripping them lets two
+# links that differ only by campaign tags collapse to one dedup key.
+_TRACKING_PARAM_EXACT = frozenset({"fbclid", "gclid"})
+
+
+def _is_tracking_param(pair: str) -> bool:
+    name = pair.split("=", 1)[0]
+    return name.startswith("utm_") or name in _TRACKING_PARAM_EXACT
+
+
+def normalize_url(url: str) -> str:
+    """Canonicalize a URL into a dedup key.
+
+    Lowercases scheme and host, drops a default port (80/443), strips one
+    trailing slash, and removes only tracking params (utm_*, fbclid, gclid).
+    Path and query CASE are left untouched and every non-tracking param is
+    kept, so pages that differ by a real param (e.g. ?page=2) stay distinct.
+    The fragment is not listed for stripping, so it is preserved. A URL that
+    cannot be parsed (e.g. an out-of-range port that makes ``parts.port``
+    raise) is returned unchanged, so one malformed result becomes its own
+    dedup key instead of aborting the whole merge.
+    """
+    try:
+        parts = urlsplit(url)
+
+        scheme = parts.scheme.lower()
+
+        host = (parts.hostname or "").lower()
+        # Rebuild userinfo verbatim; only host case and default ports change.
+        userinfo = ""
+        if parts.username is not None:
+            userinfo = parts.username
+            if parts.password is not None:
+                userinfo += f":{parts.password}"
+            userinfo += "@"
+        port = parts.port
+        netloc = f"{userinfo}{host}"
+        # Drop the port only when it is the default FOR THIS scheme; an
+        # explicit :80 on https (or :443 on http) is meaningful and kept.
+        default_port = {"http": 80, "https": 443}.get(scheme)
+        if port is not None and port != default_port:
+            netloc = f"{netloc}:{port}"
+
+        path = parts.path[:-1] if parts.path.endswith("/") else parts.path
+
+        # Filter on the raw pairs so remaining params keep their exact encoding
+        # and case; parse_qsl would decode and reorder them.
+        kept = [p for p in parts.query.split("&") if p and not _is_tracking_param(p)]
+        query = "&".join(kept)
+
+        return urlunsplit((scheme, netloc, path, query, parts.fragment))
+    except ValueError:
+        # Malformed URL (e.g. out-of-range port). Fall back to the raw string
+        # so this one result dedups on itself rather than aborting the merge.
+        return url
 
 
 # Define available region and timeframe options
@@ -188,45 +246,25 @@ async def search(
     """
     configuration = Configuration.from_runnable_config(config)
 
-    # Try SearXNG first
+    # The health probe stays on the tool path (its wiring is owned by the
+    # later S09/S10 stories); it no longer gates the fetch. The actual
+    # fetch+merge routes through the shared core so both engines run in
+    # parallel here, identical to the search_direct path.
     try:
-        if await searxng_client.health_check():
-            language = _extract_language(region)
-            results = await searxng_client.search(
-                query=query,
-                language=language,
-                time_range=timelimit,
-                max_results=configuration.max_search_results_tool
-            )
-
-            if results:
-                print(f"✅ SearXNG: {len(results)} results")
-                return results
-            else:
-                print("⚠️ SearXNG: No results, trying DuckDuckGo")
+        if not await searxng_client.health_check():
+            print("⚠️ SearXNG health probe failed; core still fetches both engines")
     except Exception as e:
-        print(f"❌ SearXNG failed: {e}")
+        print(f"❌ SearXNG health probe error: {e}")
 
-    # Fallback to DuckDuckGo
-    try:
-        print("🔄 Using DuckDuckGo fallback")
-        search_engine = DuckDuckGoSearchResults(
-            max_results=configuration.max_search_results_tool,
-            backend='text'
-        )
-
-        result = await search_engine.ainvoke({
-            "query": query,
-            "region": region,
-            "timelimit": timelimit
-        })
-
-        print("✅ DuckDuckGo: Results retrieved")
-        return cast(list[dict[str, Any]], result)
-
-    except Exception as e:
-        print(f"❌ Both engines failed: {e}")
-        return []
+    language = _extract_language(region)
+    return await _fetch_and_merge(
+        query,
+        client=searxng_client,
+        max_results=configuration.max_search_results_tool,
+        language=language,
+        time_range=timelimit,
+        categories="general",
+    )
 
 async def _ddg_search(query: str, max_results: int) -> list:
     """Run DDG search using DDGS().text(), returning up to max_results structured dicts.
@@ -250,24 +288,31 @@ async def _ddg_search(query: str, max_results: int) -> list:
     ]
 
 
-async def search_direct(
+async def _fetch_and_merge(
     query: str,
-    max_results: int = 10,
-    searxng_url: str = "http://localhost:9090",
+    *,
+    client: SearXNGClient,
+    max_results: int,
     language: str = "en",
     time_range: str | None = None,
-    searxng_timeout: int = 12,
     categories: str = "general",
 ) -> list[dict[str, Any]]:
-    """Direct search: run SearXNG + DDG in parallel, merge and deduplicate.
+    """Shared fetch core for both the `search` tool and `search_direct`.
 
-    Args:
-        categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
+    Dispatches SearXNG and DuckDuckGo concurrently, merges and deduplicates by
+    normalize_url(link), records the outbound/engine counters, and emits the
+    one provenance record. Makes no LLM call: ranking lives in the graph, so
+    this seam stays runnable with no OPENAI_API_KEY.
     """
     started = time.monotonic()
-    client = SearXNGClient(searxng_url, timeout=searxng_timeout)
 
-    searxng_task = client.search(query, language, time_range, max_results, categories=categories)
+    searxng_task = client.search(
+        query=query,
+        language=language,
+        time_range=time_range,
+        max_results=max_results,
+        categories=categories,
+    )
     ddg_task = _ddg_search(query, max_results)
     # Both engines are always dispatched from this seam, one request each.
     METRICS.record_outbound_search_requests(2)
@@ -282,16 +327,17 @@ async def search_direct(
     searxng_list = [] if isinstance(searxng_results, Exception) else list(searxng_results)
     ddg_list = [] if isinstance(ddg_results, Exception) else list(ddg_results)
 
-    # Merge, deduplicate by link; track each survivor's source engine
-    seen_links: set = set()
-    merged = []
+    # Merge, deduplicate on the normalized link; track each survivor's engine.
+    seen_keys: set[str] = set()
+    merged: list[dict[str, Any]] = []
     merged_sources: list[str] = []
     for source, engine_results in (("searxng", searxng_list), ("ddg", ddg_list)):
         for r in engine_results:
             link = r.get("link", "")
-            if link and link in seen_links:
+            key = normalize_url(link) if link else ""
+            if link and key in seen_keys:
                 continue
-            seen_links.add(link)
+            seen_keys.add(key)
             merged.append(r)
             merged_sources.append(source)
 
@@ -314,6 +360,31 @@ async def search_direct(
         "engines_used": sorted(engines_used),
     })
     return returned
+
+
+async def search_direct(
+    query: str,
+    max_results: int = 10,
+    searxng_url: str = "http://localhost:9090",
+    language: str = "en",
+    time_range: str | None = None,
+    searxng_timeout: int = 12,
+    categories: str = "general",
+) -> list[dict[str, Any]]:
+    """Direct search: run SearXNG + DDG in parallel, merge and deduplicate.
+
+    Args:
+        categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
+    """
+    client = SearXNGClient(searxng_url, timeout=searxng_timeout)
+    return await _fetch_and_merge(
+        query,
+        client=client,
+        max_results=max_results,
+        language=language,
+        time_range=time_range,
+        categories=categories,
+    )
 
 
 # Exported tools for external use
