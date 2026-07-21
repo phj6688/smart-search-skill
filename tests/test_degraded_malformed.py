@@ -28,8 +28,10 @@ from search_workflow.utils import SelectionResponse
 
 # Known raw corpus. The first link is deliberately mixed-case so a fallback that
 # lowercased or regenerated links would fail the byte-identity assertion. Links
-# are all distinct, so nothing dedups away and the merged set is these three in
-# fetch order (SearXNG rows first, then DDG).
+# are all distinct (three registrable domains), so nothing dedups away and the
+# domain cap never trims. HLB-651 ranks the merge by reciprocal rank fusion, so
+# the three survive as a set but not in fetch order; assertions compare verbatim
+# and order-independent.
 _RAW: list[dict[str, str]] = [
     {"title": "Mixed case host result", "link": "https://Example.COM/Path/One", "snippet": "s1"},
     {"title": "Second result", "link": "https://beta.example/two", "snippet": "s2"},
@@ -148,12 +150,16 @@ async def test_malformed_selection_falls_back_to_raw_degraded_evaluator(
     assert out["status"] == "ok"
     assert out["degraded"] is True
     assert out["degraded_reason"] == "evaluator"
-    # The fallback returns the merged/deduped raw fetched results verbatim.
-    assert out["results"] == _RAW
+    # The fallback returns the merged/deduped raw fetched results verbatim. The
+    # RRF merge (HLB-651) reorders them, so compare as a verbatim set, not by
+    # position.
+    assert sorted(out["results"], key=lambda r: r["link"]) == sorted(
+        _RAW, key=lambda r: r["link"]
+    )
     # Links are byte-identical, including the mixed-case host: not lowercased,
     # not regenerated.
-    assert [r["link"] for r in out["results"]] == [r["link"] for r in _RAW]
-    assert out["results"][0]["link"] == "https://Example.COM/Path/One"
+    assert {r["link"] for r in out["results"]} == {r["link"] for r in _RAW}
+    assert any(r["link"] == "https://Example.COM/Path/One" for r in out["results"])
 
 
 async def test_healthy_selection_is_not_degraded(
@@ -184,4 +190,7 @@ async def test_malformed_branch_never_raises_searcherror_or_error_status(
     # Typed-error envelope is absent on the malformed branch; it stays reserved
     # for real failures with no results.
     assert "error" not in out
-    assert out["results"] == _RAW
+    # RRF (HLB-651) reorders the merged raw results; compare verbatim as a set.
+    assert sorted(out["results"], key=lambda r: r["link"]) == sorted(
+        _RAW, key=lambda r: r["link"]
+    )

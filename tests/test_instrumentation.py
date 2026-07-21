@@ -56,7 +56,12 @@ async def test_fallback_state_provenance(
     assert isinstance(provenance["elapsed_ms"], float)
     assert provenance["elapsed_ms"] >= 0.0
 
-    assert len(results) == expected.n_after_dedup
+    # The provenance record still counts distinct URLs after dedup; the returned
+    # list is that set after the HLB-651 domain cap (at most RRF_DOMAIN_CAP per
+    # registrable domain) and truncation. Every fallback URL sits on one
+    # registrable domain (example.test), so a post-dedup set above the cap is
+    # trimmed to it.
+    assert len(results) == min(expected.n_after_dedup, tools.RRF_DOMAIN_CAP)
 
     message = record.getMessage()
     for field in PROVENANCE_FIELDS:
