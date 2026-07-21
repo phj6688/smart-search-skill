@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import os
+import random
 import re
 import threading
 import time
@@ -13,6 +14,14 @@ from urllib.parse import urlsplit, urlunsplit
 import aiohttp
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import InjectedToolArg
+
+# Package rename in flight: newer installs ship `ddgs`, older ones
+# `duckduckgo_search`. Import the throttling exception from whichever is present
+# so the retry path below catches the real class rather than a broad Exception.
+try:
+    from ddgs.exceptions import RatelimitException
+except ImportError:  # pragma: no cover - exercised by whichever package is absent
+    from duckduckgo_search.exceptions import RatelimitException
 
 from .configuration import Configuration, default_config
 
@@ -425,26 +434,64 @@ async def search(
         categories="general",
     )
 
+# DuckDuckGo rate-limit backoff (HLB-662). DDG raises RatelimitException
+# routinely under load, so a throttled call is retried rather than treated as
+# the hard outage a non-ratelimit error signals. Capped exponential backoff with
+# FULL JITTER: the wait before retry i is random.uniform(0, min(cap,
+# base * 2**i)). Full jitter (not a fixed schedule) desynchronizes concurrent
+# retriers so a fleet of them does not resynchronize into a thundering herd
+# against DDG. Worst case for a 3-attempt run is the two inter-attempt waits at
+# their ceilings, 0.5 + 1.0 = 1.5s, well under Configuration.engine_deadline_s
+# (4.5), so even a fully throttled DDG leg returns before its per-engine
+# deadline fires.
+_DDG_BACKOFF_BASE_S = 0.5
+_DDG_BACKOFF_CAP_S = 4.0
+_DDG_RETRY_ATTEMPTS = 3
+
+
+def _ddg_backoff_delay(attempt_index: int) -> float:
+    """Full-jitter capped exponential backoff wait for retried DDG attempt i."""
+    ceiling = min(_DDG_BACKOFF_CAP_S, _DDG_BACKOFF_BASE_S * 2**attempt_index)
+    return random.uniform(0.0, ceiling)
+
+
 async def _ddg_search(query: str, max_results: int) -> list:
     """Run DDG search using DDGS().text(), returning up to max_results structured dicts.
 
-    Failures propagate: search_direct gathers with return_exceptions=True and
-    records ddg_ok=False, so swallowing here would make outages look like
-    ordinary empty result sets.
+    A RatelimitException is retried up to _DDG_RETRY_ATTEMPTS times with
+    _ddg_backoff_delay between attempts. The wait is awaited at the ASYNC layer
+    and every attempt submits a FRESH executor job, so no worker thread ever
+    sleeps holding a slot in the default pool (a sleeping worker under
+    concurrent throttling would starve it). Exhausted retries return [].
+
+    Every OTHER exception propagates unchanged: search_direct gathers with
+    return_exceptions=True and records ddg_ok=False, so swallowing a hard
+    failure here would make an outage look like an ordinary empty result set.
     """
     from ddgs import DDGS
-    # DDGS().text() returns list of dicts: {title, href, body}
-    # Run in executor to avoid blocking the event loop
+
+    # DDGS().text() returns list of dicts: {title, href, body}. Run in an
+    # executor to avoid blocking the event loop.
     loop = asyncio.get_event_loop()
-    raw = await loop.run_in_executor(
-        None,
-        lambda: list(DDGS().text(query, max_results=max_results))
-    )
-    # Normalize to {title, link, snippet}
-    return [
-        {"title": r.get("title", ""), "link": r.get("href", ""), "snippet": r.get("body", "")}
-        for r in raw
-    ]
+    for attempt in range(_DDG_RETRY_ATTEMPTS):
+        try:
+            raw = await loop.run_in_executor(
+                None,
+                lambda: list(DDGS().text(query, max_results=max_results)),
+            )
+        except RatelimitException:
+            if attempt + 1 >= _DDG_RETRY_ATTEMPTS:
+                return []
+            await asyncio.sleep(_ddg_backoff_delay(attempt))
+            continue
+        # Normalize to {title, link, snippet}.
+        return [
+            {"title": r.get("title", ""), "link": r.get("href", ""), "snippet": r.get("body", "")}
+            for r in raw
+        ]
+    # Unreachable: the loop returns on success or after the final ratelimit.
+    # Kept so the function stays statically total on its list return type.
+    return []
 
 
 async def _fetch_and_merge(
