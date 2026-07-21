@@ -46,7 +46,15 @@ async def test_run_workflow_success_returns_ok_envelope(
 
     out = await graph.run_workflow("q")
 
-    assert out == {"status": "ok", "results": payload}
+    # status/results stay exactly as HLB-654 defined; HLB-657 adds the
+    # provenance metadata alongside. No search ran (ainvoke is stubbed) and the
+    # metrics reset per test, so the attribution record is absent: engines_used
+    # empty, not degraded.
+    assert out["status"] == "ok"
+    assert out["results"] == payload
+    assert out["engines_used"] == []
+    assert out["degraded"] is False
+    assert out["degraded_reason"] is None
 
 
 async def test_run_workflow_bad_json_returns_error_envelope(
