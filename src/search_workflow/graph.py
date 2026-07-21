@@ -9,6 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
+from pydantic import ValidationError
 
 from .configuration import Configuration
 from .errors import SearchError
@@ -110,8 +111,24 @@ async def evaluator(
     model = load_chat_model(
         configuration.model, temperature=0
     ).with_structured_output(SelectionResponse)
-    structured_response: Any = await model.ainvoke(message_value, config)
-    selected_indices = structured_response.selected
+    try:
+        structured_response: Any = await model.ainvoke(message_value, config)
+        selected_indices = getattr(structured_response, "selected", None)
+    except (ValueError, ValidationError):
+        # Unparseable or schema-invalid structured output. with_structured_output
+        # raises ValueError/ValidationError on bad JSON or a schema mismatch.
+        selected_indices = None
+
+    if selected_indices is None:
+        # The selection is unusable, but the merged, deduplicated raw results the
+        # tool step fetched are still good. Fall back to them verbatim instead of
+        # raising: a malformed selection is a degraded result, not a failure, and
+        # discarding the fetched set would waste it. No retry. The flag rides up
+        # to run_workflow, which surfaces degraded_reason="evaluator". An empty
+        # but valid selection (selected=[]) is NOT this branch; it stays healthy.
+        METRICS.record_evaluator_degraded()
+        response_content = json.dumps(fetched, ensure_ascii=False)
+        return {"messages": [AIMessage(content=response_content)]}
 
     # Join the picked indices back to the fetched objects. Values are copied
     # verbatim (no lowercasing, no regeneration); out-of-range indices drop, and
@@ -160,9 +177,11 @@ workflow.add_edge("evaluator", "__end__")
 
 # Compile and name the workflow
 graph = workflow.compile(interrupt_before=[], interrupt_after=[])
-graph.name = "NEWS_SEARCH_WORKFLOW"
+graph.name = "SEARCH_WORKFLOW"
 
-def _surface_provenance(provenance: dict[str, Any] | None) -> dict[str, Any]:
+def _surface_provenance(
+    provenance: dict[str, Any] | None, evaluator_degraded: bool = False
+) -> dict[str, Any]:
     """Map the S03 attribution record to the result-path metadata triple.
 
     Reads engines_used/n_searxng/n_ddg straight off the provenance record so
@@ -170,29 +189,41 @@ def _surface_provenance(provenance: dict[str, Any] | None) -> dict[str, Any]:
     which engine answered from result contents. An engine "served results" when
     it returned any raw rows (n>0), even if dedup later dropped them; both are
     always attempted, so fewer served than attempted is the degraded signal.
+
+    evaluator_degraded is HLB-658's malformed-selection signal (the evaluator
+    node fell back to raw results). It surfaces degraded_reason="evaluator", but
+    engine degradation still WINS: a single-engine fetch is a more fundamental
+    data-quality loss than an unusable selection over an otherwise-complete
+    fetch, so the evaluator reason only shows when the engines were healthy.
     """
     if not provenance:
-        return {"engines_used": [], "degraded": False, "degraded_reason": None}
-    engines_used = [
-        _ENGINE_DISPLAY_NAMES.get(engine, engine)
-        for engine in provenance.get("engines_used", [])
-    ]
-    served = int(provenance.get("n_searxng", 0) > 0) + int(
-        provenance.get("n_ddg", 0) > 0
-    )
-    degraded = served < 2
+        engines_used: list[str] = []
+        engine_degraded = False
+    else:
+        engines_used = [
+            _ENGINE_DISPLAY_NAMES.get(engine, engine)
+            for engine in provenance.get("engines_used", [])
+        ]
+        served = int(provenance.get("n_searxng", 0) > 0) + int(
+            provenance.get("n_ddg", 0) > 0
+        )
+        engine_degraded = served < 2
+    if engine_degraded:
+        degraded_reason: str | None = "engine"
+    elif evaluator_degraded:
+        degraded_reason = "evaluator"
+    else:
+        degraded_reason = None
     return {
         "engines_used": engines_used,
-        "degraded": degraded,
-        # "evaluator" is reserved for the malformed-evaluator consumer story;
-        # engine-degradation surfaces "engine" and nothing else sets it here.
-        "degraded_reason": "engine" if degraded else None,
+        "degraded": engine_degraded or evaluator_degraded,
+        "degraded_reason": degraded_reason,
     }
 
 
 async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[str, Any]:
     """
-    Execute the news search workflow with given input data.
+    Execute the search workflow with given input data.
 
     Args:
         input_data (str): The user input or query for initiating the workflow.
@@ -209,6 +240,12 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[s
         re-derived from result contents.
     """
     try:
+        # Clear last query's evaluator-degradation flag so this query starts
+        # clean. The engine attribution record is overwritten every query by the
+        # tool path, but this flag is only ever set (never cleared) by the
+        # evaluator, so it must be reset here per query.
+        METRICS.clear_evaluator_degraded()
+
         # Prepare initial state with user input as a HumanMessage
         initial_state = {
             "messages": [HumanMessage(content=input_data)]
@@ -243,9 +280,13 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[s
         results = output_content if isinstance(output_content, list) else [output_content]
         # Read the S03 attribution record the tool path recorded this run and
         # surface engines_used/degraded/degraded_reason alongside results. The
-        # record is the only source; nothing here re-derives engines from the
-        # result contents.
-        metadata = _surface_provenance(METRICS.last_provenance())
+        # record is the only source for engine attribution; the evaluator flag
+        # adds the malformed-selection degradation (HLB-658). Nothing here
+        # re-derives engines from the result contents.
+        metadata = _surface_provenance(
+            METRICS.last_provenance(),
+            evaluator_degraded=METRICS.evaluator_degraded(),
+        )
         return {"status": "ok", "results": results, **metadata}
 
     except SearchError as search_error:

@@ -38,6 +38,13 @@ class SearchMetrics:
         # per-query record additionally carries the raw n_searxng/n_ddg needed
         # to tell a genuine single-engine fallback from a deduped-away one.
         self._last_provenance: dict[str, Any] | None = None
+        # Set by the evaluator node when the LLM's structured selection comes
+        # back malformed and it falls back to the raw fetched results. Lives
+        # here, next to the engine attribution, so run_workflow reads one
+        # provenance source for the whole degraded/degraded_reason decision.
+        # Cleared per query by run_workflow; the engine record overwrites every
+        # query but this flag would otherwise carry over.
+        self._evaluator_degraded = False
 
     def record_outbound_search_requests(self, count: int = 1) -> None:
         with self._lock:
@@ -64,6 +71,18 @@ class SearchMetrics:
         with self._lock:
             return dict(self._last_provenance) if self._last_provenance else None
 
+    def record_evaluator_degraded(self) -> None:
+        with self._lock:
+            self._evaluator_degraded = True
+
+    def clear_evaluator_degraded(self) -> None:
+        with self._lock:
+            self._evaluator_degraded = False
+
+    def evaluator_degraded(self) -> bool:
+        with self._lock:
+            return self._evaluator_degraded
+
     def snapshot(self) -> dict[str, Any]:
         with self._lock:
             return {
@@ -80,6 +99,7 @@ class SearchMetrics:
             self._cache_hit = 0
             self._engines_used = {}
             self._last_provenance = None
+            self._evaluator_degraded = False
 
 
 METRICS = SearchMetrics()
