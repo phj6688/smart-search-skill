@@ -14,7 +14,7 @@ import aiohttp
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import InjectedToolArg
 
-from .configuration import Configuration
+from .configuration import Configuration, default_config
 
 logger = logging.getLogger("search_workflow.tools")
 
@@ -258,10 +258,19 @@ async def search(
     # return_exceptions gather in _fetch_and_merge), so DDG still merges when
     # SearXNG is down; probing first only bought a redundant round trip.
     language = _extract_language(region)
+    # Build the client from Configuration so the per-call url and timeout win.
+    # The import-time singleton below cannot see per-call config, and its class
+    # default timeout was 12s; routing through Configuration lifts the effective
+    # default to searxng_timeout (30).
+    client = SearXNGClient(
+        base_url=configuration.searxng_url,
+        timeout=configuration.searxng_timeout,
+    )
     return await _fetch_and_merge(
         query,
-        client=searxng_client,
+        client=client,
         max_results=configuration.max_search_results_tool,
+        engine_deadline_s=configuration.engine_deadline_s,
         language=language,
         time_range=timelimit,
         categories="general",
@@ -294,6 +303,7 @@ async def _fetch_and_merge(
     *,
     client: SearXNGClient,
     max_results: int,
+    engine_deadline_s: float,
     language: str = "en",
     time_range: str | None = None,
     categories: str = "general",
@@ -304,17 +314,30 @@ async def _fetch_and_merge(
     normalize_url(link), records the outbound/engine counters, and emits the
     one provenance record. Makes no LLM call: ranking lives in the graph, so
     this seam stays runnable with no OPENAI_API_KEY.
+
+    Each engine leg is bounded by engine_deadline_s. The SearXNG request
+    timeout can be as high as 30s; without a shorter per-engine deadline a hung
+    engine would stall the whole query for that long. asyncio.wait_for cancels
+    the slow leg at the deadline and the timeout rides the return_exceptions
+    gather below, so a hung engine becomes an absorbed exception and the other
+    engine's results are still returned.
     """
     started = time.monotonic()
 
-    searxng_task = client.search(
-        query=query,
-        language=language,
-        time_range=time_range,
-        max_results=max_results,
-        categories=categories,
+    searxng_task = asyncio.wait_for(
+        client.search(
+            query=query,
+            language=language,
+            time_range=time_range,
+            max_results=max_results,
+            categories=categories,
+        ),
+        timeout=engine_deadline_s,
     )
-    ddg_task = _ddg_search(query, max_results)
+    ddg_task = asyncio.wait_for(
+        _ddg_search(query, max_results),
+        timeout=engine_deadline_s,
+    )
     # Both engines are always dispatched from this seam, one request each.
     METRICS.record_outbound_search_requests(2)
     searxng_results, ddg_results = await asyncio.gather(
@@ -368,22 +391,36 @@ async def _fetch_and_merge(
 async def search_direct(
     query: str,
     max_results: int = 10,
-    searxng_url: str = "http://localhost:9090",
+    searxng_url: str | None = None,
     language: str = "en",
     time_range: str | None = None,
-    searxng_timeout: int = 12,
+    searxng_timeout: int | None = None,
     categories: str = "general",
+    engine_deadline_s: float | None = None,
 ) -> list[dict[str, Any]]:
     """Direct search: run SearXNG + DDG in parallel, merge and deduplicate.
 
     Args:
         categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
+
+    searxng_url, searxng_timeout and engine_deadline_s fall back to the
+    Configuration defaults (url from SEARXNG_URL, timeout 30, deadline 4.5) when
+    left as None; passing any of them still overrides. The signature stays
+    backwards-compatible: callers that pass searxng_timeout keep working. No
+    OPENAI_API_KEY is read here, so the zero-key contract holds.
     """
+    if searxng_url is None:
+        searxng_url = default_config.searxng_url
+    if searxng_timeout is None:
+        searxng_timeout = default_config.searxng_timeout
+    if engine_deadline_s is None:
+        engine_deadline_s = default_config.engine_deadline_s
     client = SearXNGClient(searxng_url, timeout=searxng_timeout)
     return await _fetch_and_merge(
         query,
         client=client,
         max_results=max_results,
+        engine_deadline_s=engine_deadline_s,
         language=language,
         time_range=time_range,
         categories=categories,
