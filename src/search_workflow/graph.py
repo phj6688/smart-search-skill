@@ -14,8 +14,12 @@ from .configuration import Configuration
 from .errors import SearchError
 from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT
 from .state import InputState, State
-from .tools import TOOLS
+from .tools import METRICS, TOOLS
 from .utils import SelectionResponse, load_chat_model
+
+# S03 engine short names mapped to the documented result-path names. The
+# attribution record uses "ddg"; the result path surfaces "duckduckgo".
+_ENGINE_DISPLAY_NAMES = {"searxng": "searxng", "ddg": "duckduckgo"}
 
 
 async def agent(
@@ -158,6 +162,34 @@ workflow.add_edge("evaluator", "__end__")
 graph = workflow.compile(interrupt_before=[], interrupt_after=[])
 graph.name = "NEWS_SEARCH_WORKFLOW"
 
+def _surface_provenance(provenance: dict[str, Any] | None) -> dict[str, Any]:
+    """Map the S03 attribution record to the result-path metadata triple.
+
+    Reads engines_used/n_searxng/n_ddg straight off the provenance record so
+    the metadata FOLLOWS what the tool path attributed, instead of re-deriving
+    which engine answered from result contents. An engine "served results" when
+    it returned any raw rows (n>0), even if dedup later dropped them; both are
+    always attempted, so fewer served than attempted is the degraded signal.
+    """
+    if not provenance:
+        return {"engines_used": [], "degraded": False, "degraded_reason": None}
+    engines_used = [
+        _ENGINE_DISPLAY_NAMES.get(engine, engine)
+        for engine in provenance.get("engines_used", [])
+    ]
+    served = int(provenance.get("n_searxng", 0) > 0) + int(
+        provenance.get("n_ddg", 0) > 0
+    )
+    degraded = served < 2
+    return {
+        "engines_used": engines_used,
+        "degraded": degraded,
+        # "evaluator" is reserved for the malformed-evaluator consumer story;
+        # engine-degradation surfaces "engine" and nothing else sets it here.
+        "degraded_reason": "engine" if degraded else None,
+    }
+
+
 async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[str, Any]:
     """
     Execute the news search workflow with given input data.
@@ -168,10 +200,13 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[s
 
     Returns:
         dict[str, Any]: A discriminated result. Success is
-        {"status": "ok", "results": [...]}; failure is
+        {"status": "ok", "results": [...], "engines_used": [...],
+        "degraded": <bool>, "degraded_reason": "engine" | None}; failure is
         {"status": "error", "error": {"type": <str>, "message": <str>}}. A bare
         string is never returned; handled failures return the typed error
-        envelope rather than propagating.
+        envelope rather than propagating. engines_used/degraded/degraded_reason
+        are read from the S03 attribution record (tools.METRICS), not
+        re-derived from result contents.
     """
     try:
         # Prepare initial state with user input as a HumanMessage
@@ -206,7 +241,12 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[s
             ) from json_error
 
         results = output_content if isinstance(output_content, list) else [output_content]
-        return {"status": "ok", "results": results}
+        # Read the S03 attribution record the tool path recorded this run and
+        # surface engines_used/degraded/degraded_reason alongside results. The
+        # record is the only source; nothing here re-derives engines from the
+        # result contents.
+        metadata = _surface_provenance(METRICS.last_provenance())
+        return {"status": "ok", "results": results, **metadata}
 
     except SearchError as search_error:
         return search_error.to_dict()
