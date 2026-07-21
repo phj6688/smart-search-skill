@@ -160,7 +160,7 @@ workflow.add_edge("evaluator", "__end__")
 
 # Compile and name the workflow
 graph = workflow.compile(interrupt_before=[], interrupt_after=[])
-graph.name = "NEWS_SEARCH_WORKFLOW"
+graph.name = "SEARCH_WORKFLOW"
 
 def _surface_provenance(provenance: dict[str, Any] | None) -> dict[str, Any]:
     """Map the S03 attribution record to the result-path metadata triple.
@@ -192,7 +192,7 @@ def _surface_provenance(provenance: dict[str, Any] | None) -> dict[str, Any]:
 
 async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[str, Any]:
     """
-    Execute the news search workflow with given input data.
+    Execute the search workflow with given input data.
 
     Args:
         input_data (str): The user input or query for initiating the workflow.
