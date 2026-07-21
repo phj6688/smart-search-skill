@@ -16,7 +16,7 @@ from .errors import SearchError
 from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT
 from .retry import ainvoke_with_retry
 from .state import InputState, State
-from .tools import METRICS, TOOLS
+from .tools import METRICS, TOOLS, search_direct
 from .utils import SelectionResponse, load_chat_model
 
 # S03 engine short names mapped to the documented result-path names. The
@@ -44,6 +44,10 @@ async def agent(
         config,
     )
 
+    # One real LLM invocation. Counted here, not inside the retry wrapper, so a
+    # retried 429 stays a single logical call; the use_llm=False path never
+    # reaches this node, so its llm_calls stays 0.
+    METRICS.record_llm_call()
     # Retry only rate-limit/timeout so a single 429 does not fail the query.
     response = cast(AIMessage, await ainvoke_with_retry(model, message_value, config))
 
@@ -82,6 +86,31 @@ def _fetched_results(messages: list[Any]) -> list[dict[str, Any]]:
     return []
 
 
+# Cap on the snippet text handed to the evaluator LLM. The model selects by
+# index and never re-emits result fields, so it needs only enough snippet to
+# judge relevance; ~200 chars bounds the per-result token cost while the
+# returned results (joined from `fetched`) stay the verbatim fetched bytes.
+_EVALUATOR_SNIPPET_CAP = 200
+
+
+def _minimized_evaluator_payload(fetched: list[dict[str, Any]]) -> str:
+    """Render the fetched results as indexed, URL-free, snippet-capped records.
+
+    The evaluator selects by position into `fetched` (the join back to the
+    fetched objects happens in the node), so the model never needs the raw URLs
+    or the full snippet. Withholding the `link` field keeps every URL out of the
+    LLM payload, and truncating the snippet bounds the token cost. This minimizes
+    only what the model SEES; the returned results are still the fetched objects,
+    untouched.
+    """
+    records = []
+    for index, item in enumerate(fetched):
+        title = str(item.get("title", ""))
+        snippet = str(item.get("snippet", ""))[:_EVALUATOR_SNIPPET_CAP]
+        records.append(f"[{index}] {title}\n{snippet}")
+    return "\n\n".join(records)
+
+
 async def evaluator(
     state: State, config: RunnableConfig
 ) -> dict[str, list[AIMessage]]:
@@ -98,9 +127,15 @@ async def evaluator(
 
     fetched = _fetched_results(list(state.messages))
 
+    # Hand the model an indexed, URL-free, snippet-capped view of the fetched
+    # results instead of the raw tool messages. The selection contract is
+    # unchanged (indices into `fetched`), so this only shrinks and de-URLs what
+    # the model sees: no raw URL and no oversized snippet reaches the LLM, while
+    # the join below still returns the fetched bytes verbatim.
+    payload_messages = [HumanMessage(content=_minimized_evaluator_payload(fetched))]
     message_value = await prompt.ainvoke(
         {
-            "messages": state.messages,
+            "messages": payload_messages,
             "system_time": datetime.now(tz=UTC).isoformat(),
             "N_RESULT": max_results,
             "SEARCH_QUERY": search_query,
@@ -113,6 +148,10 @@ async def evaluator(
     model = load_chat_model(
         configuration.model, temperature=0
     ).with_structured_output(SelectionResponse)
+    # One real LLM invocation; the use_llm=False path never runs this node, so
+    # its llm_calls stays 0. Counted even if the selection comes back malformed,
+    # because the model WAS invoked.
+    METRICS.record_llm_call()
     try:
         # Same retry wrapper as the agent node. It retries only rate-limit and
         # timeout; a ValueError/ValidationError from a malformed selection is
@@ -229,13 +268,63 @@ def _surface_provenance(
     }
 
 
-async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[str, Any]:
+async def _run_deterministic(
+    input_data: str, config: RunnableConfig | None
+) -> dict[str, Any]:
+    """LLM-free path: return the shared fetch core output in the typed envelope.
+
+    Reuses search_direct (the shared _fetch_and_merge core in tools.py), which
+    records the SAME S03 attribution record the graph path does, so
+    engines_used/degraded/degraded_reason come from _surface_provenance exactly
+    as on the LLM path (no second attribution computation, no new field). The
+    agent and evaluator nodes are never entered and load_chat_model is never
+    called, so METRICS.llm_calls stays 0 and no OPENAI_API_KEY is read. A hard
+    fetch failure with no results surfaces the same typed error envelope the LLM
+    path returns; both engines returning empty is not a failure (status "ok",
+    empty results, degraded via the attribution record), matching the LLM path.
+    """
+    try:
+        configuration = Configuration.from_runnable_config(config or {})
+        # Same knobs the agentic `search` tool feeds the shared core, so the two
+        # paths fetch identically; the returned dicts are surfaced verbatim.
+        results = await search_direct(
+            input_data,
+            max_results=configuration.max_search_results_tool,
+            searxng_url=configuration.searxng_url,
+            searxng_timeout=configuration.searxng_timeout,
+            engine_deadline_s=configuration.engine_deadline_s,
+        )
+        # Read the attribution record search_direct just recorded. The evaluator
+        # flag is not consulted: there is no evaluator on this path.
+        metadata = _surface_provenance(METRICS.last_provenance())
+        return {"status": "ok", "results": results, **metadata}
+
+    except SearchError as search_error:
+        return search_error.to_dict()
+    except Exception as e:
+        return SearchError(
+            f"Workflow execution error: {str(e)}",
+            error_type="workflow_error",
+        ).to_dict()
+
+
+async def run_workflow(
+    input_data: str,
+    config: RunnableConfig = None,
+    *,
+    use_llm: bool = True,
+) -> dict[str, Any]:
     """
     Execute the search workflow with given input data.
 
     Args:
         input_data (str): The user input or query for initiating the workflow.
         config (RunnableConfig, optional): Configuration for the workflow.
+        use_llm (bool): When False, run the deterministic LLM-free path: return
+            the shared fetch core's merged, deduplicated results directly,
+            without entering the agent or evaluator nodes and without ever
+            constructing a chat model. The success envelope is identical to the
+            LLM path's, built from the same attribution record.
 
     Returns:
         dict[str, Any]: A discriminated result. Success is
@@ -247,6 +336,9 @@ async def run_workflow(input_data: str, config: RunnableConfig = None) -> dict[s
         are read from the S03 attribution record (tools.METRICS), not
         re-derived from result contents.
     """
+    if not use_llm:
+        return await _run_deterministic(input_data, config)
+
     try:
         # Clear last query's evaluator-degradation flag so this query starts
         # clean. The engine attribution record is overwritten every query by the
