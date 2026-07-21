@@ -126,3 +126,40 @@ jobs:
               sys.exit(1)
           print(f"ddgs live query returned {len(results)} results")
           PY
+
+      - name: Default-config deterministic leg (no LLM, DDG only)
+        # Exercises the no-LLM deterministic mode: run_workflow(query,
+        # use_llm=False) returns the shared fetch core output with no ranker LLM.
+        # SEARXNG_URL points at a closed port so only DuckDuckGo serves, matching
+        # the default no-SearXNG config. Live DDG, so an empty result under a
+        # rate-limit is tolerated; the leg only asserts the typed "ok" envelope
+        # and that no LLM call was made.
+        if: ${{ !cancelled() }}
+        env:
+          SEARXNG_URL: http://127.0.0.1:1
+        run: |
+          uv run python - <<'PY'
+          import asyncio
+          import sys
+
+          from search_workflow.graph import run_workflow
+          from search_workflow.tools import METRICS
+
+
+          async def main() -> int:
+              out = await run_workflow("python programming", use_llm=False)
+              if out.get("status") != "ok":
+                  print(f"::error::deterministic leg returned {out!r}")
+                  return 1
+              if METRICS.snapshot()["llm_calls"] != 0:
+                  print("::error::deterministic leg made an LLM call")
+                  return 1
+              print(
+                  f"deterministic leg ok: {len(out['results'])} results, "
+                  f"engines_used={out['engines_used']}, llm_calls=0"
+              )
+              return 0
+
+
+          sys.exit(asyncio.run(main()))
+          PY

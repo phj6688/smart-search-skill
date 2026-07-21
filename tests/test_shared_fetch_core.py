@@ -242,11 +242,14 @@ async def test_run_workflow_drives_shared_core_end_to_end(
     assert out["results"][0]["link"].startswith("http")
 
     # The tool path fetched both engines in parallel through the shared core:
-    # one outbound request each, no LLM call inside the core.
+    # one outbound request each. The shared core itself makes no LLM call (proven
+    # by test_instrumentation's search_direct-only counter test); the two calls
+    # counted here are the graph's agent and evaluator nodes, now recorded once
+    # per real LLM invocation (HLB-661).
     snapshot = tools.METRICS.snapshot()
     assert snapshot["outbound_search_requests"] == 2
     assert snapshot["engines_used"] == {"searxng": 1, "ddg": 1}
-    assert snapshot["llm_calls"] == 0
+    assert snapshot["llm_calls"] == 2
 
 
 # --- probe removal: the SearXNG leg makes one request per tool query -------
