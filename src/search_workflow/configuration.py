@@ -62,6 +62,27 @@ class Configuration:
         metadata={"description": "Per-engine fetch deadline in seconds"}
     )
 
+    # Engine request params carried from the CLI (--region / --timelimit /
+    # --safesearch). region and timelimit default to None so an unset config
+    # leaves the LLM tool-arg region and the no-time-filter behavior untouched;
+    # the CLI always sets region, making it authoritative for a CLI run.
+    region: str | None = field(
+        default=None,
+        metadata={"description": "Search region code (e.g. us-en, de-de)"}
+    )
+
+    timelimit: str | None = field(
+        default=None,
+        metadata={"description": "Time filter code: d, w, m, or y"}
+    )
+
+    # SearXNG safesearch level: 0 off, 1 moderate, 2 strict. Default 0 keeps the
+    # emitted request identical to the old hardcoded "0" when unset.
+    safesearch: int = field(
+        default=0,
+        metadata={"description": "SafeSearch level: 0 off, 1 moderate, 2 strict"}
+    )
+
     # Search strategy
     search_strategy: str = field(
         default="hybrid",  # "searxng", "duckduckgo", "hybrid"
@@ -90,6 +111,9 @@ class Configuration:
                 "max_search_results_evaluator cannot be greater than max_search_results_tool"
             )
 
+        if self.safesearch not in (0, 1, 2):
+            raise ValueError("safesearch must be 0 (off), 1 (moderate), or 2 (strict)")
+
 
 
     @classmethod
@@ -112,7 +136,7 @@ class Configuration:
         for key, value in configurable_values.items():
             if key in final_kwargs:
                 # Ensure correct type conversion for int fields
-                if key in ["max_search_results_tool", "max_search_results_evaluator", "searxng_timeout"]:
+                if key in ["max_search_results_tool", "max_search_results_evaluator", "searxng_timeout", "safesearch"]:
                     try:
                         final_kwargs[key] = int(value)
                     except (ValueError, TypeError):

@@ -331,9 +331,14 @@ Timeframe = Literal['d', 'w', 'm', 'y'] | None
 class SearXNGClient:
     """SearXNG API client with fallback capabilities"""
 
-    def __init__(self, base_url: str = "http://localhost:9090", timeout: int = 12):
+    def __init__(self, base_url: str = "http://localhost:9090", timeout: int = 12, safesearch: int = 0):
         self.base_url = base_url.rstrip('/')
         self.timeout = timeout
+        # Carried on the instance rather than the search() signature so the many
+        # engine-boundary test doubles that replace SearXNGClient.search keep
+        # their fixed signature; the `search` tool builds the client with the
+        # configured level (HLB-663).
+        self.safesearch = safesearch
 
     async def search(
         self,
@@ -349,7 +354,7 @@ class SearXNGClient:
             "categories": categories,
             "language": language,
             "format": "json",
-            "safesearch": "0"
+            "safesearch": str(self.safesearch),
         }
 
         if time_range:
@@ -415,14 +420,22 @@ async def search(
     # parallel and already tolerates an empty or raising SearXNG leg (see the
     # return_exceptions gather in _fetch_and_merge), so DDG still merges when
     # SearXNG is down; probing first only bought a redundant round trip.
-    language = _extract_language(region)
-    # Build the client from Configuration so the per-call url and timeout win.
-    # The import-time singleton below cannot see per-call config, and its class
-    # default timeout was 12s; routing through Configuration lifts the effective
-    # default to searxng_timeout (30).
+
+    # CLI-configured region/timelimit take precedence over the LLM's tool-args
+    # for the SearXNG leg so an operator's --region/--timelimit reach the engine
+    # request without prompt injection (HLB-663). Unset on Configuration (None)
+    # falls back to the tool arg, preserving prior behavior.
+    searx_region = configuration.region if configuration.region is not None else region
+    searx_timelimit = configuration.timelimit if configuration.timelimit is not None else timelimit
+    language = _extract_language(searx_region)
+    # Build the client from Configuration so the per-call url, timeout and
+    # safesearch win. The import-time singleton below cannot see per-call config,
+    # and its class default timeout was 12s; routing through Configuration lifts
+    # the effective default to searxng_timeout (30).
     client = SearXNGClient(
         base_url=configuration.searxng_url,
         timeout=configuration.searxng_timeout,
+        safesearch=configuration.safesearch,
     )
     return await _fetch_and_merge(
         query,
@@ -430,8 +443,13 @@ async def search(
         max_results=configuration.max_search_results_tool,
         engine_deadline_s=configuration.engine_deadline_s,
         language=language,
-        time_range=timelimit,
+        time_range=searx_timelimit,
         categories="general",
+        # DDG never received region/timelimit before; source them only from the
+        # CLI seam (Configuration) so the always-present LLM tool-arg region does
+        # not silently start filtering DDG. None leaves the DDG call unchanged.
+        region=configuration.region,
+        timelimit=configuration.timelimit,
     )
 
 # DuckDuckGo rate-limit backoff (HLB-662). DDG raises RatelimitException
@@ -455,8 +473,18 @@ def _ddg_backoff_delay(attempt_index: int) -> float:
     return random.uniform(0.0, ceiling)
 
 
-async def _ddg_search(query: str, max_results: int) -> list:
+async def _ddg_search(
+    query: str,
+    max_results: int,
+    *,
+    region: str | None = None,
+    timelimit: str | None = None,
+) -> list:
     """Run DDG search using DDGS().text(), returning up to max_results structured dicts.
+
+    region and timelimit ride the ddgs-native params (DDGS().text supports both);
+    each is passed only when set, so an unset call reproduces the old
+    region-less, unfiltered request byte for byte (HLB-663).
 
     A RatelimitException is retried up to _DDG_RETRY_ATTEMPTS times with
     _ddg_backoff_delay between attempts. The wait is awaited at the ASYNC layer
@@ -470,6 +498,14 @@ async def _ddg_search(query: str, max_results: int) -> list:
     """
     from ddgs import DDGS
 
+    # Only forward region/timelimit when set: DDGS().text has its own defaults
+    # (worldwide, no time filter) and passing None would not reproduce them.
+    text_kwargs: dict[str, Any] = {"max_results": max_results}
+    if region is not None:
+        text_kwargs["region"] = region
+    if timelimit is not None:
+        text_kwargs["timelimit"] = timelimit
+
     # DDGS().text() returns list of dicts: {title, href, body}. Run in an
     # executor to avoid blocking the event loop.
     loop = asyncio.get_event_loop()
@@ -477,7 +513,7 @@ async def _ddg_search(query: str, max_results: int) -> list:
         try:
             raw = await loop.run_in_executor(
                 None,
-                lambda: list(DDGS().text(query, max_results=max_results)),
+                lambda: list(DDGS().text(query, **text_kwargs)),
             )
         except RatelimitException:
             if attempt + 1 >= _DDG_RETRY_ATTEMPTS:
@@ -503,6 +539,8 @@ async def _fetch_and_merge(
     language: str = "en",
     time_range: str | None = None,
     categories: str = "general",
+    region: str | None = None,
+    timelimit: str | None = None,
 ) -> list[dict[str, Any]]:
     """Shared fetch core for both the `search` tool and `search_direct`.
 
@@ -530,8 +568,18 @@ async def _fetch_and_merge(
         ),
         timeout=engine_deadline_s,
     )
+    # region/timelimit are the DDG-native codes and reach it ONLY from the CLI
+    # seam. Building the kwargs conditionally keeps the call byte-identical to
+    # the old _ddg_search(query, max_results) when neither is set, so the engine
+    # test doubles that stub _ddg_search with a (query, max_results) signature
+    # keep working.
+    ddg_kwargs: dict[str, Any] = {}
+    if region is not None:
+        ddg_kwargs["region"] = region
+    if timelimit is not None:
+        ddg_kwargs["timelimit"] = timelimit
     ddg_task = asyncio.wait_for(
-        _ddg_search(query, max_results),
+        _ddg_search(query, max_results, **ddg_kwargs),
         timeout=engine_deadline_s,
     )
     # Both engines are always dispatched from this seam, one request each.
