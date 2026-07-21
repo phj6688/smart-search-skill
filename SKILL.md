@@ -4,7 +4,7 @@ description: >
   Privacy-first hybrid web search using SearXNG + DuckDuckGo in parallel.
   Returns AI-evaluated, deduplicated results for any query — no commercial
   search API keys required. Use when: any agent needs web search results.
-  Requires: Python env with search-workflow installed. SearXNG optional
+  Requires: Python env with smart-search-skill installed. SearXNG optional
   (DuckDuckGo runs as automatic fallback).
 metadata:
   openclaw:
@@ -14,15 +14,15 @@ metadata:
 # smart-search Skill
 
 Parallel hybrid search: SearXNG + DuckDuckGo run simultaneously, results
-merged, deduplicated, and ranked by an LLM evaluator.
+merged, deduplicated, then selected by index from the fetched set by an LLM evaluator.
 
 ## Prerequisites
 
 1. Python environment with the package installed:
    ```bash
-   pip install search-workflow
+   pip install smart-search-skill
    # or
-   uv add search-workflow
+   uv add smart-search-skill
    ```
 
 2. Set your OpenAI API key (used for result evaluation):
@@ -61,21 +61,31 @@ python -m search_workflow LLM benchmarks 2025 --timelimit w
 import asyncio
 from search_workflow import run_workflow
 
-results = asyncio.run(run_workflow(your query here))
-for r in results:
-    print(r['title'], r['link'])
+outcome = asyncio.run(run_workflow("your query here"))
+if outcome["status"] == "ok":
+    for r in outcome["results"]:
+        print(r['title'], r['link'])
+else:
+    print("search failed:", outcome["error"]["message"])
 ```
 
-## Output Format (JSON)
+## Output Format
+
+`run_workflow` returns a discriminated dict. Success:
 
 ```json
-[
-  {
-    title: Result title,
-    link: https://example.com/page,
-    snippet: Short description of the result...
-  }
-]
+{
+  "status": "ok",
+  "results": [
+    {"title": "Result title", "link": "https://example.com/page", "snippet": "Short description..."}
+  ]
+}
+```
+
+Failure:
+
+```json
+{"status": "error", "error": {"type": "json_parse_error", "message": "..."}}
 ```
 
 ## Configuration
@@ -85,9 +95,9 @@ for r in results:
 |  | — | Required for AI result evaluation |
 |  |  | SearXNG instance URL |
 |  |  | Results fetched per engine |
-|  |  | Results returned after AI ranking |
+|  |  | Results the evaluator selects by index |
 
 ## Fallback Behavior
 
 - SearXNG down or returns 0 results → DuckDuckGo fills automatically
-- No  → results returned unranked (no AI evaluation step)
+- No  → results returned without evaluator selection (no AI evaluation step)

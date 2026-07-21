@@ -4,7 +4,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/search-workflow)](https://pypi.org/project/search-workflow/)
+[![PyPI](https://img.shields.io/pypi/v/smart-search-skill)](https://pypi.org/project/smart-search-skill/)
 
 ---
 
@@ -14,7 +14,7 @@
 - 🛡️ **Privacy-first** — self-hosted SearXNG, no queries sent to commercial APIs
 - ⚙️ **Configurable categories** — `general`, `news`, `it`, or combined per query
 - 🔄 **Resilient fallback** — SearXNG down? DuckDuckGo fills automatically
-- 🤖 **AI-evaluated results** — LLM ranks and filters results for relevance
+- 🤖 **AI-evaluated results** — LLM selects the most relevant results by index from the fetched set
 - 📦 **LangGraph-compatible** — drop-in tool for any LangGraph agent
 - 🔌 **OpenClaw skill** — invoke directly from any OpenClaw agent via `SKILL.md`
 
@@ -31,10 +31,12 @@
 ## Installation
 
 ```bash
-pip install search-workflow
+pip install smart-search-skill
 # or
-uv add search-workflow
+uv add smart-search-skill
 ```
+
+The distribution is `smart-search-skill`; the import name stays `search_workflow` and the console script is `search-workflow`.
 
 ---
 
@@ -70,8 +72,14 @@ import asyncio
 from search_workflow import run_workflow
 
 async def main():
-    results = await run_workflow("FastAPI authentication JWT tutorial")
-    for r in results:
+    # run_workflow returns a discriminated dict:
+    #   success -> {"status": "ok", "results": [...]}
+    #   failure -> {"status": "error", "error": {"type": ..., "message": ...}}
+    outcome = await run_workflow("FastAPI authentication JWT tutorial")
+    if outcome["status"] == "error":
+        print(f"search failed: {outcome['error']['message']}")
+        return
+    for r in outcome["results"]:
         print(f"• {r['title']}")
         print(f"  {r['link']}")
 
@@ -81,6 +89,12 @@ asyncio.run(main())
 ### CLI
 
 ```bash
+# Show usage and installed version
+python -m search_workflow --help
+python -m search_workflow --version
+search-workflow --help
+search-workflow --version
+
 # Basic query (JSON output)
 python -m search_workflow "neo4j python driver documentation"
 
@@ -150,7 +164,8 @@ config = {
         "model": "gpt-4o-mini",
     }
 }
-results = await run_workflow("Python asyncio best practices", config=config)
+outcome = await run_workflow("Python asyncio best practices", config=config)
+# outcome is {"status": "ok", "results": [...]} or {"status": "error", "error": {...}}
 ```
 
 ### Direct Search (no LangGraph)
@@ -206,7 +221,7 @@ query
 
 Both engines run in parallel. Results are merged and deduplicated by URL.
 If SearXNG returns 0 results, DuckDuckGo fills transparently.
-The LLM evaluator ranks results for relevance before returning.
+The LLM evaluator selects results by index from the fetched set before returning.
 
 ---
 
