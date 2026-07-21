@@ -14,6 +14,7 @@ from pydantic import ValidationError
 from .configuration import Configuration
 from .errors import SearchError
 from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT
+from .retry import ainvoke_with_retry
 from .state import InputState, State
 from .tools import METRICS, TOOLS
 from .utils import SelectionResponse, load_chat_model
@@ -43,7 +44,8 @@ async def agent(
         config,
     )
 
-    response = cast(AIMessage, await model.ainvoke(message_value, config))
+    # Retry only rate-limit/timeout so a single 429 does not fail the query.
+    response = cast(AIMessage, await ainvoke_with_retry(model, message_value, config))
 
     if state.is_last_step and response.tool_calls:
         return {
@@ -112,7 +114,13 @@ async def evaluator(
         configuration.model, temperature=0
     ).with_structured_output(SelectionResponse)
     try:
-        structured_response: Any = await model.ainvoke(message_value, config)
+        # Same retry wrapper as the agent node. It retries only rate-limit and
+        # timeout; a ValueError/ValidationError from a malformed selection is
+        # non-retryable and propagates out unchanged, so this except still fires
+        # and the degraded fallback below runs (HLB-658).
+        structured_response: Any = await ainvoke_with_retry(
+            model, message_value, config
+        )
         selected_indices = getattr(structured_response, "selected", None)
     except (ValueError, ValidationError):
         # Unparseable or schema-invalid structured output. with_structured_output
