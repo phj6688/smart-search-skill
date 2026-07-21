@@ -4,6 +4,7 @@
 
 ### Added
 - `search_workflow.mcp_server`: an SSE MCP server exposing hybrid web search as a single `web_search` tool (query, max_results). FastAPI app with `/health`, MCP mounted at `/mcp/sse`; uvicorn target `search_workflow.mcp_server:app`. Lets LibreChat and other MCP clients call the workflow directly.
+- `web_search` LLM-free fallback: when the ranker LLM is unavailable, the tool falls back to `search_direct` (SearXNG + DuckDuckGo, no LLM) so search keeps working on SearXNG alone; AI ranking resumes automatically once the ranker LLM is reachable.
 - `docker/Dockerfile.mcp`: container image for the MCP server.
 - `[project.optional-dependencies] mcp`: `mcp[cli]`, `fastapi`, `uvicorn` extras for running the server (`pip install '.[mcp]'`).
 

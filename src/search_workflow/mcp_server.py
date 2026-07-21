@@ -17,6 +17,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
 from .graph import run_workflow
+from .tools import search_direct
 
 # Docker DNS name the LibreChat container uses to reach this server. The MCP
 # SDK's DNS-rebinding guard answers 421 for an unlisted Host, so name it here.
@@ -26,6 +27,9 @@ _SERVICE_HOST = os.getenv("MCP_SERVICE_HOST", "search-mcp")
 # code's native OpenAI-style model; overridable per deployment. The OpenAI base
 # URL and key are read from OPENAI_BASE_URL / OPENAI_API_KEY by langchain.
 _RANKER_MODEL = os.getenv("SEARCH_RANKER_MODEL", "openai/gpt-4o-mini")
+
+# SearXNG endpoint for the LLM-free fallback path (service name inside Docker).
+_SEARXNG_URL = os.getenv("SEARXNG_URL", "http://localhost:9090")
 
 # Upper bound on results fetched per engine and returned after ranking.
 _MAX_RESULTS_CAP = int(os.getenv("MAX_SEARCH_RESULTS_TOOL", "10"))
@@ -80,7 +84,14 @@ def create_mcp_server() -> FastMCP:
             }
         }
         raw = await run_workflow(query, config)
-        results = _coerce_results(raw)
+        results = raw if isinstance(raw, list) else []
+        # run_workflow returns an error string (or nothing useful) when the
+        # ranker LLM is unavailable. The search itself does not need an LLM, so
+        # fall back to a direct SearXNG + DuckDuckGo query. Web search then
+        # keeps working on the homelab SearXNG alone; AI ranking resumes
+        # automatically once the ranker LLM is reachable again.
+        if not results:
+            results = await search_direct(query, max_results=k, searxng_url=_SEARXNG_URL)
         return json.dumps(results[:k], ensure_ascii=False)
 
     return server
