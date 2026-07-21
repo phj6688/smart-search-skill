@@ -163,6 +163,135 @@ def normalize_url(url: str) -> str:
         return url
 
 
+# --- reciprocal rank fusion merge (HLB-651) --------------------------------
+
+# RRF constant: score(d) = sum over engines of 1 / (RRF_K + rank), rank 0-based.
+# A SMALL k is deliberate. The classic k=60 flattens a 10-result set so a single
+# engine's rank-0 hit almost always outscores a document both engines rank
+# mid-list, which is the opposite of the cross-engine-consensus ordering this
+# merge wants. Two engines' contributions overtake one engine's rank-0 hit only
+# when k exceeds the consensus rank: 2/(k+r) > 1/k  <=>  k > r. k=5 lets a
+# document both engines place at the middle of ten (rank 4) outrank a single
+# engine's number-one result, while staying far below 60.
+RRF_K = 5
+
+# At most this many results per registrable domain survive the merge, so one
+# site cannot fill the list. Applied AFTER RRF ranking (the highest-ranked per
+# domain are kept) and BEFORE truncation.
+RRF_DOMAIN_CAP = 2
+
+# Second-level public suffixes where the registrable domain is the last THREE
+# labels rather than two (a.example.co.uk -> example.co.uk). A documented
+# heuristic set, not a full public-suffix list: it covers the common ccTLD
+# second levels without pulling in a dependency such as tldextract. Any host
+# whose final two labels are not listed falls back to those two labels.
+_MULTI_PART_SUFFIXES = frozenset(
+    {
+        "co.uk", "org.uk", "gov.uk", "ac.uk", "me.uk", "ltd.uk", "plc.uk",
+        "co.jp", "or.jp", "ne.jp", "go.jp", "ac.jp",
+        "com.au", "net.au", "org.au", "edu.au", "gov.au",
+        "co.nz", "org.nz", "govt.nz",
+        "com.br", "com.cn", "com.mx", "com.tr", "com.sg", "com.hk", "com.tw",
+        "co.in", "co.za", "co.kr", "co.il", "co.id", "co.th",
+    }
+)
+
+
+def _registrable_domain(host: str) -> str:
+    """Return the registrable domain of a host: the key the domain cap groups on.
+
+    Documented heuristic, not a full public-suffix lookup: take the last two
+    labels, but when those two are a known multi-part suffix (co.uk, com.au, ...)
+    take the last three, so a.example.co.uk and b.example.co.uk both key on
+    example.co.uk. A bare hostname split would treat every subdomain as distinct
+    (never capping) or collapse everything under co.uk (over-capping). Hosts with
+    two or fewer labels are returned unchanged.
+    """
+    host = host.lower().strip(".")
+    if not host:
+        return ""
+    labels = host.split(".")
+    if len(labels) <= 2:
+        return host
+    if ".".join(labels[-2:]) in _MULTI_PART_SUFFIXES:
+        return ".".join(labels[-3:])
+    return ".".join(labels[-2:])
+
+
+def _rrf_merge(
+    searxng_results: list[dict[str, Any]],
+    ddg_results: list[dict[str, Any]],
+    max_results: int,
+) -> tuple[list[dict[str, Any]], set[str], int]:
+    """Merge two per-engine ranked lists into one ordered result list.
+
+    Fixed order: normalize_url dedup FIRST, then reciprocal rank fusion, then a
+    domain cap of RRF_DOMAIN_CAP per registrable domain, then truncation to
+    max_results. Dedup runs before RRF so a URL both engines returned collapses
+    to ONE entry whose fused score adds both ranks (1/(RRF_K+rank) per engine)
+    instead of the two copies competing.
+
+    Returns (results, engines_used, n_after_dedup):
+      * results       the merged, ranked, capped, truncated dicts (the input
+                      dict objects, unmodified).
+      * engines_used  the set of engines that first-returned a surviving deduped
+                      URL, taken over the WHOLE deduped pool rather than the shown
+                      slice, so the cap and truncation (which only trim what is
+                      shown) cannot make the record disown a contributing engine.
+      * n_after_dedup count of distinct URLs after dedup, before cap/truncate.
+    """
+    order: list[str] = []
+    by_key: dict[str, dict[str, Any]] = {}
+    nolink = 0
+    for engine, results in (("searxng", searxng_results), ("ddg", ddg_results)):
+        for rank, r in enumerate(results):
+            link = r.get("link", "")
+            if link:
+                key = normalize_url(link)
+            else:
+                # A link-less row cannot dedup: give it its own key so several
+                # never collapse together (the pre-RRF merge appended each one).
+                key = f"\x00nolink\x00{nolink}"
+                nolink += 1
+            entry = by_key.get(key)
+            if entry is None:
+                entry = {"result": r, "source": engine, "score": 0.0}
+                by_key[key] = entry
+                order.append(key)
+            # Both engines add to the fused score; the source stays the engine
+            # that FIRST returned the URL (result-source attribution, HLB-646).
+            entry["score"] += 1.0 / (RRF_K + rank)
+
+    n_after_dedup = len(order)
+    engines_used = {by_key[key]["source"] for key in order}
+
+    # Rank by fused score, descending. sorted() is stable, so ties keep
+    # first-seen order (SearXNG rows before DDG rows), matching the concat
+    # tiebreak the merge used before.
+    ranked = sorted(order, key=lambda key: by_key[key]["score"], reverse=True)
+
+    kept: list[dict[str, Any]] = []
+    per_domain: dict[str, int] = {}
+    for key in ranked:
+        result = by_key[key]["result"]
+        try:
+            host = urlsplit(result.get("link", "")).hostname or ""
+        except ValueError:
+            host = ""
+        domain = _registrable_domain(host)
+        # Cap by registrable domain. A result whose host yields no domain
+        # (link-less or unparseable) is never capped, so the cap cannot silently
+        # drop rows it cannot attribute to a site.
+        if domain and per_domain.get(domain, 0) >= RRF_DOMAIN_CAP:
+            continue
+        per_domain[domain] = per_domain.get(domain, 0) + 1
+        kept.append(result)
+        if len(kept) >= max_results:
+            break
+
+    return kept, engines_used, n_after_dedup
+
+
 # Define available region and timeframe options
 Region = Literal[
     'us-en', 'uk-en', 'au-en', 'ca-en', 'in-en', 'de-de', 'at-de',
@@ -351,33 +480,27 @@ async def _fetch_and_merge(
     searxng_list = [] if isinstance(searxng_results, Exception) else list(searxng_results)
     ddg_list = [] if isinstance(ddg_results, Exception) else list(ddg_results)
 
-    # Merge, deduplicate on the normalized link; track each survivor's engine.
-    seen_keys: set[str] = set()
-    merged: list[dict[str, Any]] = []
-    merged_sources: list[str] = []
-    for source, engine_results in (("searxng", searxng_list), ("ddg", ddg_list)):
-        for r in engine_results:
-            link = r.get("link", "")
-            key = normalize_url(link) if link else ""
-            if link and key in seen_keys:
-                continue
-            seen_keys.add(key)
-            merged.append(r)
-            merged_sources.append(source)
+    # One merge point for the shared core: dedup on the normalized link, fuse the
+    # per-engine ranks with reciprocal rank fusion, cap per registrable domain,
+    # then truncate. _rrf_merge applies that fixed order.
+    returned, engines_used, n_after_dedup = _rrf_merge(
+        searxng_list, ddg_list, max_results
+    )
 
-    if not merged:
+    if n_after_dedup == 0:
         print(f"Warning: No results for '{query}' from either engine")
     elif not searxng_list:
         print(f"Warning: SearXNG returned 0 results for '{query}', used DDG only")
 
-    returned = merged[:max_results]
-    engines_used = set(merged_sources[: len(returned)])
+    # engines_used is taken over the deduped candidate pool (not the capped
+    # slice), so a domain cap or truncation that trims what is shown cannot make
+    # fell_back claim a DDG-only run that did not happen.
     fell_back = engines_used == {"ddg"}
     METRICS.record_engines_used(engines_used)
     provenance = {
         "n_searxng": len(searxng_list),
         "n_ddg": len(ddg_list),
-        "n_after_dedup": len(merged),
+        "n_after_dedup": n_after_dedup,
         "elapsed_ms": (time.monotonic() - started) * 1000.0,
         "ddg_ok": ddg_ok,
         "fell_back": fell_back,
