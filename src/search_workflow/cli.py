@@ -27,15 +27,27 @@ async def _async_main() -> int:
     parser.add_argument("--version", action="version", version=_package_version())
     parser.add_argument("--region", default="us-en", help="Search region")
     parser.add_argument("--timelimit", choices=['d', 'w', 'm', 'y'], help="Time limit")
+    parser.add_argument(
+        "--safesearch",
+        type=int,
+        choices=[0, 1, 2],
+        default=0,
+        help="SafeSearch level: 0 off, 1 moderate, 2 strict",
+    )
     parser.add_argument("--format", choices=['json', 'text'], default='json', help="Output format")
     parser.add_argument("--max-results", type=int, default=5, help="Maximum results")
 
     args = parser.parse_args()
 
-    # Configure search
+    # Wire the parsed flags into the run config the engine layer reads. These
+    # land in the ENGINE REQUEST PARAMS (SearXNG params + the DDGS().text call),
+    # never in the LLM prompt: region/timelimit were parsed but dropped before.
     config = {
         "configurable": {
-            "max_search_results_evaluator": args.max_results
+            "max_search_results_evaluator": args.max_results,
+            "region": args.region,
+            "timelimit": args.timelimit,
+            "safesearch": args.safesearch,
         }
     }
 
