@@ -100,7 +100,7 @@ class Configuration:
         metadata={"description": "Logging level"}
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate configuration after initialization."""
         # Changed from raising error to just warning
         if not self.openai_api_key:
@@ -122,8 +122,10 @@ class Configuration:
         # Get configurable values from the input config
         configurable_values = config.get("configurable", {})
 
-        # Get default values from environment or dataclass defaults
-        default_kwargs = {
+        # Get default values from environment or dataclass defaults. Values are
+        # heterogeneous (str/int/bool/float/None), so the collected mapping is
+        # dict[str, Any]; the Configuration constructor re-checks each field.
+        default_kwargs: dict[str, Any] = {
             f.name: f.default_factory() if callable(f.default_factory) else f.default
             for f in cls.__dataclass_fields__.values()
             if hasattr(f, 'default_factory') or hasattr(f, 'default')

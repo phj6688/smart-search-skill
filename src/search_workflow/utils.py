@@ -126,7 +126,7 @@ class ArticleStrict(BaseModel):
     # pydantic v1 validators are classmethods; `cls` is correct, so N805 is a
     # false positive here.
     @validator("title")
-    def title_cannot_be_generic(cls, v):  # noqa: N805
+    def title_cannot_be_generic(cls, v: str) -> str:  # noqa: N805
         """Ensures title is specific and not a generic placeholder."""
         generic_titles = {"untitled", "article", "news"}
         if v.lower() in generic_titles:
@@ -134,13 +134,13 @@ class ArticleStrict(BaseModel):
         return v
 
     @validator("title")
-    def validate_title_length(cls, v):  # noqa: N805
+    def validate_title_length(cls, v: str) -> str:  # noqa: N805
         if len(v) < 5 or len(v) > 500:
             raise ValueError("Title must be between 5 and 500 characters.")
         return v
 
     @validator("snippet")
-    def validate_snippet_length(cls, v):  # noqa: N805
+    def validate_snippet_length(cls, v: str) -> str:  # noqa: N805
         if len(v) < 20 or len(v) > 1000:
             raise ValueError("Snippet must be between 20 and 1000 characters.")
         return v
@@ -151,7 +151,7 @@ class ArticleStrict(BaseModel):
         return v.lower()
 
     @validator("similarity")
-    def validate_similarity(cls, v):  # noqa: N805
+    def validate_similarity(cls, v: float) -> float:  # noqa: N805
         if not 0.0 <= v <= 1.0:
             raise ValueError("Similarity must be between 0.0 and 1.0.")
         return v

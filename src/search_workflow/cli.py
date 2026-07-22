@@ -5,6 +5,8 @@ import json
 import sys
 from importlib.metadata import PackageNotFoundError, version
 
+from langchain_core.runnables import RunnableConfig
+
 from . import run_workflow
 
 _DIST_NAME = "smart-search-skill"
@@ -42,7 +44,7 @@ async def _async_main() -> int:
     # Wire the parsed flags into the run config the engine layer reads. These
     # land in the ENGINE REQUEST PARAMS (SearXNG params + the DDGS().text call),
     # never in the LLM prompt: region/timelimit were parsed but dropped before.
-    config = {
+    config: RunnableConfig = {
         "configurable": {
             "max_search_results_evaluator": args.max_results,
             "region": args.region,

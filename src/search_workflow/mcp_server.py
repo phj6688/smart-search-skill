@@ -13,6 +13,7 @@ from typing import Any
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from langchain_core.runnables import RunnableConfig
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
@@ -77,7 +78,7 @@ def create_mcp_server() -> FastMCP:
             A JSON array of objects with title, link, and snippet fields.
         """
         k = max(1, min(int(max_results), _MAX_RESULTS_CAP))
-        config = {
+        config: RunnableConfig = {
             "configurable": {
                 "model": _RANKER_MODEL,
                 "max_search_results_tool": _MAX_RESULTS_CAP,

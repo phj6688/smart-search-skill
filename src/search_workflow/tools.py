@@ -21,7 +21,9 @@ from langchain_core.tools import InjectedToolArg
 try:
     from ddgs.exceptions import RatelimitException
 except ImportError:  # pragma: no cover - exercised by whichever package is absent
-    from duckduckgo_search.exceptions import RatelimitException
+    # Legacy fallback: duckduckgo_search was dropped for ddgs (HLB-664) and is
+    # not a declared dependency, so its stubs are absent from the type-check env.
+    from duckduckgo_search.exceptions import RatelimitException  # type: ignore[import-not-found, no-redef]
 
 from .configuration import Configuration, default_config
 
@@ -395,8 +397,12 @@ class SearXNGClient:
 # is wrong from a container and silently forces the DuckDuckGo-only fallback).
 searxng_client = SearXNGClient(base_url=os.getenv("SEARXNG_URL", "http://localhost:9090"))
 
-def _extract_language(region: Region) -> str:
-    """Extract language from region code"""
+def _extract_language(region: str) -> str:
+    """Extract language from region code.
+
+    Takes a plain str, not Region: the operator-supplied configuration.region
+    is free-form and legitimately reaches here alongside the LLM's Region arg.
+    """
     return region.split('-')[1] if '-' in region else 'en'
 
 async def search(
