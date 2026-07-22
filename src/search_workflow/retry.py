@@ -57,7 +57,10 @@ class SupportsAInvoke(Protocol):
     (not ChatOpenAI) keeps the retry behavior provider-agnostic.
     """
 
-    async def ainvoke(self, value: Any, config: Any = None) -> Any: ...
+    # Positional-only: langchain's Runnable.ainvoke names its first parameter
+    # `input`, so matching by position (not name) keeps the structural check
+    # provider-agnostic.
+    async def ainvoke(self, value: Any, config: Any = None, /) -> Any: ...
 
 
 async def ainvoke_with_retry(
@@ -110,7 +113,7 @@ def _retry_wait_seconds(exc: BaseException, attempt: int) -> float:
     retry_after = _retry_after_seconds(exc)
     if retry_after is not None:
         return retry_after
-    backoff = _BACKOFF_BASE_S * (2 ** (attempt - 1))
+    backoff = _BACKOFF_BASE_S * (2.0 ** (attempt - 1))
     return backoff + random.uniform(0, _JITTER_MAX_S)
 
 

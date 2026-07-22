@@ -203,7 +203,7 @@ async def evaluator(
     return {"messages": [AIMessage(content=response_content)]}
 
 # Define workflow and its nodes
-workflow = StateGraph(State, input=InputState, config_schema=Configuration)
+workflow = StateGraph(State, input_schema=InputState, context_schema=Configuration)
 workflow.add_node(agent)
 workflow.add_node("tools", ToolNode(TOOLS))
 workflow.add_node(evaluator)
@@ -310,7 +310,7 @@ async def _run_deterministic(
 
 async def run_workflow(
     input_data: str,
-    config: RunnableConfig = None,
+    config: RunnableConfig | None = None,
     *,
     use_llm: bool = True,
 ) -> dict[str, Any]:
@@ -346,10 +346,10 @@ async def run_workflow(
         # evaluator, so it must be reset here per query.
         METRICS.clear_evaluator_degraded()
 
-        # Prepare initial state with user input as a HumanMessage
-        initial_state = {
-            "messages": [HumanMessage(content=input_data)]
-        }
+        # Prepare initial state with user input as a HumanMessage. InputState is
+        # the graph's declared input schema, so pass an instance rather than a
+        # bare dict to match ainvoke's typed input.
+        initial_state = InputState(messages=[HumanMessage(content=input_data)])
 
         # Run the workflow with optional config
         if config:

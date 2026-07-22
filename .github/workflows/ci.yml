@@ -24,11 +24,9 @@ jobs:
       # Scoped to tests/: src/ and the legacy root scripts carry pre-existing findings.
       - run: uv run ruff check tests
 
-  # mypy is allow-fail; HLB-665 tracks flipping it to required
   mypy:
-    name: mypy (allow-fail)
+    name: mypy
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -36,7 +34,10 @@ jobs:
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
         with:
           enable-cache: true
-      - run: uv sync
+      # Install the mcp and local extras so mypy type-checks mcp_server.py
+      # against real fastapi/mcp stubs and utils.py against langchain-ollama,
+      # rather than treating those optional imports as untyped Any.
+      - run: uv sync --extra mcp --extra local
       - run: uv run mypy src
 
   pytest:
