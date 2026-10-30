@@ -84,10 +84,9 @@ async def _evaluate(
         or os.getenv("OPENAI_API_BASE")
         or "https://api.openai.com/v1"
     )
-    async with httpx.AsyncClient(
-        headers={"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY', '')}"},
-        timeout=30.0,
-    ) as client:
+    api_key = os.getenv("OPENAI_API_KEY", "")
+    headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+    async with httpx.AsyncClient(headers=headers, timeout=30.0) as client:
         METRICS.record_llm_call()
         response = await ainvoke_with_retry(
             _EvaluatorRequest(client, f"{base.rstrip('/')}/chat/completions"),
