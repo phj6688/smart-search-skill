@@ -4,8 +4,14 @@ import asyncio
 import json
 import sys
 from importlib.metadata import PackageNotFoundError, version
+from typing import Any
 
-from . import run_workflow
+
+async def run_workflow(input_data: str, config: Any = None) -> dict[str, Any]:
+    """Load the graph only for a search, keeping --help/--version lightweight."""
+    from .graph import run_workflow as graph_workflow
+
+    return await graph_workflow(input_data, config)
 
 _DIST_NAME = "smart-search-skill"
 # Sentinel for source checkouts where the distribution is not installed.

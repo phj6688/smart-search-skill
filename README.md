@@ -38,6 +38,8 @@ uv add smart-search-skill
 
 The distribution is `smart-search-skill`; the import name stays `search_workflow` and the console script is `search-workflow`.
 
+The CLI and LangGraph workflow require `pip install 'smart-search-skill[agent]'` (or `pip install '.[agent]'` from a checkout); the MCP sidecar needs only `pip install '.[mcp]'` for OpenAI-compatible ranking.
+
 ---
 
 ## Configuration

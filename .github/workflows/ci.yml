@@ -20,7 +20,7 @@ jobs:
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
         with:
           enable-cache: true
-      - run: uv sync
+      - run: uv sync --extra agent
       # Scoped to tests/: src/ and the legacy root scripts carry pre-existing findings.
       - run: uv run ruff check tests
 
@@ -36,7 +36,7 @@ jobs:
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
         with:
           enable-cache: true
-      - run: uv sync
+      - run: uv sync --extra agent
       - run: uv run mypy src
 
   pytest:
@@ -53,8 +53,8 @@ jobs:
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
         with:
           enable-cache: true
-      # Install the mcp extra so the FastMCP web_search tests can import fastapi/mcp.
-      - run: uv sync --python ${{ matrix.python-version }} --extra mcp
+      # Tests cover both the lean MCP server and the LangGraph workflow.
+      - run: uv sync --python ${{ matrix.python-version }} --extra mcp --extra agent
       - run: uv run pytest tests/ -q --block-network
 
   import-probe:
@@ -69,3 +69,8 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install .
       - run: python -c "import search_workflow"
+      - name: Lean MCP import probe
+        run: |
+          python -m venv /tmp/search-mcp-import
+          /tmp/search-mcp-import/bin/python -m pip install '.[mcp]'
+          /tmp/search-mcp-import/bin/python scripts/check_lean_import.py

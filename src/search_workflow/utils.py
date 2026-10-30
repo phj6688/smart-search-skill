@@ -1,11 +1,16 @@
 """Utility functions and data models for agent interaction."""
 
+from __future__ import annotations
+
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from dotenv import load_dotenv
-from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field, confloat, validator
+
+if TYPE_CHECKING:
+    from langchain_core.language_models import BaseChatModel
+    from langchain_core.messages import BaseMessage
 
 load_dotenv()
 
@@ -37,8 +42,7 @@ _LOCAL_EXTRA_HINT = (
 
 
 def _load_openai(model_name: str, temperature: float) -> BaseChatModel:
-    # langchain-openai is a base dependency, but the import lives here so the
-    # provider dispatch is the single place the concrete integration is named.
+    # langchain-openai ships in the agent extra and is loaded only on demand.
     from langchain_openai import ChatOpenAI
 
     return ChatOpenAI(model=model_name, temperature=temperature)
@@ -56,8 +60,7 @@ def _load_ollama(model_name: str, temperature: float) -> BaseChatModel:
     return ChatOllama(model=model_name, temperature=temperature)
 
 
-# provider -> constructor. A plain dict keeps the base install to langchain-core
-# plus langchain-openai: no `langchain` meta-package and no init_chat_model.
+# provider -> constructor. Concrete integrations are imported only on demand.
 _PROVIDERS: dict[str, Callable[[str, float], BaseChatModel]] = {
     "openai": _load_openai,
     "ollama": _load_ollama,
