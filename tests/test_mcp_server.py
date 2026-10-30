@@ -36,7 +36,7 @@ async def test_mcp_coerce_web_search_ok_returns_results_json(
     async def fake_run_workflow(query: str, config: object = None) -> dict:
         return {"status": "ok", "results": payload}
 
-    monkeypatch.setattr(mcp_server, "run_workflow", fake_run_workflow)
+    monkeypatch.setattr(mcp_server, "run_workflow_lean", fake_run_workflow)
     server = mcp_server.create_mcp_server()
 
     content, _structured = await server.call_tool(
@@ -55,7 +55,7 @@ async def test_mcp_coerce_web_search_error_returns_error_json(
             "error": {"type": "workflow_error", "message": "boom"},
         }
 
-    monkeypatch.setattr(mcp_server, "run_workflow", fake_run_workflow)
+    monkeypatch.setattr(mcp_server, "run_workflow_lean", fake_run_workflow)
     server = mcp_server.create_mcp_server()
 
     content, _structured = await server.call_tool(

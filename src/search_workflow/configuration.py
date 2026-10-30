@@ -1,11 +1,11 @@
 """Configuration management with environment variable support."""
 
 import os
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
 from dotenv import load_dotenv
-from langchain_core.runnables import RunnableConfig
 
 # Load environment variables
 load_dotenv()
@@ -117,10 +117,10 @@ class Configuration:
 
 
     @classmethod
-    def from_runnable_config(cls, config: RunnableConfig) -> "Configuration":
+    def from_runnable_config(cls, config: Mapping[str, Any] | None) -> "Configuration":
         """Create configuration from LangChain runnable config."""
         # Get configurable values from the input config
-        configurable_values = config.get("configurable", {})
+        configurable_values = (config or {}).get("configurable") or {}
 
         # Get default values from environment or dataclass defaults
         default_kwargs = {

@@ -13,11 +13,27 @@ Components:
 - Utility functions for loading models and handling structured output.
 """
 
-from .graph import run_workflow
-from .configuration import Configuration
-from .state import State, InputState
-from .tools import TOOLS
-from .utils import ArticleStrict, ArticlesResponse, get_message_text
+from importlib import import_module
+from typing import Any
+
+_EXPORT_MODULES = {
+    "run_workflow": ".graph",
+    "Configuration": ".configuration",
+    "State": ".state",
+    "InputState": ".state",
+    "TOOLS": ".tools",
+    "ArticleStrict": ".utils",
+    "ArticlesResponse": ".utils",
+    "get_message_text": ".utils",
+}
+
+
+def __getattr__(name: str) -> Any:
+    """Resolve public exports only when requested by a caller."""
+    module = _EXPORT_MODULES.get(name)
+    if module is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return getattr(import_module(module, __name__), name)
 
 __all__ = [
     "run_workflow",

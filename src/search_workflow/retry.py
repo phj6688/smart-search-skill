@@ -16,26 +16,10 @@ from __future__ import annotations
 
 import asyncio
 import random
+import sys
 from typing import Any, Protocol
 
-# openai ships transitively with langchain-openai, so the isinstance checks are
-# the preferred classifier. The import stays guarded so a provider swap that
-# drops openai degrades to attribute-based detection (status_code / Retry-After)
-# instead of an ImportError at import time.
-try:
-    import openai
-
-    _RETRYABLE_TYPES: tuple[type[BaseException], ...] = (
-        openai.RateLimitError,
-        openai.APITimeoutError,
-    )
-    _NON_RETRYABLE_TYPES: tuple[type[BaseException], ...] = (
-        openai.AuthenticationError,
-        openai.BadRequestError,
-    )
-except ImportError:  # pragma: no cover - openai is a base dep in this repo
-    _RETRYABLE_TYPES = ()
-    _NON_RETRYABLE_TYPES = ()
+import httpx
 
 
 # Total attempts across the initial call and its retries. Three keeps us inside
@@ -91,15 +75,22 @@ def _is_retryable(exc: BaseException) -> bool:
     # evaluator's except block unretried and unwrapped, so refuse them first.
     if isinstance(exc, ValueError):
         return False
-    if _NON_RETRYABLE_TYPES and isinstance(exc, _NON_RETRYABLE_TYPES):
-        return False
-    if _RETRYABLE_TYPES and isinstance(exc, _RETRYABLE_TYPES):
+    # An SDK error can only exist if its module has already been imported.
+    # Consult it at call time, including when a graph loads after this module.
+    openai = sys.modules.get("openai")
+    if openai is not None:
+        if isinstance(exc, (openai.AuthenticationError, openai.BadRequestError)):
+            return False
+        if isinstance(exc, (openai.RateLimitError, openai.APITimeoutError)):
+            return True
+    if isinstance(exc, httpx.TimeoutException):
         return True
     # Provider-agnostic fallbacks for a client whose error classes we do not
-    # recognize: an HTTP 429 status or a Retry-After header is a throttle the
-    # caller is meant to wait out and retry.
-    if getattr(exc, "status_code", None) == 429:
-        return True
+    # recognize: only HTTP 429 retries when a status is available. Otherwise
+    # a Retry-After header signals a throttle the caller should wait out.
+    status_code = getattr(exc, "status_code", None)
+    if status_code is not None:
+        return bool(status_code == 429)
     return _retry_after_seconds(exc) is not None
 
 

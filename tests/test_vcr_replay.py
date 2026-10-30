@@ -1,10 +1,10 @@
 """Offline VCR replay tests (HLB-647).
 
-SearXNG replays through SearXNGClient's aiohttp session. DDG replays through
-the ddgs client pinned to backend="duckduckgo": the default "auto" backend
-rides primp, a Rust HTTP client vcrpy cannot see, so with "auto" a cassette
-would never be consulted and the test would silently hit the live network.
-The duckduckgo backend rides httpx, which vcrpy intercepts.
+SearXNG replays through SearXNGClient's aiohttp session. All ddgs backends,
+including "duckduckgo", use primp, a Rust HTTP client vcrpy cannot intercept.
+The DDG test replaces HttpClient.request with an httpx shim so vcrpy can
+replay the existing cassette while keeping the real DuckDuckGo parser.
+The recorded body uses gzip so replay needs no optional Brotli decoder.
 """
 
 import os
@@ -12,9 +12,13 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
+import httpx
 import pytest
 from ddgs import DDGS
+from ddgs.http_client import HttpClient, Response
+from vcr.cassette import Cassette
 
 from search_workflow.tools import SearXNGClient
 from tests.conftest import CASSETTE_ROOT_ENV
@@ -34,8 +38,14 @@ async def test_searxng_search_replay() -> None:
     assert all(result["link"].startswith("http") for result in results)
 
 
-@pytest.mark.vcr
-def test_ddg_text_replay() -> None:
+@pytest.mark.vcr(match_on=["method", "uri", "body"])
+def test_ddg_text_replay(monkeypatch: pytest.MonkeyPatch, vcr: Cassette) -> None:
+    def replay_request(self: HttpClient, *args: Any, **kwargs: Any) -> Response:
+        # DuckDuckGo only uses status_code and text, not primp's text helpers.
+        with httpx.Client(timeout=20, trust_env=False) as client:
+            return Response(client.request(*args, **kwargs))
+
+    monkeypatch.setattr(HttpClient, "request", replay_request)
     results = DDGS(timeout=20).text(
         "python programming", max_results=5, backend="duckduckgo"
     )
@@ -44,6 +54,7 @@ def test_ddg_text_replay() -> None:
     for result in results:
         assert result["title"]
         assert result["href"].startswith("http")
+    assert vcr.play_count == 1, "DDG did not replay the recorded request"
 
 
 def _run_searxng_replay(cassette_root: Path) -> subprocess.CompletedProcess:

@@ -11,17 +11,20 @@ from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 from pydantic import ValidationError
 
+from .agent_tools import TOOLS
 from .configuration import Configuration
 from .errors import SearchError
 from .prompts import AGENT_PROMPT, EVALUATOR_PROMPT
+from .results import (
+    _ENGINE_DISPLAY_NAMES,
+    _EVALUATOR_SNIPPET_CAP,
+    _minimized_evaluator_payload,
+    _surface_provenance,
+)
 from .retry import ainvoke_with_retry
 from .state import InputState, State
-from .tools import METRICS, TOOLS, search_direct
+from .tools import METRICS, search_direct
 from .utils import SelectionResponse, load_chat_model
-
-# S03 engine short names mapped to the documented result-path names. The
-# attribution record uses "ddg"; the result path surfaces "duckduckgo".
-_ENGINE_DISPLAY_NAMES = {"searxng": "searxng", "ddg": "duckduckgo"}
 
 
 async def agent(
@@ -85,30 +88,6 @@ def _fetched_results(messages: list[Any]) -> list[dict[str, Any]]:
         return []
     return []
 
-
-# Cap on the snippet text handed to the evaluator LLM. The model selects by
-# index and never re-emits result fields, so it needs only enough snippet to
-# judge relevance; ~200 chars bounds the per-result token cost while the
-# returned results (joined from `fetched`) stay the verbatim fetched bytes.
-_EVALUATOR_SNIPPET_CAP = 200
-
-
-def _minimized_evaluator_payload(fetched: list[dict[str, Any]]) -> str:
-    """Render the fetched results as indexed, URL-free, snippet-capped records.
-
-    The evaluator selects by position into `fetched` (the join back to the
-    fetched objects happens in the node), so the model never needs the raw URLs
-    or the full snippet. Withholding the `link` field keeps every URL out of the
-    LLM payload, and truncating the snippet bounds the token cost. This minimizes
-    only what the model SEES; the returned results are still the fetched objects,
-    untouched.
-    """
-    records = []
-    for index, item in enumerate(fetched):
-        title = str(item.get("title", ""))
-        snippet = str(item.get("snippet", ""))[:_EVALUATOR_SNIPPET_CAP]
-        records.append(f"[{index}] {title}\n{snippet}")
-    return "\n\n".join(records)
 
 
 async def evaluator(
@@ -225,47 +204,6 @@ workflow.add_edge("evaluator", "__end__")
 # Compile and name the workflow
 graph = workflow.compile(interrupt_before=[], interrupt_after=[])
 graph.name = "SEARCH_WORKFLOW"
-
-def _surface_provenance(
-    provenance: dict[str, Any] | None, evaluator_degraded: bool = False
-) -> dict[str, Any]:
-    """Map the S03 attribution record to the result-path metadata triple.
-
-    Reads engines_used/n_searxng/n_ddg straight off the provenance record so
-    the metadata FOLLOWS what the tool path attributed, instead of re-deriving
-    which engine answered from result contents. An engine "served results" when
-    it returned any raw rows (n>0), even if dedup later dropped them; both are
-    always attempted, so fewer served than attempted is the degraded signal.
-
-    evaluator_degraded is HLB-658's malformed-selection signal (the evaluator
-    node fell back to raw results). It surfaces degraded_reason="evaluator", but
-    engine degradation still WINS: a single-engine fetch is a more fundamental
-    data-quality loss than an unusable selection over an otherwise-complete
-    fetch, so the evaluator reason only shows when the engines were healthy.
-    """
-    if not provenance:
-        engines_used: list[str] = []
-        engine_degraded = False
-    else:
-        engines_used = [
-            _ENGINE_DISPLAY_NAMES.get(engine, engine)
-            for engine in provenance.get("engines_used", [])
-        ]
-        served = int(provenance.get("n_searxng", 0) > 0) + int(
-            provenance.get("n_ddg", 0) > 0
-        )
-        engine_degraded = served < 2
-    if engine_degraded:
-        degraded_reason: str | None = "engine"
-    elif evaluator_degraded:
-        degraded_reason = "evaluator"
-    else:
-        degraded_reason = None
-    return {
-        "engines_used": engines_used,
-        "degraded": engine_degraded or evaluator_degraded,
-        "degraded_reason": degraded_reason,
-    }
 
 
 async def _run_deterministic(

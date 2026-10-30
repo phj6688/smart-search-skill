@@ -7,13 +7,11 @@ import random
 import re
 import threading
 import time
-from collections.abc import Callable, Iterable
-from typing import Annotated, Any, Literal
+from collections.abc import Iterable
+from typing import Any, Literal
 from urllib.parse import urlsplit, urlunsplit
 
 import aiohttp
-from langchain_core.runnables import RunnableConfig
-from langchain_core.tools import InjectedToolArg
 
 # Package rename in flight: newer installs ship `ddgs`, older ones
 # `duckduckgo_search`. Import the throttling exception from whichever is present
@@ -395,7 +393,7 @@ class SearXNGClient:
 # is wrong from a container and silently forces the DuckDuckGo-only fallback).
 searxng_client = SearXNGClient(base_url=os.getenv("SEARXNG_URL", "http://localhost:9090"))
 
-def _extract_language(region: Region) -> str:
+def _extract_language(region: str) -> str:
     """Extract language from region code"""
     return region.split('-')[1] if '-' in region else 'en'
 
@@ -404,7 +402,7 @@ async def search(
     region: Region,
     timelimit: Timeframe,
     *,
-    config: Annotated[RunnableConfig, InjectedToolArg]
+    config: Any
 ) -> list[dict[str, Any]] | None:
     """Performs a web search for news-related content using SearXNG with DuckDuckGo fallback.
 
@@ -635,11 +633,17 @@ async def search_direct(
     searxng_timeout: int | None = None,
     categories: str = "general",
     engine_deadline_s: float | None = None,
+    *,
+    region: str | None = None,
+    timelimit: str | None = None,
+    safesearch: int = 0,
 ) -> list[dict[str, Any]]:
     """Direct search: run SearXNG + DDG in parallel, merge and deduplicate.
 
     Args:
         categories: SearXNG categories to search (e.g. "general", "news", "general,news", "it")
+        region: Optional DuckDuckGo region code.
+        timelimit: Optional DuckDuckGo time filter.
 
     searxng_url, searxng_timeout and engine_deadline_s fall back to the
     Configuration defaults (url from SEARXNG_URL, timeout 30, deadline 4.5) when
@@ -653,7 +657,16 @@ async def search_direct(
         searxng_timeout = default_config.searxng_timeout
     if engine_deadline_s is None:
         engine_deadline_s = default_config.engine_deadline_s
-    client = SearXNGClient(searxng_url, timeout=searxng_timeout)
+    client = (
+        SearXNGClient(searxng_url, timeout=searxng_timeout, safesearch=safesearch)
+        if safesearch
+        else SearXNGClient(searxng_url, timeout=searxng_timeout)
+    )
+    ddg_options: dict[str, Any] = {}
+    if region is not None:
+        ddg_options["region"] = region
+    if timelimit is not None:
+        ddg_options["timelimit"] = timelimit
     return await _fetch_and_merge(
         query,
         client=client,
@@ -662,8 +675,14 @@ async def search_direct(
         language=language,
         time_range=time_range,
         categories=categories,
+        **ddg_options,
     )
 
 
-# Exported tools for external use
-TOOLS: list[Callable[..., Any]] = [search]
+def __getattr__(name: str) -> Any:
+    """Keep the agent tool exports available without loading LangChain eagerly."""
+    if name == "TOOLS":
+        from . import agent_tools
+
+        return agent_tools.TOOLS
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

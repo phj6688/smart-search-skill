@@ -16,7 +16,7 @@ from fastapi.responses import JSONResponse
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
-from .graph import run_workflow
+from .lean import run_workflow_lean
 
 # Docker DNS name the LibreChat container uses to reach this server. The MCP
 # SDK's DNS-rebinding guard answers 421 for an unlisted Host, so name it here.
@@ -24,7 +24,8 @@ _SERVICE_HOST = os.getenv("MCP_SERVICE_HOST", "search-mcp")
 
 # Model used only for ranking/evaluation inside the workflow. Defaults to the
 # code's native OpenAI-style model; overridable per deployment. The OpenAI base
-# URL and key are read from OPENAI_BASE_URL / OPENAI_API_KEY by langchain.
+# URL and key are read from OPENAI_BASE_URL (or OPENAI_API_BASE) / OPENAI_API_KEY
+# by the lean HTTP evaluator. Only openai-compatible endpoints are supported here.
 _RANKER_MODEL = os.getenv("SEARCH_RANKER_MODEL", "openai/gpt-4o-mini")
 
 # Upper bound on results fetched per engine and returned after ranking.
@@ -77,14 +78,14 @@ def create_mcp_server() -> FastMCP:
             A JSON array of objects with title, link, and snippet fields.
         """
         k = max(1, min(int(max_results), _MAX_RESULTS_CAP))
-        config = {
+        config: Any = {
             "configurable": {
                 "model": _RANKER_MODEL,
                 "max_search_results_tool": _MAX_RESULTS_CAP,
                 "max_search_results_evaluator": k,
             }
         }
-        raw = await run_workflow(query, config)
+        raw = await run_workflow_lean(query, config)
         results = _coerce_results(raw)
         return json.dumps(results[:k], ensure_ascii=False)
 
