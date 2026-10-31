@@ -1,3 +1,6 @@
+# Host-specific compose additions
+docker/docker-compose.override.yml
+
 # Python
 __pycache__/
 *.py[cod]
