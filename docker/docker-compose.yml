@@ -7,8 +7,11 @@ services:
     hostname: searxng
     restart: unless-stopped
     
+    # war-room reaches SearXNG through host.docker.internal (docker0 gateway
+    # 172.17.0.1). Published on loopback and docker0 only, not LAN/tailnet.
     ports:
-      - "9090:8080"
+      - "127.0.0.1:9090:8080"
+      - "172.17.0.1:9090:8080"
     
     environment:
       - INSTANCE_NAME=search-workflow-searxng
